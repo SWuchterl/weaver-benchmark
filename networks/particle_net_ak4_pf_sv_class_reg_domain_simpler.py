@@ -18,14 +18,16 @@ def get_model(data_config, **kwargs):
     use_fusion = True
     ## fully connected output layers                                                                                                                                                                  
     fc_params = [
-        (256, 0.1),
+        (224, 0.1),
+        (192, 0.1),
+        (160, 0.1),
         (128, 0.1),
-        (96, 0.1),
+        (96,  0.1),
         (64,  0.1)
     ]
     ## fully connected output layers                                                                                                                                                                  
     fc_domain_params = [
-        (256, 0.1),
+        (192, 0.1),
         (128, 0.1),
         (64,  0.1),
         (32,  0.1)
