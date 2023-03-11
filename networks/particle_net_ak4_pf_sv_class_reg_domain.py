@@ -110,20 +110,15 @@ class CrossEntropyLogCoshLossDomain(torch.nn.L1Loss):
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor) -> Tensor:
 
         ## classification term
-        input_cat = input_cat.squeeze();
-        y_cat     = y_cat.squeeze().long();
         loss_cat  = 0;
         if input_cat.nelement():
             loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,reduction=self.reduction);
 
         ## regression terms
-        input_reg  = input_reg.squeeze();
-        y_reg      = y_reg.squeeze();
         x_reg      = input_reg-y_reg;        
         loss_mean  = 0;
         loss_quant = 0;
         loss_reg   = 0;
-
         if input_reg.nelement():
             ## compute loss
             for idx,q in enumerate(self.quantiles):
@@ -143,11 +138,7 @@ class CrossEntropyLogCoshLossDomain(torch.nn.L1Loss):
             loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
 
         ## domain terms
-        input_domain   = input_domain.squeeze();
-        y_domain       = y_domain.squeeze();
-        y_domain_check = y_domain_check.squeeze();
         loss_domain    = 0;
-
         if input_domain.nelement():
             ## just one domain region
             if not self.domain_weight:

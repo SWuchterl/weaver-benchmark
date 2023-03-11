@@ -71,44 +71,31 @@ class CrossEntropyLogCoshLoss(torch.nn.L1Loss):
     def forward(self, input_cat: Tensor, y_cat: Tensor, input_reg: Tensor, y_reg: Tensor) -> Tensor:
 
         ## classification term
-        input_cat = input_cat.squeeze();
-        y_cat     = y_cat.squeeze().long();
         loss_cat  = torch.nn.functional.cross_entropy(input_cat,y_cat,reduction=self.reduction);
 
         ## regression terms
-        input_reg  = input_reg.squeeze();
-        y_reg      = y_reg.squeeze();
         x_reg      = input_reg-y_reg;
-
-        loss_mean  = None;
-        loss_quant = None;
+        loss_reg   = 0;
+        loss_mean  = 0;
+        loss_quant = 0;
 
         for idx,q in enumerate(self.quantiles):
-            if q <= 0 and loss_mean is None:
-                loss_mean = (x_reg[:,idx])+torch.nn.functional.softplus(-2.*(x_reg[:,idx]))-math.log(2);
-            elif q <= 0 and loss_mean is not None:
+            if q <= 0:
                 loss_mean += (x_reg[:,idx])+torch.nn.functional.softplus(-2.*(x_reg[:,idx]))-math.log(2);
-            if q > 0 and loss_quant is None:
-                loss_quant  = q*x_reg[:,idx]*torch.ge(x_reg[:,idx],0)
-                loss_quant += (q-1)*(x_reg[:,idx])*torch.less(x_reg[:,idx],0);
-            elif q > 0 and loss_quant is not None:
+            elif q > 0:
                 loss_quant += q*x_reg[:,idx]*torch.ge(x_reg[:,idx],0)
-                loss_quant += (q-1)*(x_reg[:,idx])*torch.less(x_reg[:,idx],0);                
+                loss_quant += (q-1)*(x_reg[:,idx])*torch.less(x_reg[:,idx],0);
 
-        if loss_mean is not None and loss_quant is not None:
-            loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
-        elif loss_mean is not None:
-            loss_reg = self.loss_lambda*loss_mean;
-        elif loss_quant is not None:
-            loss_reg = self.loss_gamma*loss_quant;
-        
-        ## over a batch
-        if self.reduction == 'none':            
-            return loss_cat+loss_reg, loss_cat, loss_reg;
-        elif self.reduction == 'mean':
-            return loss_cat+loss_reg.mean(), loss_cat, loss_reg.mean();
+        if self.reduction == 'mean':
+            loss_quant = loss_quant.mean();
+            loss_mean = loss_mean.mean();
         elif self.reduction == 'sum':
-            return loss_cat+loss_reg.sum(), loss_cat, loss_reg.sum();
+            loss_quant = loss_quant.sum();
+            loss_mean = loss_mean.sum();
+ 
+        loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
+        
+        return loss_cat+loss_reg, loss_cat, loss_reg;
 
 
 def get_loss(data_config, **kwargs):
