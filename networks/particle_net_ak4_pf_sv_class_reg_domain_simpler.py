@@ -126,7 +126,7 @@ class CrossEntropyLogCoshLossDomain(torch.nn.L1Loss):
                 else:
                     x_reg_eval = x_reg
                 if q <= 0:
-                    loss_mean += x_reg_eval+torch.nn.functional.softplus(-2.*x_reg_eval-math.log(2);
+                    loss_mean += x_reg_eval+torch.nn.functional.softplus(-2.*x_reg_eval)-math.log(2);
                 elif q > 0:
                     loss_quant += q*x_reg_eval*torch.ge(x_reg_eval,0)
                     loss_quant += (q-1)*x_reg_eval*torch.less(x_reg_eval,0);
@@ -138,6 +138,7 @@ class CrossEntropyLogCoshLossDomain(torch.nn.L1Loss):
             elif self.reduction == 'sum':
                 loss_quant = loss_quant.sum();
                 loss_mean = loss_mean.sum();
+
             ## composition
             loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
 
