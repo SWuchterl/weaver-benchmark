@@ -64,6 +64,7 @@ def get_model(data_config, **kwargs):
                                      fc_domain_params=fc_domain_params,
                                      input_dims=point_features, 
                                      use_fusion=use_fusion,
+                                     use_domain_on_output=kwargs.get('use_domain_on_output', False),
                                      use_fts_bn=kwargs.get('use_fts_bn', False),
                                      use_counts=kwargs.get('use_counts', True),
                                      use_revgrad=kwargs.get('use_revgrad', True),
