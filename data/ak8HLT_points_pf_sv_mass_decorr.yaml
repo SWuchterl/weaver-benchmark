@@ -82,9 +82,9 @@ inputs:
          - [jet_hlt_pfcand_trackjet_decayL, 0, 0.01]
          - [jet_hlt_pfcand_npixhits, 0, 0.1]
          - [jet_hlt_pfcand_nstriphits, 0, 0.1]
-         - [jet_hlt_pfcand_id, 2, 0.2]
-         - [jet_hlt_pfcand_hcalfraction, 0, 1, 0, 1]
-         - [jet_hlt_pfcand_calofraction, 0, 1, 0, 5]
+         #- [jet_hlt_pfcand_id, 2, 0.2]
+         #- [jet_hlt_pfcand_hcalfraction, 0, 1, 0, 1]
+         #- [jet_hlt_pfcand_calofraction, 0, 1, 0, 5]
    pf_mask:
       length: 100
       vars:
