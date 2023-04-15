@@ -168,7 +168,7 @@ labels_domain:
      label_domain_emu: [label_data_emu, label_mc_emu]
      label_domain_mut: [label_data_mut, label_mc_mut]
    loss_weight:
-     [1.0,1.5,1.5]
+     [1.0,1.0,1.0]
 
 targets:
     type: custom
