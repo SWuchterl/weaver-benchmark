@@ -147,7 +147,7 @@ class CrossEntropyLogCoshLossDomain(torch.nn.L1Loss):
         loss_domain    = 0;
         if input_domain.nelement():
             ## just one domain region
-            if not self.domain_weight:
+            if not self.domain_weight or len(self.domain_weight) == 1:
                 loss_domain = self.loss_kappa*torch.nn.functional.cross_entropy(input_domain,y_domain,reduction=self.reduction);
             else:
                 ## more domain regions with different relative weights
