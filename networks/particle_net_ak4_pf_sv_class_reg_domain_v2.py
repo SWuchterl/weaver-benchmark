@@ -27,12 +27,10 @@ def get_model(data_config, **kwargs):
     ]
     ## fully connected output layers
     fc_domain_params = [
-        (224, 0.1),
-        (192, 0.1),
-        (160, 0.1),
+        (256, 0.1),
         (128, 0.1),
-        (96,  0.1),
         (64,  0.1)
+        (32,  0.1)
     ]
 
     ## classes and features
