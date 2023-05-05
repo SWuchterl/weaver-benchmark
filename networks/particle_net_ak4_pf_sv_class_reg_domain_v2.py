@@ -29,7 +29,7 @@ def get_model(data_config, **kwargs):
     fc_domain_params = [
         (256, 0.1),
         (128, 0.1),
-        (64,  0.1)
+        (64,  0.1),
         (32,  0.1)
     ]
 
