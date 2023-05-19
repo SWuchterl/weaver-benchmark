@@ -113,9 +113,9 @@ inputs:
       pad_mode: wrap
       vars:
          - [jet_pfcand_px, null]
-	 - [jet_pfcand_py, null]
-	 - [jet_pfcand_pz, null]
-	 - [jet_pfcand_energy, null]	    
+         - [jet_pfcand_py, null]
+         - [jet_pfcand_pz, null]
+         - [jet_pfcand_energy, null]
    pf_mask:
       length: 50
       vars:
@@ -143,9 +143,9 @@ inputs:
       pad_mode: wrap
       vars:
          - [jet_sv_px, null]
-	 - [jet_sv_py, null]
-	 - [jet_sv_pz, null]
-	 - [jet_sv_energy, null]	    
+         - [jet_sv_py, null]
+         - [jet_sv_pz, null]
+         - [jet_sv_energy, null]
    sv_mask:
       length: 5
       vars:
@@ -182,9 +182,9 @@ inputs:
       pad_mode: wrap
       vars:
          - [jet_losttrack_px, null]
-	 - [jet_losttrack_py, null]
-	 - [jet_losttrack_pz, null]
-	 - [jet_losttrack_energy, null]	    
+         - [jet_losttrack_py, null]
+         - [jet_losttrack_pz, null]
+         - [jet_losttrack_energy, null]
    lt_mask:
       length: 5
       vars:
