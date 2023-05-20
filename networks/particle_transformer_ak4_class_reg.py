@@ -7,14 +7,31 @@ from nn.model.ParticleTransformer import ParticleTransformerTagger
 ## get model
 def get_model(data_config, **kwargs):
 
+    ## number of classes
+    num_classes = len(data_config.label_value)
+    ## number of targets                                                                                                                                                                     
+    num_targets = 0;
+    if type(data_config.target_value) == dict:
+        num_targets = sum(len(dct) if type(dct) == list else 1 for dct in data_config.target_value.values())
+    else:
+        num_targets = len(data_config.target_value);
+    ## number of domain labels in the various regions (one binary or multiclass per region)                                                                                                       
+    num_domains = [];
+    if type(data_config.label_domain_value) == dict:
+        for dct in data_config.label_domain_value.values():
+            num_domain_loss.append(len(dct))
+    else:
+        num_domains.append(len(data_config.label_domain_value));
+
+
     ## options
     cfg = dict(
         pf_features_dims = len(data_config.input_dicts['pf_features']),
         sv_features_dims = len(data_config.input_dicts['sv_features']),
         lt_features_dims = len(data_config.input_dicts['lt_features']),
-        num_classes = len(data_config.label_value),
-        num_targets = len(data_config.target_value),
-        num_domains = 0,
+        num_classes = num_classes,
+        num_targets = num_targets,
+        num_domains = [],
         pair_input_dim = len(data_config.input_dicts['pf_vectors']),
         pair_extra_dim = len(data_config.input_dicts['pf_vectors_extra']),
         embed_dims = [128, 512, 128],
