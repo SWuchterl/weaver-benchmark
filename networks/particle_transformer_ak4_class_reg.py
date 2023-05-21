@@ -18,9 +18,9 @@ def get_model(data_config, **kwargs):
 
     ## options
     cfg = dict(
-        pf_features_dims = len(data_config.input_dicts['pf_features']),
-        sv_features_dims = len(data_config.input_dicts['sv_features']),
-        lt_features_dims = len(data_config.input_dicts['lt_features']),
+        pf_input_dim = len(data_config.input_dicts['pf_features']),
+        sv_input_dim = len(data_config.input_dicts['sv_features']),
+        lt_input_dim = len(data_config.input_dicts['lt_features']),
         num_classes = num_classes,
         num_targets = num_targets,
         num_domains = [],
