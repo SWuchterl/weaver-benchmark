@@ -15,14 +15,6 @@ def get_model(data_config, **kwargs):
         num_targets = sum(len(dct) if type(dct) == list else 1 for dct in data_config.target_value.values())
     else:
         num_targets = len(data_config.target_value);
-    ## number of domain labels in the various regions (one binary or multiclass per region)                                                                                                       
-    num_domains = [];
-    if type(data_config.label_domain_value) == dict:
-        for dct in data_config.label_domain_value.values():
-            num_domain_loss.append(len(dct))
-    else:
-        num_domains.append(len(data_config.label_domain_value));
-
 
     ## options
     cfg = dict(
