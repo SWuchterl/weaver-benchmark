@@ -114,11 +114,6 @@ inputs:
       length: 50
       vars:
          - [pfcand_mask, null]
-   sv_points:
-      length: 5
-      vars:
-         - [jet_sv_deta, null]
-         - [jet_sv_dphi, null]
    sv_features:
       length: 5
       vars:
@@ -144,11 +139,6 @@ inputs:
       length: 5
       vars:
          - [sv_mask, null]
-   lt_points:
-      length: 5
-      vars:
-         - [jet_losttrack_deta, null]
-         - [jet_losttrack_dphi, null]
    lt_features:
       length: 5
       vars:

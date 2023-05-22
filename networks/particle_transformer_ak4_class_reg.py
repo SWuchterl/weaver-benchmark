@@ -26,7 +26,7 @@ def get_model(data_config, **kwargs):
         num_domains = [],
         pair_input_dim = len(data_config.input_dicts['pf_vectors']),
         pair_extra_dim = 0,
-        embed_dims = [128, 512, 128],
+        embed_dims = [128, 256, 128],
         pair_embed_dims = [64, 64, 64],
         block_params = None,
         cls_block_params={'dropout': 0, 'attn_dropout': 0, 'activation_dropout': 0},
@@ -41,7 +41,7 @@ def get_model(data_config, **kwargs):
         alpha_grad = kwargs.get('alpha_grad',1),
         use_amp = kwargs.get('use_amp',False),
         split_domain_outputs = kwargs.get('split_domain_outputs',False),
-        fc_params = [(224, 0.1),(192, 0.1),(160, 0.1),(128, 0.1),(96,  0.1),(64,  0.1)],
+        fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
         fc_domain_params = []
     );
 
