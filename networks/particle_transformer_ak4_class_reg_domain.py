@@ -17,7 +17,7 @@ def get_model(data_config, **kwargs):
     num_domains = [];
     if type(data_config.label_domain_value) == dict:
         for dct in data_config.label_domain_value.values():
-            num_domain_loss.append(len(dct))
+            num_domain.append(len(dct))
     else:
         num_domains.append(len(data_config.label_domain_value));
 
