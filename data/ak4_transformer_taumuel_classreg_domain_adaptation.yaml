@@ -32,6 +32,10 @@ new_variables:
    label_data_emu: (domain==2) & (isdata==1)
    label_mc_mut:   (domain==3) & (isdata==0)
    label_data_mut: (domain==3) & (isdata==1) 
+   label_mc_dijet:   (domain==5) & (isdata==0)
+   label_data_dijet: (domain==5) & (isdata==1) 
+   label_mc_ttcharm:   (domain==6) & (isdata==0)
+   label_data_ttcharm: (domain==6) & (isdata==1) 
    label_mu:  (jet_muflav==1) & (jet_elflav==0) & (jet_tauflav==0) & (domain<0)
    label_el:  (jet_muflav==0) & (jet_elflav==1) & (jet_tauflav==0) & (domain<0)
    label_taup_1h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==0) & (jet_taucharge>0) & (domain<0)
@@ -194,8 +198,10 @@ labels_domain:
      label_domain_zll: [label_data_zll, label_mc_zll]
      label_domain_emu: [label_data_emu, label_mc_emu]
      label_domain_mut: [label_data_mut, label_mc_mut]
+     label_domain_mut: [label_data_dijet, label_mc_dijet]
+     label_domain_mut: [label_data_ttcharm, label_mc_ttcharm]
    loss_weight:
-     [1.0,1.0,1.0]
+     [0.75,1.0,1.0,0.5,1.0]
 
 targets:
     type: custom
@@ -247,14 +253,6 @@ observers:
    - jet_genmatch_lep_vis_eta
    - jet_genmatch_lep_vis_phi
    - jet_genmatch_lep_vis_mass
-   - jet_deepjet_probb
-   - jet_deepjet_probc
-   - jet_deepjet_probuds
-   - jet_deepjet_probg
-   - jet_pnet_probb
-   - jet_pnet_probc
-   - jet_pnet_probuds
-   - jet_pnet_probg
    - jet_pnetlast_probb
    - jet_pnetlast_probc
    - jet_pnetlast_probuds
@@ -272,6 +270,23 @@ observers:
    - jet_pnetlast_probtaum3h0p
    - jet_pnetlast_probtaum3h1p
    - jet_pnetlast_ptcorr
+   - jet_parTlast_probb
+   - jet_parTlast_probc
+   - jet_parTlast_probuds
+   - jet_parTlast_probg
+   - jet_parTlast_probmu
+   - jet_parTlast_probele
+   - jet_parTlast_probtaup1h0p
+   - jet_parTlast_probtaup1h1p
+   - jet_parTlast_probtaup1h2p
+   - jet_parTlast_probtaup3h0p
+   - jet_parTlast_probtaup3h1p
+   - jet_parTlast_probtaum1h0p
+   - jet_parTlast_probtaum1h1p
+   - jet_parTlast_probtaum1h2p
+   - jet_parTlast_probtaum3h0p
+   - jet_parTlast_probtaum3h1p
+   - jet_parTlast_ptcorr
    - jet_taumatch_pt
    - jet_taumatch_eta
    - jet_taumatch_phi
@@ -283,24 +298,14 @@ observers:
    - jet_taumatch_idele
    - jet_taumatch_dxy
    - jet_taumatch_dz
-   - jet_taumatch_idjet_wp
-   - jet_taumatch_idele_wp
-   - jet_taumatch_idmu_wp
    - jet_mumatch_pt
    - jet_mumatch_eta
    - jet_mumatch_phi
-   - jet_mumatch_mass
-   - jet_mumatch_dxy
-   - jet_mumatch_dz
    - jet_mumatch_id
    - jet_mumatch_iso
    - jet_elematch_pt
    - jet_elematch_eta
    - jet_elematch_phi
-   - jet_elematch_mass
-   - jet_elematch_dxy
-   - jet_elematch_dz
-   - jet_elematch_id
    - jet_elematch_idscore
 
 monitor_variables:
@@ -316,7 +321,7 @@ weights:
       jet_pt_raw: [15, 20, 25, 30, 38, 48, 60, 76, 97, 122, 154, 195, 246, 311, 393, 496, 627, 792, 1000]
       jet_eta: [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5]
    reweight_classes: [label_mu, label_el, label_taup_1h0p, label_taup_1h1p, label_taup_1h2p, label_taup_3h0p, label_taup_3h1p, label_taum_1h0p, label_taum_1h1p, label_taum_1h2p, label_taum_3h0p, label_taum_3h1p, label_b, label_c, label_uds, label_g]
-   reweight_exclude_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_data_zll, label_data_emu, label_data_mut]
+   reweight_exclude_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_dijet, label_data_ttcharm, label_data_ttcharm]
    class_weights: [1.0, 1.0, 0.15, 0.30, 0.12, 0.12, 0.06, 0.15, 0.30, 0.12, 0.12, 0.06, 1.5, 2.0, 3.0, 5.0]
    reweight_threshold: 15
    reweight_hists:
