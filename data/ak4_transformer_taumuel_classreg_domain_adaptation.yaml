@@ -198,8 +198,8 @@ labels_domain:
      label_domain_zll: [label_data_zll, label_mc_zll]
      label_domain_emu: [label_data_emu, label_mc_emu]
      label_domain_mut: [label_data_mut, label_mc_mut]
-     label_domain_mut: [label_data_dijet, label_mc_dijet]
-     label_domain_mut: [label_data_ttcharm, label_mc_ttcharm]
+     label_domain_dijet: [label_data_dijet, label_mc_dijet]
+     label_domain_ttcharm: [label_data_ttcharm, label_mc_ttcharm]
    loss_weight:
      [0.75,1.0,1.0,0.5,1.0]
 
@@ -321,7 +321,7 @@ weights:
       jet_pt_raw: [15, 20, 25, 30, 38, 48, 60, 76, 97, 122, 154, 195, 246, 311, 393, 496, 627, 792, 1000]
       jet_eta: [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5]
    reweight_classes: [label_mu, label_el, label_taup_1h0p, label_taup_1h1p, label_taup_1h2p, label_taup_3h0p, label_taup_3h1p, label_taum_1h0p, label_taum_1h1p, label_taum_1h2p, label_taum_3h0p, label_taum_3h1p, label_b, label_c, label_uds, label_g]
-   reweight_exclude_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_dijet, label_data_ttcharm, label_data_ttcharm]
+   reweight_exclude_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_mc_dijet, label_mc_ttcharm, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_ttcharm]
    class_weights: [1.0, 1.0, 0.15, 0.30, 0.12, 0.12, 0.06, 0.15, 0.30, 0.12, 0.12, 0.06, 1.5, 2.0, 3.0, 5.0]
    reweight_threshold: 15
    reweight_hists:
