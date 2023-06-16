@@ -402,6 +402,12 @@ labels_domain:
     - label_data_emu
     - label_mc_emu
     label_domain_mut:
+    - label_data_mut
+    - label_mc_mut
+    label_domain_dijet:
+    - label_data_dijet
+    - label_mc_dijet
+    label_domain_ttcharm:
     - label_data_ttcharm
     - label_mc_ttcharm
   loss_weight:
@@ -562,12 +568,12 @@ weights:
   - label_mc_zll
   - label_mc_emu
   - label_mc_mut
+  - label_mc_dijet
+  - label_mc_ttcharm
   - label_data_zll
   - label_data_emu
   - label_data_mut
   - label_data_dijet
-  - label_data_dijet
-  - label_data_ttcharm
   - label_data_ttcharm
   class_weights:
   - 1.0
