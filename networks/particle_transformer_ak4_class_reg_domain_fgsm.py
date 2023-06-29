@@ -172,7 +172,6 @@ def get_loss(data_config, **kwargs):
         loss_lambda=kwargs.get('loss_lambda',1),
         loss_gamma=kwargs.get('loss_gamma',1),
         loss_kappa=kwargs.get('loss_kappa',1),
-        loss_kappa=kwargs.get('loss_kappa',1),
         loss_omega=kwargs.get('loss_omega',1),
         quantiles=quantiles,
         domain_weight=wdomain,
