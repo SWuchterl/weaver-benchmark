@@ -147,8 +147,10 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
         ## fgsm KL term
         loss_fgsm = 0;
         if input_cat_fgsm.nelement():
-            loss_fgsm = loss_omega*torch.nn.functional.kl_div(input=torch.softmax(input_cat_fgsm,dim=1),target=torch.softmax(input_cat,dim=1),log_target=True,
-                                                              reduction="batchmean" if self.reduction == "mean" else self.reduction));
+            loss_fgsm = loss_omega*torch.nn.functional.kl_div(
+                input=torch.softmax(input_cat_fgsm,dim=1),
+                target=torch.softmax(input_cat,dim=1),
+                log_target=True,reduction="batchmean" if self.reduction == "mean" else self.reduction);
 
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
 
