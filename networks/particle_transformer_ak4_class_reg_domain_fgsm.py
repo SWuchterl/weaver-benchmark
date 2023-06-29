@@ -78,7 +78,7 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
                  domain_dim: list = [],
                  loss_omega: float = 1.,
              ) -> None:
-        super(CrossEntropyLogCoshLossDomain, self).__init__(None, None, reduction)
+        super(CrossEntropyLogCoshLossDomainFgsmKL, self).__init__(None, None, reduction)
         self.loss_lambda = loss_lambda;
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
@@ -167,7 +167,7 @@ def get_loss(data_config, **kwargs):
     else:
         ldomain = [len(data_config.label_domain_value)];
 
-    return CrossEntropyLogCoshLossDomain(
+    return CrossEntropyLogCoshLossDomainFgsmKL(
         reduction=kwargs.get('reduction','mean'),
         loss_lambda=kwargs.get('loss_lambda',1),
         loss_gamma=kwargs.get('loss_gamma',1),
