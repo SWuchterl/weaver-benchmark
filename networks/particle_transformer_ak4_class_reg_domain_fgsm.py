@@ -73,19 +73,19 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
                  loss_lambda: float = 1., 
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
+                 loss_omega: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
-                 domain_dim: list = [],
-                 loss_omega: float = 1.,
+                 domain_dim: list = []
              ) -> None:
         super(CrossEntropyLogCoshLossDomainFgsmKL, self).__init__(None, None, reduction)
         self.loss_lambda = loss_lambda;
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
+        self.loss_omega = loss_omega;
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
-        self.loss_omega = loss_omega;
 
     def forward(self, 
                 input_cat: Tensor, y_cat: Tensor, 
@@ -147,7 +147,7 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
         ## fgsm KL term
         loss_fgsm = 0;
         if input_cat_fgsm.nelement():
-            loss_fgsm = loss_omega*torch.nn.functional.kl_div(
+            loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
                 input=torch.softmax(input_cat_fgsm,dim=1),
                 target=torch.softmax(input_cat,dim=1),
                 log_target=True,reduction="batchmean" if self.reduction == "mean" else self.reduction);
