@@ -32,6 +32,7 @@ def get_model(data_config, **kwargs):
         num_classes = num_classes,
         num_targets = num_targets,
         num_domains = num_domains,
+        save_grad_inputs = True,
         pair_input_dim = len(data_config.input_dicts['pf_vectors']),
         pair_extra_dim = 0,
         embed_dims = [128, 256, 128],
@@ -151,9 +152,7 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
                 input=torch.softmax(input_cat_fgsm,dim=1),
                 target=torch.softmax(input_cat,dim=1),
                 log_target=True,reduction="batchmean" if self.reduction == "mean" else self.reduction);
-
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
-
     
 def get_loss(data_config, **kwargs):
 
