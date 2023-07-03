@@ -151,7 +151,8 @@ class CrossEntropyLogCoshLossDomainFgsmKL(torch.nn.L1Loss):
             loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
                 input=torch.softmax(input_cat_fgsm,dim=1),
                 target=torch.softmax(input_cat,dim=1),
-                log_target=True,reduction="batchmean" if self.reduction == "mean" else self.reduction);
+                log_target=True,reduction='sum');
+
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
     
 def get_loss(data_config, **kwargs):
