@@ -151,15 +151,15 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
         loss_fgsm = 0;
         if input_cat_fgsm.nelement():
             if self.fgsm_loss == 'MSE':
-                loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
-                    input=torch.softmax(input_cat_fgsm,dim=1),
-                    target=torch.softmax(input_cat,dim=1),
-                    log_target=True,reduction='sum').abs();
-            elif self.fgsm_loss == 'KL' or self.fgsm_loss == '':
                 loss_fgsm = self.loss_omega*torch.nn.functional.mse_loss(                    
                     input=torch.softmax(input_cat_fgsm,dim=1),
                     target=torch.softmax(input_cat,dim=1),
                     reduction='sum');
+            elif self.fgsm_loss == 'KL' or self.fgsm_loss == '':
+                loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
+                    input=torch.softmax(input_cat_fgsm,dim=1),
+                    target=torch.softmax(input_cat,dim=1),
+                    log_target=True,reduction='sum').abs();
 
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
     
