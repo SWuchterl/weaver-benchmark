@@ -94,7 +94,7 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                 input_cat: Tensor, y_cat: Tensor, 
                 input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,
-                input_cat_fgsm: Tensor) -> Tensor:
+                input_cat_fgsm: Tensor, input_cat_ref: Tensor) -> Tensor:
 
         ## classification term
         loss_cat = 0;
@@ -149,18 +149,18 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
 
         ## fgsm term
         loss_fgsm = 0;
-        if input_cat_fgsm.nelement():
+        if input_cat_fgsm.nelement() and input_cat_ref.nelement():
             if self.fgsm_loss == 'MSE':
                 loss_fgsm = self.loss_omega*torch.nn.functional.mse_loss(                    
                     input=torch.softmax(input_cat_fgsm,dim=1),
-                    target=torch.softmax(input_cat,dim=1),
+                    target=torch.softmax(input_cat_ref,dim=1),
                     reduction='sum');
             elif self.fgsm_loss == 'KL' or self.fgsm_loss == '':
                 loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
                     input=torch.softmax(input_cat_fgsm,dim=1),
-                    target=torch.softmax(input_cat,dim=1),
+                    target=torch.softmax(input_cat_ref,dim=1),
                     log_target=True,reduction='sum').abs();
-
+                
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
     
 def get_loss(data_config, **kwargs):
