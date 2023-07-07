@@ -41,7 +41,7 @@ def get_model(data_config, **kwargs):
         cls_block_params={'dropout': 0, 'attn_dropout': 0, 'activation_dropout': 0},
         num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',8),
-        num_cls_layers = kwargs.get('num_cls_layers',2),
+        num_cls_layers = kwargs.get('num_cls_layers',4),
         remove_self_pair = kwargs.get('remove_self_pair',False),
         use_pre_activation_pair = kwargs.get('use_pre_activation_pair',True),
         activation = kwargs.get('activation','gelu'),
@@ -154,12 +154,12 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                 loss_fgsm = self.loss_omega*torch.nn.functional.mse_loss(                    
                     input=torch.softmax(input_cat_fgsm,dim=1),
                     target=torch.softmax(input_cat_ref,dim=1),
-                    reduction='sum');
+                    reduction=self.reduction);
             elif self.fgsm_loss == 'KL' or self.fgsm_loss == '':
                 loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
                     input=torch.softmax(input_cat_fgsm,dim=1),
                     target=torch.softmax(input_cat_ref,dim=1),
-                    log_target=True,reduction='sum').abs();
+                    log_target=True,reduction='batchmean' if self.reduction == "mean" else self.reduction).abs();
         return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
     
 def get_loss(data_config, **kwargs):

@@ -40,7 +40,7 @@ def get_model(data_config, **kwargs):
         cls_block_params={'dropout': 0, 'attn_dropout': 0, 'activation_dropout': 0},
         num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',8),
-        num_cls_layers = kwargs.get('num_cls_layers',4),
+        num_cls_layers = kwargs.get('num_cls_layers',3),
         remove_self_pair = kwargs.get('remove_self_pair',False),
         use_pre_activation_pair = kwargs.get('use_pre_activation_pair',True),
         activation = kwargs.get('activation','gelu'),
