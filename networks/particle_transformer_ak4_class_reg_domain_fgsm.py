@@ -67,7 +67,7 @@ def get_model(data_config, **kwargs):
 
 
 class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
-    __constants__ = ['reduction','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega']
+    __constants__ = ['reduction','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega','loss_fgsm_type']
 
     def __init__(self, 
                  reduction: str = 'mean', 
@@ -75,7 +75,7 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
                  loss_omega: float = 1.,
-                 fgsm_loss: str = '',
+                 loss_fgsm_type: int = 1,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = []
@@ -88,7 +88,7 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
-        self.fgsm_loss = fgsm_loss;
+        self.loss_fgsm_type = loss_fgsm_type;
         
     def forward(self, 
                 input_cat: Tensor, y_cat: Tensor, 
@@ -150,12 +150,12 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
         ## fgsm term
         loss_fgsm = 0;
         if input_cat_fgsm.nelement() and input_cat_ref.nelement():
-            if self.fgsm_loss == 'MSE':
+            if self.loss_fgsm_type == 1:
                 loss_fgsm = self.loss_omega*torch.nn.functional.mse_loss(                    
                     input=torch.softmax(input_cat_fgsm,dim=1),
                     target=torch.softmax(input_cat_ref,dim=1),
                     reduction=self.reduction);
-            elif self.fgsm_loss == 'KL' or self.fgsm_loss == '':
+            elif self.loss_fgsm_type == 0 or self.loss_fgsm_type == -1:
                 loss_fgsm = self.loss_omega*torch.nn.functional.kl_div(
                     input=torch.softmax(input_cat_fgsm,dim=1),
                     target=torch.softmax(input_cat_ref,dim=1),
@@ -180,7 +180,7 @@ def get_loss(data_config, **kwargs):
         loss_gamma=kwargs.get('loss_gamma',1),
         loss_kappa=kwargs.get('loss_kappa',1),
         loss_omega=kwargs.get('loss_omega',1),
-        fgsm_loss='',
+        loss_fgsm_type=kwargs.get('loss_fgsm_type',0),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
