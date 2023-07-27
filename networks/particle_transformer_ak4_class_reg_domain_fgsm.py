@@ -75,7 +75,7 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
                  loss_omega: float = 1.,
-                 loss_fgsm_type: int = 1,
+                 loss_fgsm_type: int = 0,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = []
