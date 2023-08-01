@@ -201,7 +201,7 @@ labels_domain:
      label_domain_dijet: [label_data_dijet, label_mc_dijet]
      label_domain_ttcharm: [label_data_ttcharm, label_mc_ttcharm]
    loss_weight:
-     [0.9,1.0,1.0,0.8,1.0]
+     [1.0,1.0,1.0,1.0,1.0]
 
 targets:
     type: custom
