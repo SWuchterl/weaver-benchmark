@@ -141,8 +141,8 @@ class CrossEntropyLogCoshLossDomainFocal(torch.nn.L1Loss):
         if input_cat.nelement():
             input_soft = torch.nn.functional.softmax(input_cat,dim=1);
             target_one_hot = one_hot(y_cat,input_cat.shape[1],device=input_cat.device,dtype=input_cat.dtype);
-            weight   = torch.pow(-input_soft + 1., self.gamma);
-            loss_cat = -self.alpha * weight * torch.log(input_soft);
+            weight   = torch.pow(-input_soft + 1., self.focal_gamma);
+            loss_cat = -self.focal_alpha * weight * torch.log(input_soft);
             loss_cat = torch.sum(target_one_hot*loss_cat,dim=1);
             if self.reduction == 'mean':
                 loss_cat = loss_cat.mean();
