@@ -121,7 +121,7 @@ class CrossEntropyLogCoshLossDomainFocal(torch.nn.L1Loss):
                  domain_weight: list = [],
                  domain_dim: list = [],
              ) -> None:
-        super(CrossEntropyLogCoshLossDomain, self).__init__(None, None, reduction)
+        super(CrossEntropyLogCoshLossDomainFocal, self).__init__(None, None, reduction)
         self.loss_lambda = loss_lambda;
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
