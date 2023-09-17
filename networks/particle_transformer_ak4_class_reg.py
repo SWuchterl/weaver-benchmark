@@ -2,7 +2,7 @@ import numpy as np
 import math
 import torch
 from torch import Tensor
-from nn.model.ParticleTransformer import ParticleTransformerTagger
+from nn.model.ParticleTransformer import ParticleTransformerTaggerV2
 
 ## get model
 def get_model(data_config, **kwargs):
@@ -29,7 +29,7 @@ def get_model(data_config, **kwargs):
         embed_dims = [128, 256, 128],
         pair_embed_dims = [64, 64, 64],
         block_params = None,
-        cls_block_params={'dropout': 0, 'attn_dropout': 0, 'activation_dropout': 0},
+        cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
         num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',8),
         num_cls_layers = kwargs.get('num_cls_layers',2),

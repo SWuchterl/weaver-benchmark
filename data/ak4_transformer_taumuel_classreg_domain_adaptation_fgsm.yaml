@@ -52,7 +52,7 @@ new_variables:
    label_c:   (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==4) & (domain<0)
    label_uds: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0) & (np.abs(jet_pflav)>=0) & (np.abs(jet_pflav)<4) & (domain<0)
    label_g:   (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0) & (np.abs(jet_pflav)==21) & (domain<0)
-
+   
 preprocess:
    ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
    method: manual
@@ -61,7 +61,7 @@ preprocess:
 
 inputs:
    pf_features:
-      length: 50
+      length: 52
       pad_mode: wrap
       vars:
          ### [format 1]: var_name (no transformation)
@@ -113,7 +113,7 @@ inputs:
          - [jet_pfcand_photon_r9, 0, 1, 0, 1]
          - [jet_pfcand_photon_eVeto, null]
    pf_vectors:
-      length: 50
+      length: 52
       pad_mode: wrap
       vars:
          - [jet_pfcand_px, null]
@@ -121,11 +121,11 @@ inputs:
          - [jet_pfcand_pz, null]
          - [jet_pfcand_energy, null]
    pf_mask:
-      length: 50
+      length: 52
       vars:
          - [pfcand_mask, null]
    sv_features:
-      length: 5
+      length: 6
       vars:
          - [jet_sv_pt_log, 3, 0.6]
          - [jet_sv_mass, 1.2, 0.3]
@@ -138,7 +138,7 @@ inputs:
          - [jet_sv_d3d, 0.5, 0.2]
          - [jet_sv_d3dsig, 7, 0.02]
    sv_vectors:
-      length: 5
+      length: 6
       pad_mode: wrap
       vars:
          - [jet_sv_px, null]
@@ -146,11 +146,11 @@ inputs:
          - [jet_sv_pz, null]
          - [jet_sv_energy, null]
    sv_mask:
-      length: 5
+      length: 6
       vars:
          - [sv_mask, null]
    lt_features:
-      length: 5
+      length: 6
       vars:
          - [jet_losttrack_pt_log, 1, 0.5]
          - [jet_losttrack_eta, 0, 0.8]
@@ -172,7 +172,7 @@ inputs:
          - [jet_losttrack_npixhits, 0, 0.1]
          - [jet_losttrack_nstriphits, 0, 0.1]
    lt_vectors:
-      length: 5
+      length: 6
       pad_mode: wrap
       vars:
          - [jet_losttrack_px, null]
@@ -180,7 +180,7 @@ inputs:
          - [jet_losttrack_pz, null]
          - [jet_losttrack_energy, null]
    lt_mask:
-      length: 5
+      length: 6
       vars:
          - [lt_mask, null]
 labels:
@@ -201,7 +201,7 @@ labels_domain:
      label_domain_dijet: [label_data_dijet, label_mc_dijet]
      label_domain_ttcharm: [label_data_ttcharm, label_mc_ttcharm]
    loss_weight:
-     [0.75,1.0,1.0,0.5,1.0]
+     [1.0,1.0,1.0,1.0,1.0]
 
 targets:
     type: custom
@@ -210,6 +210,8 @@ targets:
         target_pt_q16: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p) | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
         target_pt_q84: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p) | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2) 
         target_pt_nu: ((domain<0)*(((label_b) | (label_c) | (label_uds) | (label_g))*np.clip(np.nan_to_num(jet_genmatch_wnu_pt/jet_genmatch_pt,nan=0,posinf=0,neginf=0),0.9,2)+((label_mu) | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p) | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,5.0))+(domain>=0))
+        target_energy: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_energy/jet_energy_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_mumatch_energy,nan=0,posinf=0,neginf=0)+(jet_mumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_elematch_energy,nan=0,posinf=0,neginf=0)+(jet_elematch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p) | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*((jet_taumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_taumatch_energy,nan=0,posinf=0,neginf=0)+(jet_taumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+        target_energy_nu: ((domain<0)*(((label_b) | (label_c) | (label_uds) | (label_g))*np.clip(np.nan_to_num(jet_genmatch_wnu_energy/jet_genmatch_energy,nan=0,posinf=0,neginf=0),0.9,2)+((label_mu) | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_energy/jet_genmatch_lep_vis_energy,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p) | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*np.clip(np.nan_to_num(jet_genmatch_lep_energy/jet_genmatch_lep_vis_energy,nan=0,posinf=0,neginf=0),0.9,5.0))+(domain>=0))
     quantile:
        [-1,0.16,0.84,-1]
 
@@ -223,11 +225,12 @@ observers:
    - sample
    - domain
    - isdata
-   - jet_pt
+   - jet_energy
    - jet_pt_raw
    - jet_eta
    - jet_phi
    - jet_mass
+   - jet_energy
    - jet_ncand
    - jet_hflav
    - jet_pflav
@@ -241,18 +244,22 @@ observers:
    - jet_genmatch_eta
    - jet_genmatch_phi
    - jet_genmatch_mass
+   - jet_genmatch_energy
    - jet_genmatch_wnu_pt
    - jet_genmatch_wnu_eta
    - jet_genmatch_wnu_phi
    - jet_genmatch_wnu_mass
+   - jet_genmatch_wnu_energy
    - jet_genmatch_lep_pt
    - jet_genmatch_lep_eta
    - jet_genmatch_lep_phi
    - jet_genmatch_lep_mass
+   - jet_genmatch_lep_energy
    - jet_genmatch_lep_vis_pt
    - jet_genmatch_lep_vis_eta
    - jet_genmatch_lep_vis_phi
    - jet_genmatch_lep_vis_mass
+   - jet_genmatch_lep_vis_energy
    - jet_pnetlast_probb
    - jet_pnetlast_probc
    - jet_pnetlast_probuds
@@ -270,6 +277,23 @@ observers:
    - jet_pnetlast_probtaum3h0p
    - jet_pnetlast_probtaum3h1p
    - jet_pnetlast_ptcorr
+   - jet_parTlast_probb
+   - jet_parTlast_probc
+   - jet_parTlast_probuds
+   - jet_parTlast_probg
+   - jet_parTlast_probmu
+   - jet_parTlast_probele
+   - jet_parTlast_probtaup1h0p
+   - jet_parTlast_probtaup1h1p
+   - jet_parTlast_probtaup1h2p
+   - jet_parTlast_probtaup3h0p
+   - jet_parTlast_probtaup3h1p
+   - jet_parTlast_probtaum1h0p
+   - jet_parTlast_probtaum1h1p
+   - jet_parTlast_probtaum1h2p
+   - jet_parTlast_probtaum3h0p
+   - jet_parTlast_probtaum3h1p
+   - jet_parTlast_ptcorr
    - jet_taumatch_pt
    - jet_taumatch_eta
    - jet_taumatch_phi
@@ -304,7 +328,8 @@ weights:
       jet_pt_raw: [15, 20, 25, 30, 38, 48, 60, 76, 97, 122, 154, 195, 246, 311, 393, 496, 627, 792, 1000]
       jet_eta: [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5]
    reweight_classes: [label_mu, label_el, label_taup_1h0p, label_taup_1h1p, label_taup_1h2p, label_taup_3h0p, label_taup_3h1p, label_taum_1h0p, label_taum_1h1p, label_taum_1h2p, label_taum_3h0p, label_taum_3h1p, label_b, label_c, label_uds, label_g]
-   reweight_exclude_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_mc_dijet, label_mc_ttcharm, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_ttcharm]
    class_weights: [1.0, 1.0, 0.15, 0.30, 0.12, 0.12, 0.06, 0.15, 0.30, 0.12, 0.12, 0.06, 1.5, 2.0, 3.0, 5.0]
    reweight_threshold: 15
    reweight_hists:
+   domain_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_mc_dijet, label_mc_ttcharm, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_ttcharm]
+   domain_weights: [7,7,8,7,12,7,7,8,7,12]
