@@ -332,4 +332,4 @@ weights:
    reweight_threshold: 15
    reweight_hists:
    domain_classes: [label_mc_zll, label_mc_emu, label_mc_mut, label_mc_dijet, label_mc_ttcharm, label_data_zll, label_data_emu, label_data_mut, label_data_dijet, label_data_ttcharm]
-   domain_weights: [7,7,8,7,12,7,7,8,7,12]
+   domain_weights: [6,6,12,7,12,6,8,15,7,22]
