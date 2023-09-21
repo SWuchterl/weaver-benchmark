@@ -298,6 +298,7 @@ observers:
    - jet_taumatch_eta
    - jet_taumatch_phi
    - jet_taumatch_mass
+   - jet_taumatch_energy
    - jet_taumatch_decaymode
    - jet_taumatch_charge
    - jet_taumatch_idjet
@@ -310,9 +311,11 @@ observers:
    - jet_mumatch_phi
    - jet_mumatch_id
    - jet_mumatch_iso
+   - jet_mumatch_energy
    - jet_elematch_pt
    - jet_elematch_eta
    - jet_elematch_phi
+   - jet_elematch_energy
    - jet_elematch_idscore
 
 monitor_variables:
