@@ -2,11 +2,11 @@ selection:
    ### use `&`, `|`, `~` for logical operations on numpy arrays
    ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
    >-
-   (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=1000) & (((domain<0) & (event%7!=0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5) & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1) & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11))) | ((domain>=0) & (event%5!=0)))
+   (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000) & (((domain<0) & (event%7!=0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5) & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1) & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11))) | ((domain>=0) & (event%5!=0)))
 
 test_time_selection:
    >-
-   (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=1000) & (((domain<0) & (event%7==0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5) & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1) & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11))) | ((domain>=0) & (event%5==0)))
+   (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000) & (((domain<0) & (event%7==0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5) & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1) & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11))) | ((domain>=0) & (event%5==0)))
 
 new_variables:
    ### [format] name: formula
@@ -71,47 +71,52 @@ inputs:
          ### clip_min(optional, default=-5),
          ### clip_max(optional, default=5),
          ### pad_value(optional, default=0)]
-         - [jet_pfcand_pt_log, 1, 0.5]
-         - [jet_pfcand_energy_log, 1, 0.5]
-         - [jet_pfcand_eta, 0, 0.8]
+         - [jet_pfcand_pt_log, 1, 0.5, -10, 10]
+         - [jet_pfcand_energy_log, 1, 0.5, -10, 10]
+         - [jet_pfcand_eta, 0, 0.5, -5, 5]
          - [jet_pfcand_deta, null]
          - [jet_pfcand_dphi, null]
          - [jet_pfcand_charge, null]
-         - [jet_pfcand_frompv, 2, 1]
-         - [jet_pfcand_track_chi2, 1, 0.2]
-         - [jet_pfcand_track_qual, 0, 0.2]
-         - [jet_pfcand_dz, 0, 0.1, -10, 10]
-         - [jet_pfcand_dzsig, 0, 0.01]
+         - [jet_pfcand_frompv, 2, 1, -5, 5]
+         - [jet_pfcand_dz, 0, 0.1, -20, 20]
+         - [jet_pfcand_dzsig, 0, 0.01, -1, 50]
          - [jet_pfcand_dxy, 0, 0.25, -25, 25]
-         - [jet_pfcand_dxysig, 0.01]
-         - [jet_pfcand_etarel, 1.5, 0.5]
-         - [jet_pfcand_pperp_ratio, 0, 1]
-         - [jet_pfcand_ppara_ratio, 0, 1]
-         - [jet_pfcand_trackjet_d3d, 0, 0.1]
-         - [jet_pfcand_trackjet_d3dsig, 0, 0.005]
-         - [jet_pfcand_trackjet_dist, 0, 0.1]
-         - [jet_pfcand_trackjet_decayL, 0, 0.01]
-         - [jet_pfcand_nlostinnerhits, null]
-         - [jet_pfcand_npixhits, 0, 0.1]
-         - [jet_pfcand_nstriphits, 0, 0.1]
-         - [jet_pfcand_id, 2, 0.2]
+         - [jet_pfcand_dxysig, 0, 0.01, -1, 50]
+         - [jet_pfcand_etarel, 1.5, 0.5, -5, 5]
+         - [jet_pfcand_pperp_ratio, 0, 1, 0, 10]
+         - [jet_pfcand_ppara_ratio, 0, 1, 0, 1]
+         - [jet_pfcand_track_chi2, 1, 0.2, -5, 10]
+         - [jet_pfcand_track_qual, 0, 0.2, -5, 10]
+         - [jet_pfcand_trackjet_d3d, 0, 0.1, -10, 10]
+         - [jet_pfcand_trackjet_d3dsig, 0, 0.005, -1, 50]
+         - [jet_pfcand_trackjet_dist, 0, 0.1, 0, 10]
+         - [jet_pfcand_trackjet_decayL, 0, 0.01, -5, 5]
+         - [jet_pfcand_npixhits, 0, 0.1, -1, 5]
+         - [jet_pfcand_nstriphits, 0, 0.1, -1, 5]
+         - [jet_pfcand_nlosthits, 0, 0.5, -1, 5]
+         - [jet_pfcand_npixlayers, 0, 0.5, -1, 5]
+         - [jet_pfcand_nstriplayers, 0, 0.1, -1, 5]
+         - [jet_pfcand_track_pterr, 0, 0.05, -1, 5]
+         - [jet_pfcand_track_etaerr, 0, 1, -1, 1]
+         - [jet_pfcand_track_phierr, 0, 1, -1, 1]
+         - [jet_pfcand_id, 2, 0.2, -5, 5]
          - [jet_pfcand_tau_signal, null]
          - [jet_pfcand_hcalfraction, 0, 1, 0, 1]
          - [jet_pfcand_calofraction, 0, 1, 0, 5]
          - [jet_pfcand_muon_isglobal, 0, 1]
-         - [jet_pfcand_muon_chi2, 0, 1]
+         - [jet_pfcand_muon_chi2,  1, 0.2, -5, 10]
          - [jet_pfcand_muon_segcomp, 0, 1]
-         - [jet_pfcand_muon_nvalidhit, 0, 1]
-         - [jet_pfcand_muon_nstation, 0, 1]
-         - [jet_pfcand_electron_detaIn, 0, 25]
-         - [jet_pfcand_electron_dphiIn, 0, 25]
-         - [jet_pfcand_electron_sigIetaIeta, 0.002, 50]
-         - [jet_pfcand_electron_sigIphiIphi, 0.001, 100]
-         - [jet_pfcand_electron_r9, 0, 1, 0, 1]
-         - [jet_pfcand_electron_convProb, null]
-         - [jet_pfcand_photon_sigIetaIeta, 0.002, 50]
-         - [jet_pfcand_photon_r9, 0, 1, 0, 1]
-         - [jet_pfcand_photon_eVeto, null]
+         - [jet_pfcand_muon_nvalidhit, 0, 1, -1, 50]
+         - [jet_pfcand_muon_nstation, 0, 1, -1, 10]
+         - [jet_pfcand_electron_detaIn, 0, 25, -5, 5]
+         - [jet_pfcand_electron_dphiIn, 0, 25, -5, 5]
+         - [jet_pfcand_electron_sigIetaIeta, 0.002, 50, -1, 5]
+         - [jet_pfcand_electron_sigIphiIphi, 0.001, 100, -1, 10]
+         - [jet_pfcand_electron_r9, 0, 1, -1, 2]
+         - [jet_pfcand_electron_convProb, 0, 1, -2, 2]
+         - [jet_pfcand_photon_sigIetaIeta, 0.002, 50, -1, 5]
+         - [jet_pfcand_photon_r9, 0, 1, -1, 2]
+         - [jet_pfcand_photon_eVeto, 0, 1, -1, 1]
    pf_vectors:
       length: 52
       pad_mode: wrap
@@ -127,16 +132,16 @@ inputs:
    sv_features:
       length: 6
       vars:
-         - [jet_sv_pt_log, 3, 0.6]
-         - [jet_sv_mass, 1.2, 0.3]
+         - [jet_sv_pt_log, 3, 0.5, -5, 5]
+         - [jet_sv_mass, 1., 0.25, -1, 5]
          - [jet_sv_deta, null]
          - [jet_sv_dphi, null]
-         - [jet_sv_ntrack, 3, 1]
-         - [jet_sv_chi2, 1, 0.5]
-         - [jet_sv_dxy, 0.2, 0.25]
-         - [jet_sv_dxysig, 7, 0.02]
-         - [jet_sv_d3d, 0.5, 0.2]
-         - [jet_sv_d3dsig, 7, 0.02]
+         - [jet_sv_ntrack, 3, 1, -5, 20]
+         - [jet_sv_chi2, 0, 0.25, -0.001, 2.5]
+         - [jet_sv_dxy, 0.2, 0.25, -5, 5]
+         - [jet_sv_dxysig, 0, 0.01, -1, 5]
+         - [jet_sv_d3d, 0.5, 0.2, -5, 5]
+         - [jet_sv_d3dsig, 0, 0.01. -1, 5]
    sv_vectors:
       length: 6
       pad_mode: wrap
@@ -152,25 +157,32 @@ inputs:
    lt_features:
       length: 6
       vars:
-         - [jet_losttrack_pt_log, 1, 0.5]
-         - [jet_losttrack_eta, 0, 0.8]
+         - [jet_losttrack_pt_log, 1, 0.5, -10, 10]
+         - [jet_losttrack_eta, 0, 0.5, -5, 5]
          - [jet_losttrack_deta, null]
          - [jet_losttrack_dphi, null]
          - [jet_losttrack_charge, null]
-         - [jet_losttrack_frompv, 2, 1]
-         - [jet_losttrack_track_chi2, 1, 0.2]
-         - [jet_losttrack_track_qual, 0, 0.2]
-         - [jet_losttrack_dz, 0, 0.1, -10, 10]
-         - [jet_losttrack_dzsig, 0, 0.01]
+         - [jet_losttrack_frompv, 2, 1, -5, 5]
+         - [jet_losttrack_dz, 0, 0.1, -20, 20]
+         - [jet_losttrack_dzsig, 0, 0.01, -1, 50]
          - [jet_losttrack_dxy, 0, 0.25, -25, 25]
-         - [jet_losttrack_dxysig, 0.01]
-         - [jet_losttrack_etarel, 1.5, 0.5]
-         - [jet_losttrack_trackjet_d3d, 0, 0.1]
-         - [jet_losttrack_trackjet_d3dsig, 0, 0.005]
-         - [jet_losttrack_trackjet_dist, 0, 0.1]
-         - [jet_losttrack_trackjet_decayL, 0, 0.01]
-         - [jet_losttrack_npixhits, 0, 0.1]
-         - [jet_losttrack_nstriphits, 0, 0.1]
+         - [jet_losttrack_dxysig, 0, 0.01, -1, 50]
+         - [jet_losttrack_etarel, 1.5, 0.5, -5, 5]
+         - [jet_losttrack_track_chi2, 1, 0.2, -5, 10]
+         - [jet_losttrack_track_qual, 0, 0.2, -5, 10]
+         - [jet_losttrack_trackjet_d3d, 0, 0.1, -10, 10]
+         - [jet_losttrack_trackjet_d3dsig, 0, 0.005, -1, 50]
+         - [jet_losttrack_trackjet_dist, 0, 0.1, 0, 10]
+         - [jet_losttrack_trackjet_decayL, 0, 0.01, -5, 5]
+         - [jet_losttrack_npixhits, 0, 0.1, -1, 5]
+         - [jet_losttrack_nstriphits, 0, 0.1, -1, 5]
+         - [jet_losttrack_nlosthits, 0, 0.5, -1, 5]
+         - [jet_losttrack_npixlayers, 0, 0.5, -1, 5]
+         - [jet_losttrack_nstriplayers, 0, 0.1, -1, 5]
+         - [jet_losttrack_track_pterr, 0, 0.05, -1, 5]
+         - [jet_losttrack_track_etaerr, 0, 1, -1, 1]
+         - [jet_losttrack_track_phierr, 0, 1, -1, 1]
+
    lt_vectors:
       length: 6
       pad_mode: wrap
@@ -323,7 +335,7 @@ weights:
    use_precomputed_weights: false
    reweight_method: flat
    reweight_vars:
-      jet_pt_raw: [15, 20, 25, 30, 38, 48, 60, 76, 97, 122, 154, 195, 246, 311, 393, 496, 627, 792, 1000]
+      jet_pt_raw: [15, 20, 25, 30, 38, 48, 60, 76, 97, 122, 154, 195, 246, 311, 393, 496, 627, 792, 915, 1190, 1500, 3000]
       jet_eta: [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5]
    reweight_classes: [label_mu, label_el, label_taup_1h0p, label_taup_1h1p, label_taup_1h2p, label_taup_3h0p, label_taup_3h1p, label_taum_1h0p, label_taum_1h1p, label_taum_1h2p, label_taum_3h0p, label_taum_3h1p, label_b, label_c, label_uds, label_g]
    class_weights: [1.0, 1.0, 0.15, 0.30, 0.12, 0.12, 0.06, 0.15, 0.30, 0.12, 0.12, 0.06, 1.5, 2.0, 3.0, 5.0]
