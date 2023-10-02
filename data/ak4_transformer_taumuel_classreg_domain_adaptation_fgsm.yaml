@@ -70,13 +70,15 @@ inputs:
          ### multiply_by(optional, default=1),
          ### clip_min(optional, default=-5),
          ### clip_max(optional, default=5),
-         ### pad_value(optional, default=0)]
+         ### pad_value(optional, default=0),
+         ### eps_min(optional, default=-5),
+         ### eps_max(optional, default=5)]
          - [jet_pfcand_pt_log, 1, 0.5, -10, 10]
          - [jet_pfcand_energy_log, 1, 0.5, -10, 10]
          - [jet_pfcand_eta, 0, 0.5, -5, 5]
-         - [jet_pfcand_deta, null]
-         - [jet_pfcand_dphi, null]
-         - [jet_pfcand_charge, null]
+         - [jet_pfcand_deta, 0, 1, -1, 1]
+         - [jet_pfcand_dphi, 0, 1, -1, 1]
+         - [jet_pfcand_charge, 0, 1, -2, 2]
          - [jet_pfcand_frompv, 2, 1, -5, 5]
          - [jet_pfcand_dz, 0, 0.1, -20, 20]
          - [jet_pfcand_dzsig, 0, 0.01, -1, 50]
@@ -100,7 +102,7 @@ inputs:
          - [jet_pfcand_track_etaerr, 0, 1, -1, 1]
          - [jet_pfcand_track_phierr, 0, 1, -1, 1]
          - [jet_pfcand_id, 2, 0.2, -5, 5]
-         - [jet_pfcand_tau_signal, null]
+         - [jet_pfcand_tau_signal, 0, 1, 0, 1]
          - [jet_pfcand_hcalfraction, 0, 1, 0, 1]
          - [jet_pfcand_calofraction, 0, 1, 0, 5]
          - [jet_pfcand_muon_isglobal, 0, 1]
@@ -134,14 +136,14 @@ inputs:
       vars:
          - [jet_sv_pt_log, 3, 0.5, -5, 5]
          - [jet_sv_mass, 1., 0.25, -1, 5]
-         - [jet_sv_deta, null]
-         - [jet_sv_dphi, null]
+         - [jet_sv_deta, 0, 1, -1, 1]
+         - [jet_sv_dphi, 0, 1, -1, 1]
          - [jet_sv_ntrack, 3, 1, -5, 20]
          - [jet_sv_chi2, 0, 0.25, -0.001, 2.5]
          - [jet_sv_dxy, 0.2, 0.25, -5, 5]
          - [jet_sv_dxysig, 0, 0.01, -1, 5]
          - [jet_sv_d3d, 0.5, 0.2, -5, 5]
-         - [jet_sv_d3dsig, 0, 0.01. -1, 5]
+         - [jet_sv_d3dsig, 0, 0.01, -1, 5]
    sv_vectors:
       length: 6
       pad_mode: wrap
@@ -159,9 +161,9 @@ inputs:
       vars:
          - [jet_losttrack_pt_log, 1, 0.5, -10, 10]
          - [jet_losttrack_eta, 0, 0.5, -5, 5]
-         - [jet_losttrack_deta, null]
-         - [jet_losttrack_dphi, null]
-         - [jet_losttrack_charge, null]
+         - [jet_losttrack_deta, 0, 1, -1, 1]
+         - [jet_losttrack_dphi, 0, 1, -1, 1]
+         - [jet_losttrack_charge, 0, 1, -2, 2]
          - [jet_losttrack_frompv, 2, 1, -5, 5]
          - [jet_losttrack_dz, 0, 0.1, -20, 20]
          - [jet_losttrack_dzsig, 0, 0.01, -1, 50]
