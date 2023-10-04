@@ -72,7 +72,7 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
 
     def __init__(self, 
                  reduction: str = 'mean',
-                 select_label: bool = True,
+                 select_label: bool = False,
                  loss_lambda: float = 1., 
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
@@ -151,11 +151,13 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
         ## fgsm term
         loss_fgsm = 0;
         if input_cat_fgsm.nelement() and input_cat_ref.nelement():
-            input_cat_fgsm = torch.log_softmax(input_cat_fgsm,dim=1);
-            input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
             if self.select_label: ## build KL divergence only on the score of y-cat type
-                loss_fgsm = torch.nn.functional.kl_div(input=input_cat_fgsm.gather(1,y_cat.view(-1,1)),target=input_cat_ref.gather(1,y_cat.view(-1,1)),reduction='none');
+                input_cat_fgsm = torch.softmax(input_cat_fgsm,dim=1);
+                input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
+                loss_fgsm = torch.nn.functional.mse_loss(input=input_cat_fgsm.gather(1,y_cat.view(-1,1)),target=input_cat_ref.gather(1,y_cat.view(-1,1)),reduction='none');
             else:
+                input_cat_fgsm = torch.log_softmax(input_cat_fgsm,dim=1);
+                input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
                 loss_fgsm = torch.nn.functional.kl_div(input=input_cat_fgsm,target=input_cat_ref,reduction='none');
             if self.reduction == 'mean':
                 loss_fgsm = self.loss_omega*loss_fgsm.mean();
@@ -181,7 +183,7 @@ def get_loss(data_config, **kwargs):
         loss_gamma=kwargs.get('loss_gamma',1),
         loss_kappa=kwargs.get('loss_kappa',1),
         loss_omega=kwargs.get('loss_omega',1),
-        select_label=kwargs.get('select_label',True),
+        select_label=kwargs.get('select_label',False),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
