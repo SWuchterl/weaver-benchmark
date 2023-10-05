@@ -122,11 +122,11 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
 
             ## reduction
             if self.reduction == 'mean':
-                loss_quant = loss_quant.mean();
-                loss_mean = loss_mean.mean();
-            elif self.reduction == 'sum':
-                loss_quant = loss_quant.sum();
-                loss_mean = loss_mean.sum();
+                if torch.is_tensor(loss_quant): loss_quant = loss_quant.mean();
+                if torch.is_tensor(loss_mean): loss_mean = loss_mean.mean();
+                elif self.reduction == 'sum':
+                    if torch.is_tensor(loss_quant): loss_quant = loss_quant.sum();
+                if torch.is_tensor(loss_mean): loss_mean = loss_mean.sum();
             ## composition
             loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
 
