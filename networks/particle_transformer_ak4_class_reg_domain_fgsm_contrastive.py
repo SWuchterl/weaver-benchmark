@@ -177,7 +177,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         if input_contrastive.nelement():
             logits_contrastive = torch.nn.functional.normalize(input_contrastive, p=2, dim=1)
             logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
-            logits_mask = torch.zeros(input_cat.shape).float();
+            logits_mask = torch.zeros(input_cat.shape).float().to(logits_contrastive.get_device(),non_blocking=True);
             r, c = y_cat.view(-1,1).shape;
             logits_mask[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),y_cat.flatten()] = 1;
             logits_mask = torch.matmul(logits_mask,logits_mask.permute(1,0))
