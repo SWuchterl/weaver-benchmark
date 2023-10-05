@@ -51,6 +51,7 @@ def get_model(data_config, **kwargs):
         use_amp = kwargs.get('use_amp',False),
         split_domain_outputs = kwargs.get('split_domain_outputs',False),
         split_reg_outputs = kwargs.get('split_reg_outputs',False),
+        contrastive = kwargs.get('contrastive',False),
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
         fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)]
     );
@@ -67,23 +68,27 @@ def get_model(data_config, **kwargs):
     return model, model_info
 
 
-class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
-    __constants__ = ['reduction','select_label','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega']
+class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
+    __constants__ = ['reduction','select_label','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega','contrastive','temperature']
 
     def __init__(self, 
                  reduction: str = 'mean',
                  select_label: bool = False,
+                 contrastive: bool = False,
                  loss_lambda: float = 1., 
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
                  loss_omega: float = 1.,
+                 temperature: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = []
              ) -> None:
-        super(CrossEntropyLogCoshLossDomainFgsm, self).__init__(None, None, reduction)
+        super(CrossEntropyContrastiveRegDomainFgsm, self).__init__(None, None, reduction)
         self.loss_lambda = loss_lambda;
         self.select_label = select_label;
+        self.contrastive = contrastive;
+        self.temperature = temperature;
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
         self.loss_omega = loss_omega;
@@ -95,7 +100,10 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                 input_cat: Tensor, y_cat: Tensor, 
                 input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,
-                input_cat_fgsm: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor()) -> Tensor:
+                input_cat_fgsm: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor(),
+                input_contrastive: Tensor = torch.Tensor(),
+                ) -> Tensor:
+
 
         ## classification term
         loss_cat = 0;
@@ -122,11 +130,11 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
 
             ## reduction
             if self.reduction == 'mean':
-                if torch.is_tensor(loss_quant): loss_quant = loss_quant.mean();
-                if torch.is_tensor(loss_mean): loss_mean = loss_mean.mean();
-                elif self.reduction == 'sum':
-                    if torch.is_tensor(loss_quant): loss_quant = loss_quant.sum();
-                if torch.is_tensor(loss_mean): loss_mean = loss_mean.sum();
+                loss_quant = loss_quant.mean();
+                loss_mean = loss_mean.mean();
+            elif self.reduction == 'sum':
+                loss_quant = loss_quant.sum();
+                loss_mean = loss_mean.sum();
             ## composition
             loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
 
@@ -163,7 +171,21 @@ class CrossEntropyLogCoshLossDomainFgsm(torch.nn.L1Loss):
                 loss_fgsm = self.loss_omega*loss_fgsm.mean();
             elif self.reduction == 'sum':
                 loss_fgsm = self.loss_omega*loss_fgsm.sum();
-        return loss_cat+loss_reg+loss_domain+loss_fgsm, loss_cat, loss_reg, loss_domain, loss_fgsm;
+
+        ## contrastive term
+        loss_contrastive = 0;
+        if input_contrastive.nelement():
+            logits_contrastive = torch.nn.functional.normalize(input_contrastive, p=2, dim=1)
+            logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
+            logits_mask = torch.zeros(input_cat.shape).float();
+            r, c = y_cat.view(-1,1).shape;
+            logits_mask[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),y_cat.flatten()] = 1;
+            logits_mask = torch.matmul(logits_mask,logits_mask.permute(1,0))
+            logits_mask /= torch.sum(logits_mask,dim=1,keepdims=True)
+            loss_contrastive = torch.nn.functional.cross_entropy(logits_contrastive,logits_mask,reduction=self.reduction);
+            
+        return loss_cat+loss_reg+loss_domain+loss_fgsm+loss_contrastive, loss_cat, loss_reg, loss_domain, loss_fgsm, loss_contrastive;
+
     
 def get_loss(data_config, **kwargs):
 
@@ -177,13 +199,15 @@ def get_loss(data_config, **kwargs):
     else:
         ldomain = [len(data_config.label_domain_value)];
 
-    return CrossEntropyLogCoshLossDomainFgsm(
+    return CrossEntropyContrastiveRegDomainFgsm(
         reduction=kwargs.get('reduction','mean'),
         loss_lambda=kwargs.get('loss_lambda',1),
         loss_gamma=kwargs.get('loss_gamma',1),
         loss_kappa=kwargs.get('loss_kappa',1),
         loss_omega=kwargs.get('loss_omega',1),
         select_label=kwargs.get('select_label',False),
+        contrastive=kwargs.get('contrastive',False),
+        temperature=kwargs.get('temperature',1),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
