@@ -763,10 +763,10 @@ targets:
       | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p)
       | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p)
       | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,5.0))+(domain>=0))
-    target_energy: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_energy/jet_energy_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_mumatch_energy,nan=0,posinf=0,neginf=0)+(jet_mumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_elematch_energy,nan=0,posinf=0,neginf=0)+(jet_elematch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+    target_energy: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_energy/jet_energy,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_mumatch_energy,nan=0,posinf=0,neginf=0)+(jet_mumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_elematch_energy,nan=0,posinf=0,neginf=0)+(jet_elematch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
       | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
       | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
-      | (label_taum_3h1p))*((jet_taumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_taumatch_energy,nan=0,posinf=0,neginf=0)+(jet_taumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+      | (label_taum_3h1p))*((jet_taumatch_energy>0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_taumatch_energy,nan=0,posinf=0,neginf=0)+(jet_taumatch_energy<=0)*np.nan_to_num(jet_genmatch_lep_vis_energy/jet_energy,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
     target_energy_nu: ((domain<0)*(((label_b) | (label_c) | (label_uds) | (label_g))*np.clip(np.nan_to_num(jet_genmatch_wnu_energy/jet_genmatch_energy,nan=0,posinf=0,neginf=0),0.9,2)+((label_mu)
       | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_energy/jet_genmatch_lep_vis_energy,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p)
       | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p)
@@ -786,7 +786,6 @@ observers:
 - sample
 - domain
 - isdata
-- jet_energy
 - jet_pt_raw
 - jet_eta
 - jet_phi
