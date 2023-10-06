@@ -80,6 +80,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                  loss_kappa: float = 1., 
                  loss_omega: float = 1.,
                  temperature: float = 1.,
+                 loss_cont: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = []
@@ -92,6 +93,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
         self.loss_omega = loss_omega;
+        self.loss_cont = loss_cont;
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
@@ -177,12 +179,14 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         if input_contrastive.nelement():
             logits_contrastive = torch.nn.functional.normalize(input_contrastive, p=2, dim=1)
             logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
-            logits_mask = torch.zeros(input_cat.shape).float().to(logits_contrastive.get_device(),non_blocking=True);
+            logits_mask = torch.zeros(input_cat.shape).float()
+            if logits_contrastive.get_device() >= 0:
+                logits_mask.to(logits_contrastive.get_device(),non_blocking=True);
             r, c = y_cat.view(-1,1).shape;
             logits_mask[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),y_cat.flatten()] = 1;
             logits_mask = torch.matmul(logits_mask,logits_mask.permute(1,0))
             logits_mask /= torch.sum(logits_mask,dim=1,keepdims=True)
-            loss_contrastive = torch.nn.functional.cross_entropy(logits_contrastive,logits_mask,reduction=self.reduction);
+            loss_contrastive = self.loss_cont*torch.nn.functional.cross_entropy(logits_contrastive,logits_mask,reduction=self.reduction);
             
         return loss_cat+loss_reg+loss_domain+loss_fgsm+loss_contrastive, loss_cat, loss_reg, loss_domain, loss_fgsm, loss_contrastive;
 
@@ -208,6 +212,7 @@ def get_loss(data_config, **kwargs):
         select_label=kwargs.get('select_label',False),
         contrastive=kwargs.get('contrastive',False),
         temperature=kwargs.get('temperature',1),
+        loss_cont=kwargs.get('loss_cont',0.25),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
