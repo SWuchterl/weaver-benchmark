@@ -51,9 +51,9 @@ def get_model(data_config, **kwargs):
         use_amp = kwargs.get('use_amp',False),
         split_domain_outputs = kwargs.get('split_domain_outputs',False),
         split_reg_outputs = kwargs.get('split_reg_outputs',False),
-        contrastive = kwargs.get('contrastive',False),
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
-        fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)]
+        fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
+        fc_contrastive_params = [(128, 0.0)]
     );
 
     model = ParticleTransformerTagger(**cfg)
@@ -79,7 +79,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
                  loss_omega: float = 1.,
-                 temperature: float = 1.,
+                 temperature: float = 0.1,
                  loss_cont: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
@@ -177,7 +177,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         ## contrastive term
         loss_contrastive = 0;
         if input_contrastive.nelement():
-            logits_contrastive = torch.nn.functional.normalize(input_contrastive, p=2, dim=1)
+            logits_contrastive = torch.nn.functional.normalize(input_contrastive, dim=1)
             logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
             logits_mask = torch.zeros(input_cat.shape).float().to(logits_contrastive.device,non_blocking=True);
             r, c = y_cat.view(-1,1).shape;
@@ -209,7 +209,7 @@ def get_loss(data_config, **kwargs):
         loss_omega=kwargs.get('loss_omega',1),
         select_label=kwargs.get('select_label',False),
         contrastive=kwargs.get('contrastive',False),
-        temperature=kwargs.get('temperature',1),
+        temperature=kwargs.get('temperature',0.1),
         loss_cont=kwargs.get('loss_cont',0.25),
         quantiles=quantiles,
         domain_weight=wdomain,
