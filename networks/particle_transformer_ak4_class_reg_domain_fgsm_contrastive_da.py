@@ -26,34 +26,43 @@ def get_model(data_config, **kwargs):
 
     ## options                                                                                                                                                                                   
     cfg = dict(
+        ## node feature block
         pf_input_dim = len(data_config.input_dicts['pf_features']),
         sv_input_dim = len(data_config.input_dicts['sv_features']),
         lt_input_dim = len(data_config.input_dicts['lt_features']),
         num_classes = num_classes,
         num_targets = num_targets,
         num_domains = num_domains,
-        save_grad_inputs = False,
+        ## edge feature block
         pair_input_dim = len(data_config.input_dicts['pf_vectors']),
         pair_extra_dim = 0,
+        remove_self_pair = kwargs.get('remove_self_pair',False),
+        ## Embeddings
         embed_dims = [128, 256, 128],
         pair_embed_dims = [64, 64, 64],
-        block_params = None,
-        cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
+        trim = kwargs.get('use_trim',True),
+        activation = kwargs.get('activation','gelu'),
+        ## Transformer block
         num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',8),
+        block_params = None,
+        cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
         num_cls_layers = kwargs.get('num_cls_layers',2),
-        remove_self_pair = kwargs.get('remove_self_pair',False),
         use_pre_activation_pair = kwargs.get('use_pre_activation_pair',True),
-        activation = kwargs.get('activation','gelu'),
-        trim = kwargs.get('use_trim',True),
-        for_inference = kwargs.get('for_inference',False),
-        alpha_grad = kwargs.get('alpha_grad',1),
+        ## Gradient step
+        save_grad_inputs = False,
         use_amp = kwargs.get('use_amp',False),
-        split_domain_outputs = kwargs.get('split_domain_outputs',False),
-        split_reg_outputs = kwargs.get('split_reg_outputs',False),
+        ## Post CLs parameters
+        for_inference = kwargs.get('for_inference',False),
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
+        split_reg_outputs = kwargs.get('split_reg_outputs',False),
+        ## DA parameters
+        alpha_grad = kwargs.get('alpha_grad',1),
+        split_domain_outputs = kwargs.get('split_domain_outputs',False),        
         fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
-        fc_contrastive_params = [(128, 0.05)]
+        ## Contrastive
+        fc_contrastive_params = [(256, 0.05)],
+        use_contrastive_domain = kwargs.get('use_contrastive_domain',False)
     );
 
     model = ParticleTransformerTagger(**cfg)
@@ -69,11 +78,12 @@ def get_model(data_config, **kwargs):
 
 
 class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
-    __constants__ = ['reduction','select_label','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega','temperature']
+    __constants__ = ['reduction','select_label','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega','use_cont_domain','temperature']
 
     def __init__(self, 
                  reduction: str = 'mean',
                  select_label: bool = False,
+                 use_cont_domain: bool = False,
                  loss_lambda: float = 1., 
                  loss_gamma: float = 1., 
                  loss_kappa: float = 1., 
@@ -87,6 +97,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         super(CrossEntropyContrastiveRegDomainFgsm, self).__init__(None, None, reduction)
         self.loss_lambda = loss_lambda;
         self.select_label = select_label;
+        self.use_cont_domain = use_cont_domain;
         self.temperature = temperature;
         self.loss_gamma = loss_gamma;
         self.loss_kappa = loss_kappa;
@@ -101,7 +112,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                 input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,
                 input_cat_fgsm: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor(),
-                input_cont: Tensor = torch.Tensor(),
+                input_cont: Tensor = torch.Tensor(), input_cont_domain: Tensor = torch.Tensor(),
                 ) -> Tensor:
 
 
@@ -175,14 +186,24 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
         ## contrastive term
         loss_contrastive = 0;
         if input_cont.nelement():
-            logits_contrastive = torch.nn.functional.normalize(input_cont, dim=1)
-            logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
-            logits_mask = torch.zeros(input_cat.shape).float().to(logits_contrastive.device,non_blocking=True);
+            logits_cont = torch.nn.functional.normalize(input_cont, dim=1)
+            logits_cont = torch.div(torch.matmul(logits_cont,logits_cont.permute(1,0)),self.temperature);
+            logits_mask = torch.zeros(input_cont.shape).float().to(logits_cont.device,non_blocking=True);
             r, c = y_cat.view(-1,1).shape;
             logits_mask[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),y_cat.flatten()] = 1;
             logits_mask = torch.matmul(logits_mask,logits_mask.permute(1,0))
             logits_mask /= torch.sum(logits_mask,dim=1,keepdims=True)
-            loss_contrastive = self.loss_cont*torch.nn.functional.cross_entropy(logits_contrastive,logits_mask,reduction=self.reduction);
+            loss_contrastive = self.loss_cont*torch.nn.functional.cross_entropy(logits_cont,logits_mask,reduction=self.reduction);
+            ## domain cont part
+            if self.use_cont_domain and input_cont_domain.nelement():
+                logits_cont_domain = torch.nn.functional.normalize(input_cont_domain, dim=1)
+                logits_cont_domain = torch.div(torch.matmul(logits_cont_domain,logits_cont_domain.permute(1,0)),self.temperature);
+                logits_mask_domain = torch.zeros(input_cont_domain.shape).float().to(logits_cont_domain.device,non_blocking=True);                
+                r, c = y_domain.view(-1,1).shape;
+                logits_mask_domain[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),y_domain.flatten()] = 1;
+                logits_mask_domain = torch.matmul(logits_mask_domain,logits_mask_domain.permute(1,0))
+                logits_mask_domain /= torch.sum(logits_mask_domain,dim=1,keepdims=True)
+                loss_contrastive += self.loss_cont*torch.nn.functional.cross_entropy(logits_cont_domain,logits_mask_domain,reduction=self.reduction);
             
         return loss_cat+loss_reg+loss_domain+loss_fgsm+loss_contrastive, loss_cat, loss_reg, loss_domain, loss_fgsm, loss_contrastive;
 
@@ -205,10 +226,11 @@ def get_loss(data_config, **kwargs):
         loss_gamma=kwargs.get('loss_gamma',1),
         loss_kappa=kwargs.get('loss_kappa',1),
         loss_omega=kwargs.get('loss_omega',1),
-        select_label=kwargs.get('select_label',False),
-        temperature=kwargs.get('temperature',0.1),
-        loss_cont=kwargs.get('loss_cont',0.25),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
+        select_label=kwargs.get('select_label',False),
+        use_cont_domain=kwargs.get('use_contrastive_domain',False),
+        temperature=kwargs.get('temperature',0.1),
+        loss_cont=kwargs.get('loss_cont',0.25),
     );
