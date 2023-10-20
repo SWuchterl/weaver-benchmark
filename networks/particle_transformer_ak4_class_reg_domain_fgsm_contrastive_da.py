@@ -78,31 +78,30 @@ def get_model(data_config, **kwargs):
 
 
 class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
-    __constants__ = ['reduction','select_label','loss_lambda','loss_gamma','quantiles','loss_kappa','domain_weight','domain_dim','loss_omega','use_cont_domain','temperature']
-
+    __constants__ = ['reduction','select_label','loss_reg','loss_res','quantiles','loss_da','domain_weight','domain_dim','loss_fgsm','loss_cont','use_cont_domain','temperature']
     def __init__(self, 
                  reduction: str = 'mean',
+                 loss_reg: float = 1., 
+                 loss_res: float = 1., 
+                 loss_da: float = 1., 
+                 loss_fgsm: float = 1.,
+                 loss_cont: float = 1.,
                  select_label: bool = False,
                  use_cont_domain: bool = False,
-                 loss_lambda: float = 1., 
-                 loss_gamma: float = 1., 
-                 loss_kappa: float = 1., 
-                 loss_omega: float = 1.,
                  temperature: float = 0.1,
-                 loss_cont: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = []
              ) -> None:
         super(CrossEntropyContrastiveRegDomainFgsm, self).__init__(None, None, reduction)
-        self.loss_lambda = loss_lambda;
+        self.loss_reg = loss_reg;
+        self.loss_res = loss_res;
+        self.loss_da  = loss_da;
+        self.loss_fgsm = loss_fgsm;
+        self.loss_cont = loss_cont;
+        self.temperature = temperature;
         self.select_label = select_label;
         self.use_cont_domain = use_cont_domain;
-        self.temperature = temperature;
-        self.loss_gamma = loss_gamma;
-        self.loss_kappa = loss_kappa;
-        self.loss_omega = loss_omega;
-        self.loss_cont = loss_cont;
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
@@ -147,14 +146,14 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                 loss_quant = loss_quant.sum();
                 loss_mean = loss_mean.sum();
             ## composition
-            loss_reg = self.loss_lambda*loss_mean+self.loss_gamma*loss_quant;
+            loss_reg = self.loss_reg*loss_mean+self.loss_res*loss_quant;
 
         ## domain terms
         loss_domain = 0;
         if input_domain.nelement():
             ## just one domain region
             if not self.domain_weight or len(self.domain_weight) == 1:
-                loss_domain = self.loss_kappa*torch.nn.functional.cross_entropy(input_domain,y_domain,reduction=self.reduction);
+                loss_domain = self.loss_da*torch.nn.functional.cross_entropy(input_domain,y_domain,reduction=self.reduction);
             else:
                 ## more domain regions with different relative weights
                 for id,w in enumerate(self.domain_weight):
@@ -165,7 +164,7 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                     y_pred  = y_domain[indexes,id].squeeze();
                     if y_val.nelement():
                         loss_domain += w*torch.nn.functional.cross_entropy(y_val,y_pred,reduction=self.reduction);
-                loss_domain *= self.loss_kappa;
+                loss_domain *= self.loss_da;
 
         ## fgsm term
         loss_fgsm = 0;
@@ -179,9 +178,9 @@ class CrossEntropyContrastiveRegDomainFgsm(torch.nn.L1Loss):
                 input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
                 loss_fgsm = torch.nn.functional.kl_div(input=input_cat_fgsm,target=input_cat_ref,reduction='none');
             if self.reduction == 'mean':
-                loss_fgsm = self.loss_omega*loss_fgsm.mean();
+                loss_fgsm = self.loss_fgsm*loss_fgsm.mean();
             elif self.reduction == 'sum':
-                loss_fgsm = self.loss_omega*loss_fgsm.sum();
+                loss_fgsm = self.loss_fgsm*loss_fgsm.sum();
 
         ## contrastive term
         loss_contrastive = 0;
@@ -222,15 +221,15 @@ def get_loss(data_config, **kwargs):
 
     return CrossEntropyContrastiveRegDomainFgsm(
         reduction=kwargs.get('reduction','mean'),
-        loss_lambda=kwargs.get('loss_lambda',1),
-        loss_gamma=kwargs.get('loss_gamma',1),
-        loss_kappa=kwargs.get('loss_kappa',1),
-        loss_omega=kwargs.get('loss_omega',1),
+        loss_lambda=kwargs.get('loss_reg',1),
+        loss_gamma=kwargs.get('loss_res',1),
+        loss_kappa=kwargs.get('loss_da',1),
+        loss_omega=kwargs.get('loss_fgsm',1),
+        loss_cont=kwargs.get('loss_cont',1),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain,
         select_label=kwargs.get('select_label',False),
         use_cont_domain=kwargs.get('use_contrastive_domain',False),
         temperature=kwargs.get('temperature',0.1),
-        loss_cont=kwargs.get('loss_cont',0.25),
     );
