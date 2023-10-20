@@ -221,10 +221,10 @@ def get_loss(data_config, **kwargs):
 
     return CrossEntropyContrastiveRegDomainFgsm(
         reduction=kwargs.get('reduction','mean'),
-        loss_lambda=kwargs.get('loss_reg',1),
-        loss_gamma=kwargs.get('loss_res',1),
-        loss_kappa=kwargs.get('loss_da',1),
-        loss_omega=kwargs.get('loss_fgsm',1),
+        loss_reg=kwargs.get('loss_reg',1),
+        loss_res=kwargs.get('loss_res',1),
+        loss_da=kwargs.get('loss_da',1),
+        loss_fgsm=kwargs.get('loss_fgsm',1),
         loss_cont=kwargs.get('loss_cont',1),
         quantiles=quantiles,
         domain_weight=wdomain,
