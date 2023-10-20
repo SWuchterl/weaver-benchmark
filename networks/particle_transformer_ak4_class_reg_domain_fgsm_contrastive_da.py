@@ -228,7 +228,7 @@ def get_loss(data_config, **kwargs):
         loss_omega=kwargs.get('loss_omega',1),
         quantiles=quantiles,
         domain_weight=wdomain,
-        domain_dim=ldomain
+        domain_dim=ldomain,
         select_label=kwargs.get('select_label',False),
         use_cont_domain=kwargs.get('use_contrastive_domain',False),
         temperature=kwargs.get('temperature',0.1),
