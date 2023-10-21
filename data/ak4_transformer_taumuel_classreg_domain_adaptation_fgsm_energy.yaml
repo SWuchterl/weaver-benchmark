@@ -786,6 +786,7 @@ observers:
 - sample
 - domain
 - isdata
+- jet_pt
 - jet_pt_raw
 - jet_eta
 - jet_phi
@@ -898,8 +899,7 @@ weights:
     - 496
     - 627
     - 792
-    - 925
-    - 1250
+    - 1000
     - 3000
     jet_eta:
     - -2.5
