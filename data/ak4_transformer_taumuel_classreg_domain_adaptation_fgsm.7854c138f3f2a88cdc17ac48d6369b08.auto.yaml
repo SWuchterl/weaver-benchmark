@@ -1,0 +1,4033 @@
+treename: null
+branch_magic: null
+file_magic: null
+selection: (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000) & (((domain<0)
+  & (event%7!=0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0)
+  & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0)
+  & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0))
+  & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5)
+  & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1)
+  & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11)))
+  | ((domain>=0) & (event%5!=0)))
+test_time_selection: (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000)
+  & (((domain<0) & (event%7==0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0)
+  & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0))
+  & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4)
+  & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5)
+  & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1)
+  & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11)))
+  | ((domain>=0) & (event%5==0)))
+preprocess:
+  method: manual
+  data_fraction: null
+  params: null
+new_variables:
+  pfcand_mask: ak.ones_like(jet_pfcand_deta)
+  sv_mask: ak.ones_like(jet_sv_deta)
+  lt_mask: ak.ones_like(jet_losttrack_deta)
+  jet_pfcand_p4: _p4_from_ptetaphie(jet_pfcand_pt,jet_pfcand_eta,jet_pfcand_phi,jet_pfcand_energy)
+  jet_pfcand_px: jet_pfcand_p4.px
+  jet_pfcand_py: jet_pfcand_p4.py
+  jet_pfcand_pz: jet_pfcand_p4.pz
+  jet_sv_p4: _p4_from_ptetaphie(jet_sv_pt,jet_sv_eta,jet_sv_dphi+jet_phi,jet_sv_energy)
+  jet_sv_px: jet_sv_p4.px
+  jet_sv_py: jet_sv_p4.py
+  jet_sv_pz: jet_sv_p4.pz
+  jet_losttrack_p4: _p4_from_ptetaphie(jet_losttrack_pt,jet_losttrack_eta,jet_losttrack_phi,jet_losttrack_energy)
+  jet_losttrack_px: jet_losttrack_p4.px
+  jet_losttrack_py: jet_losttrack_p4.py
+  jet_losttrack_pz: jet_losttrack_p4.pz
+  label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
+  label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
+  label_mc_emu: (domain==2) & (isdata==0)
+  label_data_emu: (domain==2) & (isdata==1)
+  label_mc_mut: (domain==3) & (isdata==0)
+  label_data_mut: (domain==3) & (isdata==1)
+  label_mc_dijet: (domain==5) & (isdata==0)
+  label_data_dijet: (domain==5) & (isdata==1)
+  label_mc_ttcharm: (domain==6) & (isdata==0)
+  label_data_ttcharm: (domain==6) & (isdata==1)
+  label_mu: (jet_muflav==1) & (jet_elflav==0) & (jet_tauflav==0) & (domain<0)
+  label_el: (jet_muflav==0) & (jet_elflav==1) & (jet_tauflav==0) & (domain<0)
+  label_taup_1h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==0)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_1h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==1)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_1h2p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==2)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_3h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==10)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_3h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==11)
+    & (jet_taucharge>0) & (domain<0)
+  label_taum_1h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==0)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_1h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==1)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_1h2p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==2)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_3h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==10)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_3h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==11)
+    & (jet_taucharge<0) & (domain<0)
+  label_b: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==5) &
+    (domain<0)
+  label_c: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==4) &
+    (domain<0)
+  label_uds: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0)
+    & (np.abs(jet_pflav)>=0) & (np.abs(jet_pflav)<4) & (domain<0)
+  label_g: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0) &
+    (np.abs(jet_pflav)==21) & (domain<0)
+inputs:
+  pf_features:
+    length: 52
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_pt_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.37394
+      - 2.12567
+    - - jet_pfcand_energy_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.1359
+      - 2.27593
+    - - jet_pfcand_eta
+      - 0
+      - 0.5
+      - -5
+      - 5
+      - -1.19978
+      - 1.20031
+    - - jet_pfcand_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.36488
+      - 0.36503
+    - - jet_pfcand_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.35777
+      - 0.35775
+    - - jet_pfcand_charge
+      - 0
+      - 1
+      - -2
+      - 2
+      - -0.99998
+      - 1.00039
+    - - jet_pfcand_frompv
+      - 2
+      - 1
+      - -5
+      - 5
+      - -0.99995
+      - 1.00099
+    - - jet_pfcand_dz
+      - 0
+      - 0.1
+      - -15
+      - 15
+      - -1.14145
+      - 1.13866
+    - - jet_pfcand_dzsig
+      - 0
+      - 0.01
+      - -1
+      - 25
+      - -0.00155
+      - 6.74114
+    - - jet_pfcand_dxy
+      - 0
+      - 0.25
+      - -15
+      - 15
+      - -1.01685
+      - 0.92939
+    - - jet_pfcand_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 25
+      - -0.00156
+      - 0.71242
+    - - jet_pfcand_etarel
+      - 1.5
+      - 0.5
+      - -5
+      - 5
+      - -0.14982
+      - 2.19885
+    - - jet_pfcand_pperp_ratio
+      - 0
+      - 1
+      - 0
+      - 10
+      - 0.00012
+      - 1.14198
+    - - jet_pfcand_ppara_ratio
+      - 0
+      - 1
+      - 0
+      - 2
+      - 0.93055
+      - 0.99997
+    - - jet_pfcand_track_chi2
+      - 1
+      - 0.2
+      - -2
+      - 10
+      - -0.19998
+      - 0.59927
+    - - jet_pfcand_track_qual
+      - 0
+      - 0.2
+      - -2
+      - 10
+      - -0.00078
+      - 1.00117
+    - - jet_pfcand_trackjet_d3d
+      - 0
+      - 0.1
+      - -8
+      - 8
+      - -0.54092
+      - 0.9339
+    - - jet_pfcand_trackjet_d3dsig
+      - 0
+      - 0.005
+      - -1
+      - 25
+      - -0.00155
+      - 1.87207
+    - - jet_pfcand_trackjet_dist
+      - 0
+      - 0.1
+      - 0
+      - 6
+      - 1.0e-05
+      - 0.68895
+    - - jet_pfcand_trackjet_decayL
+      - 0
+      - 0.01
+      - -5
+      - 5
+      - -0.21056
+      - 0.6083
+    - - jet_pfcand_npixhits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - -0.00039
+      - 0.60009
+    - - jet_pfcand_nstriphits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - -0.00039
+      - 2.00043
+    - - jet_pfcand_nlosthits
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - -0.00039
+      - 1.00029
+    - - jet_pfcand_npixlayers
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - -0.00039
+      - 2.49994
+    - - jet_pfcand_nstriplayers
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - -0.00039
+      - 1.19995
+    - - jet_pfcand_track_pterr
+      - 0
+      - 0.05
+      - -1
+      - 5
+      - -0.00039
+      - 0.0048
+    - - jet_pfcand_track_etaerr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.0
+      - 0.01402
+    - - jet_pfcand_track_phierr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.0
+      - 0.01098
+    - - jet_pfcand_id
+      - 2
+      - 0.2
+      - -5
+      - 5
+      - -0.19912
+      - 0.40098
+    - - jet_pfcand_tau_signal
+      - 0
+      - 1
+      - -5
+      - 5
+      - 1.0e-05
+      - 1.00088
+    - - jet_pfcand_hcalfraction
+      - 0
+      - 1
+      - -0.01
+      - 1
+      - 0.0
+      - 0.92996
+    - - jet_pfcand_calofraction
+      - 0
+      - 1
+      - -0.01
+      - 3
+      - -6.0e-05
+      - 1.72981
+    - - jet_pfcand_muon_isglobal
+      - 0
+      - 1
+      - -1
+      - 2
+      - -0.0001
+      - 0.0002
+    - - jet_pfcand_muon_chi2
+      - 1
+      - 0.2
+      - -5
+      - 10
+      - -0.19998
+      - -0.19851
+    - - jet_pfcand_muon_segcomp
+      - 0
+      - 1
+      - -1
+      - 2
+      - -0.0001
+      - 0.0002
+    - - jet_pfcand_muon_nvalidhit
+      - 0
+      - 1
+      - -1
+      - 50
+      - -0.00035
+      - 0.00467
+    - - jet_pfcand_muon_nstation
+      - 0
+      - 1
+      - -1
+      - 10
+      - -9.0e-05
+      - 0.00099
+    - - jet_pfcand_electron_detaIn
+      - 0
+      - 25
+      - -5
+      - 5
+      - 1.0e-05
+      - 0.00099
+    - - jet_pfcand_electron_dphiIn
+      - 0
+      - 25
+      - -5
+      - 5
+      - 1.0e-05
+      - 0.00099
+    - - jet_pfcand_electron_sigIetaIeta
+      - 0.002
+      - 50
+      - -1
+      - 5
+      - -0.09999
+      - -0.0994
+    - - jet_pfcand_electron_sigIphiIphi
+      - 0.001
+      - 100
+      - -1
+      - 10
+      - -0.10019
+      - -0.09911
+    - - jet_pfcand_electron_r9
+      - 0
+      - 1
+      - -1
+      - 2
+      - -0.0001
+      - 0.0002
+    - - jet_pfcand_electron_convProb
+      - 0
+      - 1
+      - -2
+      - 2
+      - 0.0
+      - 0.0004
+    - - jet_pfcand_photon_sigIetaIeta
+      - 0.002
+      - 50
+      - -1
+      - 5
+      - -0.09999
+      - 0.5715
+    - - jet_pfcand_photon_r9
+      - 0
+      - 1
+      - -1
+      - 2
+      - -0.0001
+      - 0.64469
+    - - jet_pfcand_photon_eVeto
+      - 0
+      - 1
+      - -1
+      - 2
+      - -0.0001
+      - 0.99986
+  pf_vectors:
+    length: 52
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_px
+      - null
+    - - jet_pfcand_py
+      - null
+    - - jet_pfcand_pz
+      - null
+    - - jet_pfcand_energy
+      - null
+  pf_mask:
+    length: 52
+    vars:
+    - - pfcand_mask
+      - null
+  sv_features:
+    length: 6
+    vars:
+    - - jet_sv_pt_log
+      - 3
+      - 0.5
+      - -5
+      - 5
+      - -1.12495
+      - 1.63545
+    - - jet_sv_mass
+      - 1.0
+      - 0.25
+      - -1
+      - 5
+      - -0.17645
+      - 3.43519
+    - - jet_sv_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.27954
+      - 0.27937
+    - - jet_sv_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.28003
+      - 0.28035
+    - - jet_sv_ntrack
+      - 3
+      - 1
+      - -5
+      - 20
+      - -0.99995
+      - 7.00128
+    - - jet_sv_chi2
+      - 0
+      - 0.25
+      - -0.001
+      - 2.5
+      - 0.00018
+      - 1.86542
+    - - jet_sv_dxy
+      - 0.2
+      - 0.25
+      - -5
+      - 5
+      - -4.02805
+      - -0.04616
+    - - jet_sv_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 5
+      - 0.00246
+      - 2.82305
+    - - jet_sv_d3d
+      - 0.5
+      - 0.2
+      - -5
+      - 5
+      - -0.72268
+      - 3.50387
+    - - jet_sv_d3dsig
+      - 0
+      - 0.01
+      - -1
+      - 5
+      - 0.00252
+      - 2.82379
+  sv_vectors:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_sv_px
+      - null
+    - - jet_sv_py
+      - null
+    - - jet_sv_pz
+      - null
+    - - jet_sv_energy
+      - null
+  sv_mask:
+    length: 6
+    vars:
+    - - sv_mask
+      - null
+  lt_features:
+    length: 6
+    vars:
+    - - jet_losttrack_pt_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -0.47996
+      - 2.97095
+    - - jet_losttrack_energy_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -0.30458
+      - 3.15216
+    - - jet_losttrack_eta
+      - 0
+      - 0.5
+      - -5
+      - 5
+      - -1.21443
+      - 1.21352
+    - - jet_losttrack_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.17065
+      - 0.17073
+    - - jet_losttrack_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.17737
+      - 0.17682
+    - - jet_losttrack_charge
+      - 0
+      - 1
+      - -2
+      - 2
+      - -0.99999
+      - 1.00039
+    - - jet_losttrack_frompv
+      - 2
+      - 1
+      - -5
+      - 5
+      - -1.99955
+      - 1.0009
+    - - jet_losttrack_dz
+      - 0
+      - 0.1
+      - -15
+      - 15
+      - -2.03007
+      - 2.05339
+    - - jet_losttrack_dzsig
+      - 0
+      - 0.01
+      - -1
+      - 25
+      - -0.00034
+      - 12.98729
+    - - jet_losttrack_dxy
+      - 0
+      - 0.25
+      - -15
+      - 15
+      - -1.33887
+      - 1.35566
+    - - jet_losttrack_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 25
+      - -6.0e-05
+      - 1.83191
+    - - jet_losttrack_etarel
+      - 1.5
+      - 0.5
+      - -5
+      - 5
+      - 0.44005
+      - 2.53656
+    - - jet_losttrack_track_chi2
+      - 1
+      - 0.2
+      - -2
+      - 10
+      - -0.19997
+      - 2.39935
+    - - jet_losttrack_track_qual
+      - 0
+      - 0.2
+      - -2
+      - 10
+      - 0.19962
+      - 1.00117
+    - - jet_losttrack_trackjet_d3d
+      - 0
+      - 0.1
+      - -8
+      - 8
+      - -0.80524
+      - 1.33887
+    - - jet_losttrack_trackjet_d3dsig
+      - 0
+      - 0.005
+      - -1
+      - 25
+      - 0.0012
+      - 3.88684
+    - - jet_losttrack_trackjet_dist
+      - 0
+      - 0.1
+      - 0
+      - 6
+      - 3.0e-05
+      - 1.00217
+    - - jet_losttrack_trackjet_decayL
+      - 0
+      - 0.01
+      - -5
+      - 5
+      - -0.75987
+      - 1.86427
+    - - jet_losttrack_npixhits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.09981
+      - 0.60017
+    - - jet_losttrack_nstriphits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - -0.00036
+      - 2.00015
+    - - jet_losttrack_nlosthits
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - -0.00039
+      - 0.00019
+    - - jet_losttrack_npixlayers
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - 0.50001
+      - 2.50006
+    - - jet_losttrack_nstriplayers
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - -0.00036
+      - 1.19995
+    - - jet_losttrack_track_pterr
+      - 0
+      - 0.05
+      - -1
+      - 5
+      - 0.00022
+      - 0.20563
+    - - jet_losttrack_track_etaerr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 5.0e-05
+      - 0.03813
+    - - jet_losttrack_track_phierr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 3.0e-05
+      - 0.01258
+  lt_vectors:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_losttrack_px
+      - null
+    - - jet_losttrack_py
+      - null
+    - - jet_losttrack_pz
+      - null
+    - - jet_losttrack_energy
+      - null
+  lt_mask:
+    length: 6
+    vars:
+    - - lt_mask
+      - null
+labels:
+  type: simple
+  value:
+  - label_mu
+  - label_el
+  - label_taup_1h0p
+  - label_taup_1h1p
+  - label_taup_1h2p
+  - label_taup_3h0p
+  - label_taup_3h1p
+  - label_taum_1h0p
+  - label_taum_1h1p
+  - label_taum_1h2p
+  - label_taum_3h0p
+  - label_taum_3h1p
+  - label_b
+  - label_c
+  - label_uds
+  - label_g
+targets:
+  type: custom
+  value:
+    target_pt: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_q16: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_q84: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_nu: ((domain<0)*(((label_b) | (label_c) | (label_uds) | (label_g))*np.clip(np.nan_to_num(jet_genmatch_wnu_pt/jet_genmatch_pt,nan=0,posinf=0,neginf=0),0.9,2)+((label_mu)
+      | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p)
+      | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p)
+      | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,5.0))+(domain>=0))
+  quantile:
+  - -1
+  - 0.16
+  - 0.84
+  - -1
+labels_domain:
+  type: custom
+  value:
+    label_domain_zll:
+    - label_data_zll
+    - label_mc_zll
+    label_domain_emu:
+    - label_data_emu
+    - label_mc_emu
+    label_domain_mut:
+    - label_data_mut
+    - label_mc_mut
+    label_domain_dijet:
+    - label_data_dijet
+    - label_mc_dijet
+    label_domain_ttcharm:
+    - label_data_ttcharm
+    - label_mc_ttcharm
+  loss_weight:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+observers:
+- event
+- rho
+- npv
+- wgt
+- met
+- npu
+- sample
+- domain
+- isdata
+- jet_pt
+- jet_pt_raw
+- jet_eta
+- jet_phi
+- jet_mass
+- jet_energy
+- jet_ncand
+- jet_hflav
+- jet_pflav
+- jet_muflav
+- jet_elflav
+- jet_tauflav
+- jet_taudecaymode
+- jet_taucharge
+- jet_lepflav
+- jet_genmatch_pt
+- jet_genmatch_eta
+- jet_genmatch_phi
+- jet_genmatch_mass
+- jet_genmatch_energy
+- jet_genmatch_wnu_pt
+- jet_genmatch_wnu_eta
+- jet_genmatch_wnu_phi
+- jet_genmatch_wnu_mass
+- jet_genmatch_wnu_energy
+- jet_genmatch_lep_pt
+- jet_genmatch_lep_eta
+- jet_genmatch_lep_phi
+- jet_genmatch_lep_mass
+- jet_genmatch_lep_energy
+- jet_genmatch_lep_vis_pt
+- jet_genmatch_lep_vis_eta
+- jet_genmatch_lep_vis_phi
+- jet_genmatch_lep_vis_mass
+- jet_genmatch_lep_vis_energy
+- jet_pnetlast_probb
+- jet_pnetlast_probc
+- jet_pnetlast_probuds
+- jet_pnetlast_probg
+- jet_pnetlast_probmu
+- jet_pnetlast_probele
+- jet_pnetlast_probtaup1h0p
+- jet_pnetlast_probtaup1h1p
+- jet_pnetlast_probtaup1h2p
+- jet_pnetlast_probtaup3h0p
+- jet_pnetlast_probtaup3h1p
+- jet_pnetlast_probtaum1h0p
+- jet_pnetlast_probtaum1h1p
+- jet_pnetlast_probtaum1h2p
+- jet_pnetlast_probtaum3h0p
+- jet_pnetlast_probtaum3h1p
+- jet_pnetlast_ptcorr
+- jet_parTlast_probb
+- jet_parTlast_probc
+- jet_parTlast_probuds
+- jet_parTlast_probg
+- jet_parTlast_probmu
+- jet_parTlast_probele
+- jet_parTlast_probtaup1h0p
+- jet_parTlast_probtaup1h1p
+- jet_parTlast_probtaup1h2p
+- jet_parTlast_probtaup3h0p
+- jet_parTlast_probtaup3h1p
+- jet_parTlast_probtaum1h0p
+- jet_parTlast_probtaum1h1p
+- jet_parTlast_probtaum1h2p
+- jet_parTlast_probtaum3h0p
+- jet_parTlast_probtaum3h1p
+- jet_parTlast_ptcorr
+- jet_taumatch_pt
+- jet_taumatch_eta
+- jet_taumatch_phi
+- jet_taumatch_mass
+- jet_taumatch_decaymode
+- jet_taumatch_charge
+- jet_taumatch_idjet
+- jet_taumatch_idmu
+- jet_taumatch_idele
+- jet_taumatch_dxy
+- jet_taumatch_dz
+- jet_mumatch_pt
+- jet_mumatch_eta
+- jet_mumatch_phi
+- jet_mumatch_id
+- jet_mumatch_iso
+- jet_elematch_pt
+- jet_elematch_eta
+- jet_elematch_phi
+- jet_elematch_idscore
+monitor_variables: []
+weights:
+  use_precomputed_weights: false
+  reweight_method: flat
+  reweight_vars:
+    jet_pt_raw:
+    - 15
+    - 20
+    - 25
+    - 30
+    - 38
+    - 48
+    - 60
+    - 76
+    - 97
+    - 122
+    - 154
+    - 195
+    - 246
+    - 311
+    - 393
+    - 496
+    - 627
+    - 792
+    - 1000
+    - 3000
+    jet_eta:
+    - -2.5
+    - -2.0
+    - -1.5
+    - -1.0
+    - -0.5
+    - 0.0
+    - 0.5
+    - 1.0
+    - 1.5
+    - 2.0
+    - 2.5
+  reweight_classes:
+  - label_mu
+  - label_el
+  - label_taup_1h0p
+  - label_taup_1h1p
+  - label_taup_1h2p
+  - label_taup_3h0p
+  - label_taup_3h1p
+  - label_taum_1h0p
+  - label_taum_1h1p
+  - label_taum_1h2p
+  - label_taum_3h0p
+  - label_taum_3h1p
+  - label_b
+  - label_c
+  - label_uds
+  - label_g
+  class_weights:
+  - 1.0
+  - 1.0
+  - 0.15
+  - 0.3
+  - 0.12
+  - 0.12
+  - 0.06
+  - 0.15
+  - 0.3
+  - 0.12
+  - 0.12
+  - 0.06
+  - 1.5
+  - 2.0
+  - 3.0
+  - 5.0
+  reweight_threshold: 15
+  reweight_hists:
+    label_mu:
+    - - 0.07520206272602081
+      - 0.05499815195798874
+      - 0.04773084074258804
+      - 0.04133542627096176
+      - 0.03955017030239105
+      - 0.03957298770546913
+      - 0.04193917289376259
+      - 0.04781690984964371
+      - 0.05537746101617813
+      - 0.07496802508831024
+    - - 0.06280608475208282
+      - 0.046124812215566635
+      - 0.03925790637731552
+      - 0.03471004590392113
+      - 0.03297314792871475
+      - 0.03310980275273323
+      - 0.03466771915555
+      - 0.038913704454898834
+      - 0.04595085605978966
+      - 0.06294640898704529
+    - - 0.05836192145943642
+      - 0.04296763613820076
+      - 0.03639332950115204
+      - 0.032599810510873795
+      - 0.030854959040880203
+      - 0.0308513380587101
+      - 0.03228694573044777
+      - 0.036002203822135925
+      - 0.042999252676963806
+      - 0.05813184380531311
+    - - 0.035493992269039154
+      - 0.02582770586013794
+      - 0.02189493365585804
+      - 0.01974267140030861
+      - 0.01877612993121147
+      - 0.018686294555664062
+      - 0.019777068868279457
+      - 0.02190314047038555
+      - 0.026059549301862717
+      - 0.03523637726902962
+    - - 0.029331224039196968
+      - 0.02156485989689827
+      - 0.018183346837759018
+      - 0.016457339748740196
+      - 0.015758132562041283
+      - 0.015678275376558304
+      - 0.01648605614900589
+      - 0.018152805045247078
+      - 0.021562060341238976
+      - 0.02920256368815899
+    - - 0.03430366888642311
+      - 0.024734705686569214
+      - 0.020218411460518837
+      - 0.01810053363442421
+      - 0.017189020290970802
+      - 0.01708405092358589
+      - 0.018084663897752762
+      - 0.020114922896027565
+      - 0.02482694759964943
+      - 0.034008290618658066
+    - - 0.04362701252102852
+      - 0.029992766678333282
+      - 0.023413706570863724
+      - 0.02050827629864216
+      - 0.019188987091183662
+      - 0.019250325858592987
+      - 0.020510010421276093
+      - 0.02324914187192917
+      - 0.029709264636039734
+      - 0.04362701252102852
+    - - 0.05819616839289665
+      - 0.03703268617391586
+      - 0.02849455364048481
+      - 0.024454090744256973
+      - 0.022847507148981094
+      - 0.022960716858506203
+      - 0.024326277896761894
+      - 0.02822742983698845
+      - 0.037069227546453476
+      - 0.05793440714478493
+    - - 0.07897365093231201
+      - 0.047845907509326935
+      - 0.03650236129760742
+      - 0.03135063126683235
+      - 0.02905173972249031
+      - 0.029098352417349815
+      - 0.031217269599437714
+      - 0.03635559231042862
+      - 0.04743024334311485
+      - 0.07804588228464127
+    - - 0.10807689279317856
+      - 0.06142343580722809
+      - 0.045797474682331085
+      - 0.03916776180267334
+      - 0.03652940317988396
+      - 0.036655426025390625
+      - 0.03922472521662712
+      - 0.04610055312514305
+      - 0.06143658980727196
+      - 0.108110211789608
+    - - 0.16901232302188873
+      - 0.08753964304924011
+      - 0.06288869678974152
+      - 0.052444349974393845
+      - 0.048826828598976135
+      - 0.048830606043338776
+      - 0.05279090255498886
+      - 0.06273242831230164
+      - 0.08860890567302704
+      - 0.16893088817596436
+    - - 0.21686682105064392
+      - 0.10173869132995605
+      - 0.07078416645526886
+      - 0.05943812057375908
+      - 0.05511823669075966
+      - 0.05510764941573143
+      - 0.059048838913440704
+      - 0.07113521546125412
+      - 0.10214705765247345
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.10969996452331543
+      - 0.07300303131341934
+      - 0.06027829274535179
+      - 0.05591220781207085
+      - 0.0562170073390007
+      - 0.060457292944192886
+      - 0.07335260510444641
+      - 0.10954763740301132
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.15697304904460907
+      - 0.09414729475975037
+      - 0.07494665682315826
+      - 0.06860809028148651
+      - 0.06795067340135574
+      - 0.07364705950021744
+      - 0.09514938294887543
+      - 0.15866202116012573
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.20981577038764954
+      - 0.11571796983480453
+      - 0.08725402504205704
+      - 0.0777650773525238
+      - 0.07882175594568253
+      - 0.08667644113302231
+      - 0.11730527132749557
+      - 0.2171541005373001
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.15422652661800385
+      - 0.10682924836874008
+      - 0.09262736886739731
+      - 0.0915364995598793
+      - 0.10632889717817307
+      - 0.15230606496334076
+      - 0.2171541005373001
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.12121184915304184
+      - 0.0813453197479248
+      - 0.07052946090698242
+      - 0.07118656486272812
+      - 0.0808037593960762
+      - 0.12151522934436798
+      - 0.2171541005373001
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.1929340362548828
+      - 0.19345445930957794
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+    - - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+      - 0.2171541005373001
+    label_el:
+    - - 0.07645925879478455
+      - 0.05415530875325203
+      - 0.04635326936841011
+      - 0.040382955223321915
+      - 0.03887620195746422
+      - 0.03971371054649353
+      - 0.040825944393873215
+      - 0.0458369106054306
+      - 0.05314130336046219
+      - 0.07916542887687683
+    - - 0.06343991309404373
+      - 0.04550579562783241
+      - 0.03838072717189789
+      - 0.03364076837897301
+      - 0.03237729147076607
+      - 0.032682400196790695
+      - 0.034053485840559006
+      - 0.038404081016778946
+      - 0.044606007635593414
+      - 0.06468291580677032
+    - - 0.058291323482990265
+      - 0.04259638488292694
+      - 0.03597944229841232
+      - 0.03211994096636772
+      - 0.03044753521680832
+      - 0.030533844605088234
+      - 0.03233317285776138
+      - 0.03597124293446541
+      - 0.04190634563565254
+      - 0.05815490707755089
+    - - 0.034811098128557205
+      - 0.02568429335951805
+      - 0.0221247635781765
+      - 0.01973220892250538
+      - 0.018828917294740677
+      - 0.018801098689436913
+      - 0.01974974200129509
+      - 0.022079873830080032
+      - 0.025569219142198563
+      - 0.03459512069821358
+    - - 0.028346197679638863
+      - 0.02155243046581745
+      - 0.01872280053794384
+      - 0.01654352806508541
+      - 0.01577925495803356
+      - 0.015743518248200417
+      - 0.01655810885131359
+      - 0.018587937578558922
+      - 0.02176317572593689
+      - 0.02769983932375908
+    - - 0.03215233236551285
+      - 0.0246001984924078
+      - 0.02074519917368889
+      - 0.018182286992669106
+      - 0.017207304015755653
+      - 0.01726038008928299
+      - 0.01820462755858898
+      - 0.020575061440467834
+      - 0.02482563816010952
+      - 0.031273312866687775
+    - - 0.04093184322118759
+      - 0.02939239703118801
+      - 0.02395634539425373
+      - 0.020642349496483803
+      - 0.01929383911192417
+      - 0.019200170412659645
+      - 0.020455706864595413
+      - 0.023772107437253
+      - 0.029622482135891914
+      - 0.03953956812620163
+    - - 0.0540347695350647
+      - 0.03636206313967705
+      - 0.029081204906105995
+      - 0.02465265989303589
+      - 0.022846121340990067
+      - 0.022684210911393166
+      - 0.024567261338233948
+      - 0.028673525899648666
+      - 0.03680991753935814
+      - 0.05234018713235855
+    - - 0.07194166630506516
+      - 0.04687652364373207
+      - 0.03693787381052971
+      - 0.03142746537923813
+      - 0.029341300949454308
+      - 0.02894836664199829
+      - 0.031109314411878586
+      - 0.03697032481431961
+      - 0.0476098395884037
+      - 0.07021154463291168
+    - - 0.09611135721206665
+      - 0.06064349412918091
+      - 0.046914149075746536
+      - 0.03958916664123535
+      - 0.03680004924535751
+      - 0.03650675341486931
+      - 0.03933456540107727
+      - 0.04662513732910156
+      - 0.06101279333233833
+      - 0.09420359134674072
+    - - 0.1548505425453186
+      - 0.08682996779680252
+      - 0.06427716463804245
+      - 0.05303236469626427
+      - 0.04949825629591942
+      - 0.04881231114268303
+      - 0.05224228650331497
+      - 0.06334823369979858
+      - 0.087730273604393
+      - 0.1524420976638794
+    - - 0.2049662470817566
+      - 0.10200086236000061
+      - 0.07271239161491394
+      - 0.059313442558050156
+      - 0.055361781269311905
+      - 0.05507868900895119
+      - 0.05888954922556877
+      - 0.07209120690822601
+      - 0.10212959349155426
+      - 0.19755923748016357
+    - - 0.2049662470817566
+      - 0.10701962560415268
+      - 0.07435876131057739
+      - 0.06038590520620346
+      - 0.05631707236170769
+      - 0.055516619235277176
+      - 0.060455311089754105
+      - 0.0749272033572197
+      - 0.10848747193813324
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.1548505425453186
+      - 0.09806446731090546
+      - 0.07501625269651413
+      - 0.06868951767683029
+      - 0.06865964084863663
+      - 0.07582002878189087
+      - 0.0975220575928688
+      - 0.15762706100940704
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.2024639993906021
+      - 0.11842434853315353
+      - 0.08575178682804108
+      - 0.07795309275388718
+      - 0.07713574171066284
+      - 0.08685386180877686
+      - 0.11939655244350433
+      - 0.2049662470817566
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.16000044345855713
+      - 0.11013816297054291
+      - 0.09448562562465668
+      - 0.09410247206687927
+      - 0.10914403200149536
+      - 0.1626305729150772
+      - 0.2049662470817566
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.11962734907865524
+      - 0.08025451749563217
+      - 0.0695999264717102
+      - 0.0688784122467041
+      - 0.07968512177467346
+      - 0.12025180459022522
+      - 0.2049662470817566
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.19140085577964783
+      - 0.18707817792892456
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+    - - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+      - 0.2049662470817566
+    label_taup_1h0p:
+    - - 0.2514541447162628
+      - 0.19596706330776215
+      - 0.17519862949848175
+      - 0.16996517777442932
+      - 0.1666654348373413
+      - 0.16420461237430573
+      - 0.17145401239395142
+      - 0.17513591051101685
+      - 0.20161917805671692
+      - 0.25794926285743713
+    - - 0.12276210635900497
+      - 0.08895286917686462
+      - 0.0748325064778328
+      - 0.06340111047029495
+      - 0.05840650945901871
+      - 0.05867262929677963
+      - 0.06465773284435272
+      - 0.07626710832118988
+      - 0.09021566063165665
+      - 0.12297806888818741
+    - - 0.10672404617071152
+      - 0.07509664446115494
+      - 0.0585462711751461
+      - 0.050734031945466995
+      - 0.0479077473282814
+      - 0.04673190414905548
+      - 0.050363294780254364
+      - 0.05875011533498764
+      - 0.07500456273555756
+      - 0.10612226277589798
+    - - 0.07414086908102036
+      - 0.05189625173807144
+      - 0.038493528962135315
+      - 0.03307622671127319
+      - 0.03090178407728672
+      - 0.030207404866814613
+      - 0.0330851748585701
+      - 0.0384511835873127
+      - 0.05126556009054184
+      - 0.07364986836910248
+    - - 0.08089432120323181
+      - 0.052385155111551285
+      - 0.037739451974630356
+      - 0.03201581537723541
+      - 0.029735643416643143
+      - 0.02977001667022705
+      - 0.0315554104745388
+      - 0.03745061904191971
+      - 0.05114232003688812
+      - 0.0794108584523201
+    - - 0.10616830736398697
+      - 0.059507448226213455
+      - 0.040985822677612305
+      - 0.03438235819339752
+      - 0.032127223908901215
+      - 0.03192391246557236
+      - 0.03443801403045654
+      - 0.04148972034454346
+      - 0.06016596034169197
+      - 0.10471425950527191
+    - - 0.13221554458141327
+      - 0.06848561763763428
+      - 0.04662059247493744
+      - 0.036446429789066315
+      - 0.03273327648639679
+      - 0.03324025496840477
+      - 0.03650896996259689
+      - 0.0462024100124836
+      - 0.07018499076366425
+      - 0.1283993124961853
+    - - 0.17488554120063782
+      - 0.08999995142221451
+      - 0.05886319279670715
+      - 0.04337260499596596
+      - 0.03617697209119797
+      - 0.03695007041096687
+      - 0.04261711612343788
+      - 0.059019386768341064
+      - 0.09091968834400177
+      - 0.17937308549880981
+    - - 0.27382752299308777
+      - 0.12996806204319
+      - 0.08041573315858841
+      - 0.05793627351522446
+      - 0.050650011748075485
+      - 0.04943723604083061
+      - 0.05786091089248657
+      - 0.07934648543596268
+      - 0.12634384632110596
+      - 0.26153379678726196
+    - - 0.4218359887599945
+      - 0.16371019184589386
+      - 0.10000607371330261
+      - 0.06920234113931656
+      - 0.05929113179445267
+      - 0.05831601843237877
+      - 0.07041728496551514
+      - 0.10164722800254822
+      - 0.16757868230342865
+      - 0.38080134987831116
+    - - 0.6048575639724731
+      - 0.22061756253242493
+      - 0.12637649476528168
+      - 0.08927745372056961
+      - 0.0739503875374794
+      - 0.07317627221345901
+      - 0.08458595722913742
+      - 0.12924715876579285
+      - 0.2208166867494583
+      - 0.6004046201705933
+    - - 0.8688383102416992
+      - 0.3181597888469696
+      - 0.17175491154193878
+      - 0.11192354559898376
+      - 0.09397536516189575
+      - 0.09329452365636826
+      - 0.11406288295984268
+      - 0.16931824386119843
+      - 0.31982335448265076
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.47323957085609436
+      - 0.22984017431735992
+      - 0.14105786383152008
+      - 0.12028755247592926
+      - 0.11519061774015427
+      - 0.1417936086654663
+      - 0.23811665177345276
+      - 0.48981958627700806
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.7447941303253174
+      - 0.3251360356807709
+      - 0.19683416187763214
+      - 0.15267698466777802
+      - 0.1551457643508911
+      - 0.19464190304279327
+      - 0.3295149803161621
+      - 0.7436622381210327
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.4687066674232483
+      - 0.2660847008228302
+      - 0.19227102398872375
+      - 0.19077183306217194
+      - 0.252361923456192
+      - 0.48352745175361633
+      - 0.8688383102416992
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.6843772530555725
+      - 0.3363091051578522
+      - 0.24010291695594788
+      - 0.2359352707862854
+      - 0.33152422308921814
+      - 0.6712342500686646
+      - 0.8688383102416992
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.5756820440292358
+      - 0.3758293092250824
+      - 0.3834872543811798
+      - 0.5371347665786743
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+    - - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8169111013412476
+      - 0.830780565738678
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+    - - 0.0
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.8688383102416992
+      - 0.0
+    label_taup_1h1p:
+    - - 0.13942916691303253
+      - 0.10453813523054123
+      - 0.10443706065416336
+      - 0.11669870465993881
+      - 0.11300862580537796
+      - 0.11654479801654816
+      - 0.12084785848855972
+      - 0.10525120794773102
+      - 0.10400130599737167
+      - 0.1462024599313736
+    - - 0.08383788168430328
+      - 0.061161454766988754
+      - 0.05387088656425476
+      - 0.04921278730034828
+      - 0.04753313213586807
+      - 0.04757966846227646
+      - 0.05022475868463516
+      - 0.053050652146339417
+      - 0.060889456421136856
+      - 0.08538428694009781
+    - - 0.08067221194505692
+      - 0.057797737419605255
+      - 0.04671088233590126
+      - 0.041817955672740936
+      - 0.039410531520843506
+      - 0.03931807726621628
+      - 0.041159290820360184
+      - 0.04614545404911041
+      - 0.05730709061026573
+      - 0.08150415867567062
+    - - 0.05865565314888954
+      - 0.04089609161019325
+      - 0.03185751289129257
+      - 0.026821736246347427
+      - 0.025299955159425735
+      - 0.025318404659628868
+      - 0.02735690213739872
+      - 0.03182101622223854
+      - 0.04066173732280731
+      - 0.058574363589286804
+    - - 0.0648932009935379
+      - 0.042087722569704056
+      - 0.03214510530233383
+      - 0.026173235848546028
+      - 0.024139562621712685
+      - 0.02428368292748928
+      - 0.026310663670301437
+      - 0.03177628666162491
+      - 0.04230569303035736
+      - 0.06341162323951721
+    - - 0.08178531378507614
+      - 0.05015479028224945
+      - 0.03552348539233208
+      - 0.028924666345119476
+      - 0.02608824521303177
+      - 0.026087544858455658
+      - 0.028611376881599426
+      - 0.03554816544055939
+      - 0.04994092881679535
+      - 0.07886582612991333
+    - - 0.10016488283872604
+      - 0.057269953191280365
+      - 0.03840016573667526
+      - 0.030278777703642845
+      - 0.02725030481815338
+      - 0.027077244594693184
+      - 0.03006526455283165
+      - 0.038456372916698456
+      - 0.056220006197690964
+      - 0.09782631695270538
+    - - 0.1271383911371231
+      - 0.06799329817295074
+      - 0.04553162306547165
+      - 0.034541454166173935
+      - 0.03062601014971733
+      - 0.030201638117432594
+      - 0.03414711728692055
+      - 0.045923102647066116
+      - 0.06826066970825195
+      - 0.12601764500141144
+    - - 0.1941094547510147
+      - 0.0938592404127121
+      - 0.06145531311631203
+      - 0.044552918523550034
+      - 0.03915180638432503
+      - 0.03847159072756767
+      - 0.04394268989562988
+      - 0.06159939989447594
+      - 0.09604783356189728
+      - 0.18864741921424866
+    - - 0.28407368063926697
+      - 0.12397655099630356
+      - 0.07542091608047485
+      - 0.053680501878261566
+      - 0.04650529474020004
+      - 0.04644973948597908
+      - 0.05352974310517311
+      - 0.07431958615779877
+      - 0.1223537027835846
+      - 0.28423982858657837
+    - - 0.4271090626716614
+      - 0.16493046283721924
+      - 0.0933186337351799
+      - 0.06486722081899643
+      - 0.05664259195327759
+      - 0.05601268634200096
+      - 0.06566913425922394
+      - 0.09289947897195816
+      - 0.16365322470664978
+      - 0.41348370909690857
+    - - 0.6388880610466003
+      - 0.22249947488307953
+      - 0.12233830243349075
+      - 0.08155202865600586
+      - 0.07000577449798584
+      - 0.06948038935661316
+      - 0.08201300352811813
+      - 0.12333166599273682
+      - 0.22781817615032196
+      - 0.6374427676200867
+    - - 0.6388880610466003
+      - 0.3236019015312195
+      - 0.16365322470664978
+      - 0.10544529557228088
+      - 0.08601133525371552
+      - 0.08460401743650436
+      - 0.10404583066701889
+      - 0.1645953506231308
+      - 0.3361342251300812
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.4919534921646118
+      - 0.22899885475635529
+      - 0.13252899050712585
+      - 0.10856601595878601
+      - 0.1081673726439476
+      - 0.13345691561698914
+      - 0.2287294566631317
+      - 0.5023773312568665
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.31674817204475403
+      - 0.17461830377578735
+      - 0.13780835270881653
+      - 0.13879214227199554
+      - 0.17427396774291992
+      - 0.3153098225593567
+      - 0.6388880610466003
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.4408617317676544
+      - 0.22932299971580505
+      - 0.17226655781269073
+      - 0.16923747956752777
+      - 0.22486703097820282
+      - 0.43709540367126465
+      - 0.6388880610466003
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.3882189095020294
+      - 0.2732921540737152
+      - 0.2768727242946625
+      - 0.3846854865550995
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.5573968887329102
+      - 0.5661619901657104
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+    - - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.6388880610466003
+      - 0.0
+    label_taup_1h2p:
+    - - 0.1485222727060318
+      - 0.10166563838720322
+      - 0.10432159155607224
+      - 0.12292798608541489
+      - 0.12758435308933258
+      - 0.1351521611213684
+      - 0.1344018280506134
+      - 0.10641375929117203
+      - 0.10409730672836304
+      - 0.15042567253112793
+    - - 0.09369765222072601
+      - 0.06961648166179657
+      - 0.06171862408518791
+      - 0.06158125400543213
+      - 0.060343679040670395
+      - 0.06272811442613602
+      - 0.06230434030294418
+      - 0.06289106607437134
+      - 0.0687149316072464
+      - 0.09761746227741241
+    - - 0.08929140120744705
+      - 0.06449318677186966
+      - 0.054532747715711594
+      - 0.051155056804418564
+      - 0.04893204942345619
+      - 0.048962973058223724
+      - 0.05250014364719391
+      - 0.054771788418293
+      - 0.06570756435394287
+      - 0.08791331946849823
+    - - 0.060731593519449234
+      - 0.043991606682538986
+      - 0.03646296635270119
+      - 0.03165626525878906
+      - 0.03021891787648201
+      - 0.029500843957066536
+      - 0.03171069175004959
+      - 0.03634663671255112
+      - 0.0434829443693161
+      - 0.06157146394252777
+    - - 0.06317828595638275
+      - 0.043713588267564774
+      - 0.034767620265483856
+      - 0.028805390000343323
+      - 0.026861727237701416
+      - 0.02675042115151882
+      - 0.02856534533202648
+      - 0.033617958426475525
+      - 0.04358569532632828
+      - 0.06365589052438736
+    - - 0.07768673449754715
+      - 0.049418993294239044
+      - 0.03722691908478737
+      - 0.02992475964128971
+      - 0.026973962783813477
+      - 0.027677463367581367
+      - 0.030320633202791214
+      - 0.037287842482328415
+      - 0.050422560423612595
+      - 0.07409068197011948
+    - - 0.09073462337255478
+      - 0.05505985766649246
+      - 0.03896057978272438
+      - 0.030451735481619835
+      - 0.027916833758354187
+      - 0.02744021639227867
+      - 0.031064728274941444
+      - 0.039145637303590775
+      - 0.05438726395368576
+      - 0.08935318887233734
+    - - 0.11470124125480652
+      - 0.06411953270435333
+      - 0.04600856453180313
+      - 0.0336325503885746
+      - 0.030793074518442154
+      - 0.02986477129161358
+      - 0.03346691280603409
+      - 0.04500361159443855
+      - 0.06590881198644638
+      - 0.10853070765733719
+    - - 0.16454803943634033
+      - 0.08690735697746277
+      - 0.058600012212991714
+      - 0.04252811521291733
+      - 0.03812086209654808
+      - 0.03691823035478592
+      - 0.04304802045226097
+      - 0.05881355702877045
+      - 0.09111882001161575
+      - 0.16929462552070618
+    - - 0.2513602077960968
+      - 0.11098741739988327
+      - 0.07018410414457321
+      - 0.05212569981813431
+      - 0.04505595937371254
+      - 0.04387699067592621
+      - 0.05136534944176674
+      - 0.06941685825586319
+      - 0.11092384904623032
+      - 0.23618663847446442
+    - - 0.34127411246299744
+      - 0.14431673288345337
+      - 0.086191825568676
+      - 0.061807259917259216
+      - 0.054265353828668594
+      - 0.05228753760457039
+      - 0.060865193605422974
+      - 0.08373240381479263
+      - 0.14600305259227753
+      - 0.3514937460422516
+    - - 0.5160142183303833
+      - 0.19445084035396576
+      - 0.1055726632475853
+      - 0.07385054230690002
+      - 0.06565187871456146
+      - 0.06373968720436096
+      - 0.07256390154361725
+      - 0.11178819835186005
+      - 0.20028235018253326
+      - 0.515087902545929
+    - - 0.5160142183303833
+      - 0.2766757607460022
+      - 0.1399877518415451
+      - 0.09233518689870834
+      - 0.07708379626274109
+      - 0.07697656750679016
+      - 0.09194067865610123
+      - 0.1499597728252411
+      - 0.27608415484428406
+      - 0.5160142183303833
+    - - 0.5160142183303833
+      - 0.3940448462963104
+      - 0.2047283798456192
+      - 0.11812933534383774
+      - 0.09896425157785416
+      - 0.09652282297611237
+      - 0.117949478328228
+      - 0.18950395286083221
+      - 0.4090243875980377
+      - 0.5160142183303833
+    - - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.25805869698524475
+      - 0.15042567253112793
+      - 0.11446397006511688
+      - 0.11312677711248398
+      - 0.14442434906959534
+      - 0.26314273476600647
+      - 0.5160142183303833
+      - 0.5160142183303833
+    - - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.3394794762134552
+      - 0.181087464094162
+      - 0.13760073482990265
+      - 0.13567288219928741
+      - 0.17768168449401855
+      - 0.35213279724121094
+      - 0.5160142183303833
+      - 0.5160142183303833
+    - - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.2903643846511841
+      - 0.2151922732591629
+      - 0.2103998363018036
+      - 0.2860754132270813
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+    - - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.45948526263237
+      - 0.45894086360931396
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+    - - 0.0
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.5160142183303833
+      - 0.0
+    label_taup_3h0p:
+    - - 0.20197749137878418
+      - 0.2028103768825531
+      - 0.22968600690364838
+      - 0.25749483704566956
+      - 0.2412336766719818
+      - 0.25237470865249634
+      - 0.24332228302955627
+      - 0.2137165367603302
+      - 0.20270588994026184
+      - 0.19672606885433197
+    - - 0.10500457137823105
+      - 0.08921816945075989
+      - 0.0841069146990776
+      - 0.07757337391376495
+      - 0.07517235726118088
+      - 0.07598534971475601
+      - 0.08157829940319061
+      - 0.08573810011148453
+      - 0.08938030898571014
+      - 0.1071784645318985
+    - - 0.08869525045156479
+      - 0.06830766052007675
+      - 0.05977698788046837
+      - 0.054593052715063095
+      - 0.05260055139660835
+      - 0.05224434286355972
+      - 0.05591191351413727
+      - 0.05947877839207649
+      - 0.06978575885295868
+      - 0.08835664391517639
+    - - 0.05753065273165703
+      - 0.04187888652086258
+      - 0.03495798632502556
+      - 0.03143090754747391
+      - 0.02950964868068695
+      - 0.029438992962241173
+      - 0.031438443809747696
+      - 0.035092055797576904
+      - 0.04327930510044098
+      - 0.05695601552724838
+    - - 0.05640890821814537
+      - 0.04002565145492554
+      - 0.031046489253640175
+      - 0.026539774611592293
+      - 0.025420090183615685
+      - 0.025083012878894806
+      - 0.026572035625576973
+      - 0.030813073739409447
+      - 0.03980294615030289
+      - 0.05648989975452423
+    - - 0.067406564950943
+      - 0.04421307519078255
+      - 0.03145855292677879
+      - 0.026919275522232056
+      - 0.025300761684775352
+      - 0.025008080527186394
+      - 0.027140244841575623
+      - 0.03175818547606468
+      - 0.044267792254686356
+      - 0.0666981115937233
+    - - 0.08122463524341583
+      - 0.04721047729253769
+      - 0.03295796364545822
+      - 0.027343953028321266
+      - 0.024804700165987015
+      - 0.025507431477308273
+      - 0.027258703485131264
+      - 0.032825976610183716
+      - 0.046523842960596085
+      - 0.08132536709308624
+    - - 0.1118079423904419
+      - 0.05636042729020119
+      - 0.03764011710882187
+      - 0.030103452503681183
+      - 0.027389638125896454
+      - 0.027645597234368324
+      - 0.030516725033521652
+      - 0.0372164323925972
+      - 0.055840495973825455
+      - 0.10901971161365509
+    - - 0.16393838822841644
+      - 0.07463052123785019
+      - 0.05078112334012985
+      - 0.0382772795855999
+      - 0.03417162597179413
+      - 0.03466233238577843
+      - 0.038517095148563385
+      - 0.05050085112452507
+      - 0.07632436603307724
+      - 0.16517722606658936
+    - - 0.2530238628387451
+      - 0.10370377451181412
+      - 0.06486187130212784
+      - 0.04696253687143326
+      - 0.04137246310710907
+      - 0.040366485714912415
+      - 0.047182172536849976
+      - 0.06536835432052612
+      - 0.10741253942251205
+      - 0.24745416641235352
+    - - 0.3998497426509857
+      - 0.14046844840049744
+      - 0.08423295617103577
+      - 0.058349717408418655
+      - 0.048912499099969864
+      - 0.04973481595516205
+      - 0.05764021724462509
+      - 0.08630228787660599
+      - 0.14836053550243378
+      - 0.3761492669582367
+    - - 0.49040526151657104
+      - 0.19982333481311798
+      - 0.1126079335808754
+      - 0.07480078190565109
+      - 0.06363449990749359
+      - 0.06430007517337799
+      - 0.0753595381975174
+      - 0.1186884269118309
+      - 0.2010486125946045
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.28845465183258057
+      - 0.15594615042209625
+      - 0.09428519755601883
+      - 0.07943713665008545
+      - 0.07945317775011063
+      - 0.09240303188562393
+      - 0.14824873208999634
+      - 0.29384028911590576
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.4430767297744751
+      - 0.20375563204288483
+      - 0.12376600503921509
+      - 0.0960342064499855
+      - 0.10049863159656525
+      - 0.12013805657625198
+      - 0.20365017652511597
+      - 0.4532858729362488
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.2738010585308075
+      - 0.14785875380039215
+      - 0.11847399175167084
+      - 0.12139837443828583
+      - 0.15238270163536072
+      - 0.26838481426239014
+      - 0.49040526151657104
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.38051462173461914
+      - 0.1897069215774536
+      - 0.14648254215717316
+      - 0.15333285927772522
+      - 0.1977146416902542
+      - 0.3930590748786926
+      - 0.49040526151657104
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.3500463664531708
+      - 0.2308991402387619
+      - 0.23391923308372498
+      - 0.33428388833999634
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+    - - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.4591040015220642
+      - 0.4728992283344269
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+    - - 0.0
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.49040526151657104
+      - 0.0
+    label_taup_3h1p:
+    - - 0.16740189492702484
+      - 0.15271751582622528
+      - 0.16843250393867493
+      - 0.19055499136447906
+      - 0.18942411243915558
+      - 0.1972273588180542
+      - 0.20460230112075806
+      - 0.1518697589635849
+      - 0.15247434377670288
+      - 0.16887810826301575
+    - - 0.09963983297348022
+      - 0.08104433119297028
+      - 0.07903745770454407
+      - 0.07996149361133575
+      - 0.07557528465986252
+      - 0.07781704515218735
+      - 0.07884222269058228
+      - 0.08077088743448257
+      - 0.08576254546642303
+      - 0.10413690656423569
+    - - 0.08788791298866272
+      - 0.06888768821954727
+      - 0.06256379187107086
+      - 0.06068053096532822
+      - 0.056827228516340256
+      - 0.05808546021580696
+      - 0.05988360568881035
+      - 0.06309975683689117
+      - 0.0711660236120224
+      - 0.09269494563341141
+    - - 0.05899808183312416
+      - 0.04330794885754585
+      - 0.037171535193920135
+      - 0.03363325446844101
+      - 0.03150835260748863
+      - 0.032300181686878204
+      - 0.033340491354465485
+      - 0.03677184507250786
+      - 0.042977504432201385
+      - 0.05813836306333542
+    - - 0.058422137051820755
+      - 0.041604988276958466
+      - 0.03253062069416046
+      - 0.02805563434958458
+      - 0.02619088813662529
+      - 0.026616785675287247
+      - 0.027807140722870827
+      - 0.03259706497192383
+      - 0.04128212109208107
+      - 0.057997506111860275
+    - - 0.06936173886060715
+      - 0.044881127774715424
+      - 0.03234928473830223
+      - 0.027650557458400726
+      - 0.025069743394851685
+      - 0.025568459182977676
+      - 0.027448439970612526
+      - 0.0328768715262413
+      - 0.04557538405060768
+      - 0.06958857923746109
+    - - 0.08304759860038757
+      - 0.04911714792251587
+      - 0.03391318768262863
+      - 0.027928797528147697
+      - 0.02501734346151352
+      - 0.025636915117502213
+      - 0.027330920100212097
+      - 0.034240614622831345
+      - 0.04952360317111015
+      - 0.0813196450471878
+    - - 0.10825764387845993
+      - 0.057458072900772095
+      - 0.040539320558309555
+      - 0.03096826560795307
+      - 0.027928797528147697
+      - 0.027823297306895256
+      - 0.031023450195789337
+      - 0.039429228752851486
+      - 0.05827990174293518
+      - 0.10010860860347748
+    - - 0.1593242734670639
+      - 0.0765724778175354
+      - 0.05171692371368408
+      - 0.039372485131025314
+      - 0.03546439856290817
+      - 0.034568190574645996
+      - 0.03864939883351326
+      - 0.054560620337724686
+      - 0.0777854472398758
+      - 0.15382149815559387
+    - - 0.2352675199508667
+      - 0.09938129782676697
+      - 0.06409229338169098
+      - 0.048397213220596313
+      - 0.041335586458444595
+      - 0.04153280705213547
+      - 0.047461651265621185
+      - 0.06581022590398788
+      - 0.10436390340328217
+      - 0.22907626628875732
+    - - 0.3273636996746063
+      - 0.13180163502693176
+      - 0.07835833728313446
+      - 0.05655870586633682
+      - 0.04905424267053604
+      - 0.04825088754296303
+      - 0.05721773952245712
+      - 0.07675662636756897
+      - 0.13063286244869232
+      - 0.3103853464126587
+    - - 0.5550949573516846
+      - 0.18812157213687897
+      - 0.10482088476419449
+      - 0.0714314728975296
+      - 0.061361026018857956
+      - 0.06027943640947342
+      - 0.07025229930877686
+      - 0.10442081838846207
+      - 0.18308581411838531
+      - 0.45815253257751465
+    - - 0.5823559761047363
+      - 0.2619805335998535
+      - 0.13345488905906677
+      - 0.08915631473064423
+      - 0.07405559718608856
+      - 0.07312247157096863
+      - 0.09059023857116699
+      - 0.14060775935649872
+      - 0.25705739855766296
+      - 0.5823559761047363
+    - - 0.5823559761047363
+      - 0.383015513420105
+      - 0.19036558270454407
+      - 0.1112770214676857
+      - 0.09076197445392609
+      - 0.09106408059597015
+      - 0.11285077780485153
+      - 0.1872021108865738
+      - 0.36065492033958435
+      - 0.5823559761047363
+    - - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.2526487708091736
+      - 0.14196276664733887
+      - 0.11018858850002289
+      - 0.10686817765235901
+      - 0.13669362664222717
+      - 0.24871137738227844
+      - 0.5823559761047363
+      - 0.5823559761047363
+    - - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.3279242515563965
+      - 0.16382187604904175
+      - 0.12750184535980225
+      - 0.12276139110326767
+      - 0.1625702679157257
+      - 0.3240402340888977
+      - 0.5823559761047363
+      - 0.5823559761047363
+    - - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.26821815967559814
+      - 0.18118047714233398
+      - 0.19621697068214417
+      - 0.27164220809936523
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+    - - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.4208962023258209
+      - 0.4227544367313385
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+    - - 0.0
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+      - 0.5823559761047363
+    label_taum_1h0p:
+    - - 0.2814202606678009
+      - 0.21986357867717743
+      - 0.19487303495407104
+      - 0.18460480868816376
+      - 0.16976124048233032
+      - 0.1728566288948059
+      - 0.18306702375411987
+      - 0.1949516087770462
+      - 0.20857636630535126
+      - 0.28950896859169006
+    - - 0.1366148591041565
+      - 0.09741688519716263
+      - 0.08338737487792969
+      - 0.06584230065345764
+      - 0.06282224506139755
+      - 0.06325788050889969
+      - 0.06833639740943909
+      - 0.08292967826128006
+      - 0.10110414028167725
+      - 0.1368856281042099
+    - - 0.11516913026571274
+      - 0.0813528522849083
+      - 0.06405404955148697
+      - 0.052775897085666656
+      - 0.048723168671131134
+      - 0.04866432026028633
+      - 0.053305402398109436
+      - 0.06484442204236984
+      - 0.08012595027685165
+      - 0.1150868833065033
+    - - 0.08028562366962433
+      - 0.05563636124134064
+      - 0.04115423932671547
+      - 0.03440893813967705
+      - 0.03187920153141022
+      - 0.03148271143436432
+      - 0.0348680205643177
+      - 0.0408620685338974
+      - 0.05611420422792435
+      - 0.07996692508459091
+    - - 0.08445065468549728
+      - 0.05571329966187477
+      - 0.04071410372853279
+      - 0.032773859798908234
+      - 0.03068545274436474
+      - 0.030397986993193626
+      - 0.03281612694263458
+      - 0.04079999774694443
+      - 0.055406831204891205
+      - 0.08586041629314423
+    - - 0.11304185539484024
+      - 0.06210404634475708
+      - 0.04324121028184891
+      - 0.035967860370874405
+      - 0.03299304097890854
+      - 0.03245050087571144
+      - 0.035765647888183594
+      - 0.04353714734315872
+      - 0.06330758333206177
+      - 0.11137525737285614
+    - - 0.1387317031621933
+      - 0.07354426383972168
+      - 0.04843033105134964
+      - 0.038096290081739426
+      - 0.034187525510787964
+      - 0.033776722848415375
+      - 0.037911079823970795
+      - 0.047727540135383606
+      - 0.07260549813508987
+      - 0.14087411761283875
+    - - 0.18616865575313568
+      - 0.09254976361989975
+      - 0.06203233078122139
+      - 0.044262565672397614
+      - 0.03771883249282837
+      - 0.037751227617263794
+      - 0.04515550658106804
+      - 0.06151145324110985
+      - 0.09223197400569916
+      - 0.17788079380989075
+    - - 0.28323376178741455
+      - 0.12643305957317352
+      - 0.08489552140235901
+      - 0.06060165539383888
+      - 0.05079638585448265
+      - 0.05166488513350487
+      - 0.06048792973160744
+      - 0.082015261054039
+      - 0.13063496351242065
+      - 0.2691982090473175
+    - - 0.39148178696632385
+      - 0.16851864755153656
+      - 0.104108527302742
+      - 0.07196784764528275
+      - 0.061652638018131256
+      - 0.06054094806313515
+      - 0.07172229140996933
+      - 0.10260611027479172
+      - 0.17181237041950226
+      - 0.3794976472854614
+    - - 0.6166836619377136
+      - 0.2196637988090515
+      - 0.1268310546875
+      - 0.08768226206302643
+      - 0.07406250387430191
+      - 0.0733657032251358
+      - 0.09076027572154999
+      - 0.12600469589233398
+      - 0.226666659116745
+      - 0.5602317452430725
+    - - 0.8618181943893433
+      - 0.3095262348651886
+      - 0.17304222285747528
+      - 0.11259431391954422
+      - 0.09539858251810074
+      - 0.09534214437007904
+      - 0.11489544063806534
+      - 0.16665977239608765
+      - 0.32018542289733887
+      - 0.7925901412963867
+    - - 0.8999999761581421
+      - 0.4271024763584137
+      - 0.232666015625
+      - 0.1429145634174347
+      - 0.11732103675603867
+      - 0.11780701577663422
+      - 0.14174142479896545
+      - 0.2282719612121582
+      - 0.4489136338233948
+      - 0.8999999761581421
+    - - 0.8999999761581421
+      - 0.6437816619873047
+      - 0.30484238266944885
+      - 0.1842530369758606
+      - 0.15261363983154297
+      - 0.15108750760555267
+      - 0.18638396263122559
+      - 0.3044584393501282
+      - 0.6344881653785706
+      - 0.8999999761581421
+    - - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.41859740018844604
+      - 0.22837978601455688
+      - 0.1897488236427307
+      - 0.18819774687290192
+      - 0.24198196828365326
+      - 0.4278584122657776
+      - 0.8999999761581421
+      - 0.8999999761581421
+    - - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.5925000309944153
+      - 0.31212395429611206
+      - 0.24307693541049957
+      - 0.22957265377044678
+      - 0.3085385859012604
+      - 0.6081509590148926
+      - 0.8999999761581421
+      - 0.8999999761581421
+    - - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.5755714178085327
+      - 0.380393385887146
+      - 0.3676654100418091
+      - 0.5148882269859314
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+    - - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.7798064351081848
+      - 0.7848701477050781
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+    - - 0.0
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.8999999761581421
+      - 0.0
+    label_taum_1h1p:
+    - - 0.16424289345741272
+      - 0.11945121735334396
+      - 0.11593501269817352
+      - 0.12408668547868729
+      - 0.11939234286546707
+      - 0.12664952874183655
+      - 0.1310521960258484
+      - 0.1157134622335434
+      - 0.11825568228960037
+      - 0.1680605262517929
+    - - 0.0972466990351677
+      - 0.06868000328540802
+      - 0.05865179002285004
+      - 0.05288008227944374
+      - 0.050480324774980545
+      - 0.05106835439801216
+      - 0.054608773440122604
+      - 0.05973297357559204
+      - 0.06984852254390717
+      - 0.09770762920379639
+    - - 0.09154090285301208
+      - 0.06372041255235672
+      - 0.0508512482047081
+      - 0.043652575463056564
+      - 0.041142672300338745
+      - 0.04176519066095352
+      - 0.044005490839481354
+      - 0.051755812019109726
+      - 0.06355322152376175
+      - 0.0917576402425766
+    - - 0.06510340422391891
+      - 0.04452113062143326
+      - 0.034298669546842575
+      - 0.02862495556473732
+      - 0.026503687724471092
+      - 0.026661958545446396
+      - 0.02919686958193779
+      - 0.034274403005838394
+      - 0.04497580975294113
+      - 0.06460417807102203
+    - - 0.0703250989317894
+      - 0.046180594712495804
+      - 0.03431081771850586
+      - 0.02767801471054554
+      - 0.025501247495412827
+      - 0.02525332011282444
+      - 0.027608606964349747
+      - 0.03406951576471329
+      - 0.04660039767622948
+      - 0.06880681961774826
+    - - 0.08928844332695007
+      - 0.053691815584897995
+      - 0.03840602934360504
+      - 0.030119027942419052
+      - 0.027189450338482857
+      - 0.027030909433960915
+      - 0.030445553362369537
+      - 0.03843650221824646
+      - 0.053531620651483536
+      - 0.08734055608510971
+    - - 0.10395587980747223
+      - 0.06185716763138771
+      - 0.041873492300510406
+      - 0.031866494566202164
+      - 0.02829640358686447
+      - 0.028348565101623535
+      - 0.031876977533102036
+      - 0.041289955377578735
+      - 0.06180192902684212
+      - 0.1048445925116539
+    - - 0.13839006423950195
+      - 0.07399899512529373
+      - 0.05006298050284386
+      - 0.03687978908419609
+      - 0.0321328230202198
+      - 0.03208068758249283
+      - 0.03625870496034622
+      - 0.04937414824962616
+      - 0.07423713803291321
+      - 0.1328127384185791
+    - - 0.19862009584903717
+      - 0.09997615218162537
+      - 0.06517785787582397
+      - 0.046762336045503616
+      - 0.04142412543296814
+      - 0.0404893197119236
+      - 0.04698685184121132
+      - 0.06578414142131805
+      - 0.10164382308721542
+      - 0.20005550980567932
+    - - 0.28973349928855896
+      - 0.13382166624069214
+      - 0.08037737756967545
+      - 0.05655316635966301
+      - 0.04901694133877754
+      - 0.04859895631670952
+      - 0.05702582746744156
+      - 0.08031074702739716
+      - 0.13121192157268524
+      - 0.27361446619033813
+    - - 0.40002843737602234
+      - 0.16938266158103943
+      - 0.09868291765451431
+      - 0.06889979541301727
+      - 0.05892287939786911
+      - 0.05861630290746689
+      - 0.0681438222527504
+      - 0.10020362585783005
+      - 0.16779854893684387
+      - 0.4062343239784241
+    - - 0.6045040488243103
+      - 0.22674207389354706
+      - 0.12812337279319763
+      - 0.08414702862501144
+      - 0.07191188633441925
+      - 0.07145577669143677
+      - 0.08461736887693405
+      - 0.12641817331314087
+      - 0.2256331741809845
+      - 0.6025304198265076
+    - - 0.6045040488243103
+      - 0.3073822557926178
+      - 0.16346698999404907
+      - 0.10636391490697861
+      - 0.08823138475418091
+      - 0.0883118063211441
+      - 0.10417944937944412
+      - 0.1606481373310089
+      - 0.3103359639644623
+      - 0.6045040488243103
+    - - 0.6045040488243103
+      - 0.4600517153739929
+      - 0.21444641053676605
+      - 0.1330133080482483
+      - 0.10941489040851593
+      - 0.10960054397583008
+      - 0.13400675356388092
+      - 0.21444641053676605
+      - 0.4391971528530121
+      - 0.6045040488243103
+    - - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.2874129116535187
+      - 0.16991737484931946
+      - 0.13458381593227386
+      - 0.13535469770431519
+      - 0.16982801258563995
+      - 0.28843969106674194
+      - 0.6045040488243103
+      - 0.6045040488243103
+    - - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.38941672444343567
+      - 0.21473157405853271
+      - 0.1691461056470871
+      - 0.1665581613779068
+      - 0.21645863354206085
+      - 0.38538938760757446
+      - 0.6045040488243103
+      - 0.6045040488243103
+    - - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.37582188844680786
+      - 0.2756383717060089
+      - 0.2588482201099396
+      - 0.37178391218185425
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+    - - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.5461493134498596
+      - 0.5308870673179626
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+    - - 0.0
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.6045040488243103
+      - 0.0
+    label_taum_1h2p:
+    - - 0.16267405450344086
+      - 0.12055036425590515
+      - 0.11950014531612396
+      - 0.13663232326507568
+      - 0.14063474535942078
+      - 0.14379388093948364
+      - 0.14438852667808533
+      - 0.11589422821998596
+      - 0.11731015890836716
+      - 0.16904641687870026
+    - - 0.11246660351753235
+      - 0.07930485904216766
+      - 0.07049807161092758
+      - 0.06665627658367157
+      - 0.06415123492479324
+      - 0.06649471819400787
+      - 0.0692773163318634
+      - 0.07117743790149689
+      - 0.07971636950969696
+      - 0.11447793245315552
+    - - 0.10149932652711868
+      - 0.07084919512271881
+      - 0.05999273061752319
+      - 0.05511961504817009
+      - 0.05214138701558113
+      - 0.05223357304930687
+      - 0.05478155240416527
+      - 0.05950015038251877
+      - 0.07361960411071777
+      - 0.10033266991376877
+    - - 0.07047219574451447
+      - 0.04829290509223938
+      - 0.03895663470029831
+      - 0.03340640664100647
+      - 0.031324807554483414
+      - 0.031299278140068054
+      - 0.034024935215711594
+      - 0.0387522391974926
+      - 0.049711812287569046
+      - 0.06647169589996338
+    - - 0.07090150564908981
+      - 0.04746335372328758
+      - 0.03643960878252983
+      - 0.030547479167580605
+      - 0.027742955833673477
+      - 0.02735760807991028
+      - 0.030208703130483627
+      - 0.0359787791967392
+      - 0.04762816056609154
+      - 0.06856005638837814
+    - - 0.0838954746723175
+      - 0.05455588921904564
+      - 0.03971393406391144
+      - 0.031289082020521164
+      - 0.028129007667303085
+      - 0.02813931182026863
+      - 0.030993662774562836
+      - 0.04003267362713814
+      - 0.055001210421323776
+      - 0.08029969781637192
+    - - 0.09535090625286102
+      - 0.060848139226436615
+      - 0.04253305494785309
+      - 0.03247429430484772
+      - 0.028743712231516838
+      - 0.02883434295654297
+      - 0.031899791210889816
+      - 0.04195231944322586
+      - 0.059712912887334824
+      - 0.09406648576259613
+    - - 0.12306102365255356
+      - 0.06955332309007645
+      - 0.04987967014312744
+      - 0.03627783805131912
+      - 0.03176523745059967
+      - 0.03121279552578926
+      - 0.03523609787225723
+      - 0.04895149916410446
+      - 0.0715353786945343
+      - 0.11861441284418106
+    - - 0.17789414525032043
+      - 0.09324434399604797
+      - 0.06339938193559647
+      - 0.045766618102788925
+      - 0.03901202976703644
+      - 0.03808363527059555
+      - 0.04480035603046417
+      - 0.06457187235355377
+      - 0.09618669003248215
+      - 0.17324016988277435
+    - - 0.2444770634174347
+      - 0.12329805642366409
+      - 0.07838234305381775
+      - 0.056142885237932205
+      - 0.04738722741603851
+      - 0.04676978290081024
+      - 0.05446305498480797
+      - 0.0767226293683052
+      - 0.12539127469062805
+      - 0.25301283597946167
+    - - 0.3478926122188568
+      - 0.15168778598308563
+      - 0.09290601313114166
+      - 0.06652926653623581
+      - 0.05684082582592964
+      - 0.05663129687309265
+      - 0.06661003082990646
+      - 0.09281620383262634
+      - 0.16157907247543335
+      - 0.33138349652290344
+    - - 0.4800918400287628
+      - 0.191557839512825
+      - 0.11551082134246826
+      - 0.07974947243928909
+      - 0.06778565049171448
+      - 0.06986964493989944
+      - 0.07835036516189575
+      - 0.11403606086969376
+      - 0.1893853396177292
+      - 0.503372848033905
+    - - 0.5119273066520691
+      - 0.2747306823730469
+      - 0.1429908722639084
+      - 0.09464599937200546
+      - 0.07969982922077179
+      - 0.0814923495054245
+      - 0.09427429735660553
+      - 0.14636945724487305
+      - 0.25794053077697754
+      - 0.5119273066520691
+    - - 0.5119273066520691
+      - 0.3718039095401764
+      - 0.18845607340335846
+      - 0.11533737182617188
+      - 0.09863211959600449
+      - 0.09628314524888992
+      - 0.11846806108951569
+      - 0.17674803733825684
+      - 0.3682391941547394
+      - 0.5119273066520691
+    - - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.223428413271904
+      - 0.14235487580299377
+      - 0.11589422821998596
+      - 0.11458038538694382
+      - 0.14283134043216705
+      - 0.2356278896331787
+      - 0.5119273066520691
+      - 0.5119273066520691
+    - - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.3065231144428253
+      - 0.16874931752681732
+      - 0.13702228665351868
+      - 0.13157705962657928
+      - 0.1651218682527542
+      - 0.3148142993450165
+      - 0.5119273066520691
+      - 0.5119273066520691
+    - - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.26524409651756287
+      - 0.20582716166973114
+      - 0.19756865501403809
+      - 0.29589635133743286
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+    - - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.4215954542160034
+      - 0.4320286512374878
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+    - - 0.0
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.5119273066520691
+      - 0.0
+    label_taum_3h0p:
+    - - 0.22846153378486633
+      - 0.22243905067443848
+      - 0.2562086880207062
+      - 0.26974019408226013
+      - 0.26085761189460754
+      - 0.2523772120475769
+      - 0.271627813577652
+      - 0.2410907745361328
+      - 0.23439380526542664
+      - 0.2314586341381073
+    - - 0.12183181196451187
+      - 0.10124052315950394
+      - 0.09335164725780487
+      - 0.08449197560548782
+      - 0.08176872879266739
+      - 0.08058048039674759
+      - 0.08691360056400299
+      - 0.09816796332597733
+      - 0.10249700397253036
+      - 0.12436915934085846
+    - - 0.10032466799020767
+      - 0.07716822624206543
+      - 0.0664878636598587
+      - 0.06022593379020691
+      - 0.05521424487233162
+      - 0.055127985775470734
+      - 0.05859845131635666
+      - 0.06574460119009018
+      - 0.0780213326215744
+      - 0.10087217390537262
+    - - 0.06373663991689682
+      - 0.04716356471180916
+      - 0.038268376141786575
+      - 0.0333639457821846
+      - 0.031172193586826324
+      - 0.031032629311084747
+      - 0.03290574252605438
+      - 0.038114309310913086
+      - 0.04710061103105545
+      - 0.06322790682315826
+    - - 0.06089679151773453
+      - 0.043335504829883575
+      - 0.032435543835163116
+      - 0.02824186161160469
+      - 0.02625870145857334
+      - 0.02614022232592106
+      - 0.027850767597556114
+      - 0.03263736143708229
+      - 0.043190848082304
+      - 0.062025588005781174
+    - - 0.07221509516239166
+      - 0.0467151440680027
+      - 0.03376445174217224
+      - 0.028217224404215813
+      - 0.02552987076342106
+      - 0.02559552527964115
+      - 0.028415530920028687
+      - 0.03392380475997925
+      - 0.04720945283770561
+      - 0.07221509516239166
+    - - 0.08654540777206421
+      - 0.05121469125151634
+      - 0.034542687237262726
+      - 0.02842177264392376
+      - 0.02569209411740303
+      - 0.02584778144955635
+      - 0.02833256684243679
+      - 0.03506062179803848
+      - 0.04986589774489403
+      - 0.08491712063550949
+    - - 0.1201721802353859
+      - 0.06038521230220795
+      - 0.039806801825761795
+      - 0.030995460227131844
+      - 0.028528306633234024
+      - 0.028515731915831566
+      - 0.03163972496986389
+      - 0.04041188210248947
+      - 0.06121370941400528
+      - 0.11987527459859848
+    - - 0.18317891657352448
+      - 0.08398012071847916
+      - 0.05451631173491478
+      - 0.04029441997408867
+      - 0.03611426800489426
+      - 0.03543834015727043
+      - 0.04024011641740799
+      - 0.05515148490667343
+      - 0.08502872288227081
+      - 0.1775645613670349
+    - - 0.26033276319503784
+      - 0.1146017536520958
+      - 0.07197406888008118
+      - 0.04893546923995018
+      - 0.04296138510107994
+      - 0.04249109327793121
+      - 0.05051485449075699
+      - 0.07048413902521133
+      - 0.1172323003411293
+      - 0.2563779056072235
+    - - 0.3703779876232147
+      - 0.15702109038829803
+      - 0.09058486670255661
+      - 0.0625452995300293
+      - 0.052052587270736694
+      - 0.05208052322268486
+      - 0.06340348720550537
+      - 0.09016402810811996
+      - 0.15263709425926208
+      - 0.3710861802101135
+    - - 0.5295445322990417
+      - 0.20237545669078827
+      - 0.1204705536365509
+      - 0.07654429972171783
+      - 0.06745848804712296
+      - 0.06620436161756516
+      - 0.07806840538978577
+      - 0.11566035449504852
+      - 0.20397064089775085
+      - 0.5231214761734009
+    - - 0.5295445322990417
+      - 0.26806363463401794
+      - 0.1499251276254654
+      - 0.09653224796056747
+      - 0.08089957386255264
+      - 0.0805136188864708
+      - 0.0985918641090393
+      - 0.14592336118221283
+      - 0.2804596424102783
+      - 0.5295445322990417
+    - - 0.5295445322990417
+      - 0.39287057518959045
+      - 0.18915991485118866
+      - 0.12137465924024582
+      - 0.09998870640993118
+      - 0.09955274313688278
+      - 0.11748067289590836
+      - 0.189993217587471
+      - 0.3960776925086975
+      - 0.5295445322990417
+    - - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.24079164862632751
+      - 0.14929082989692688
+      - 0.11794473975896835
+      - 0.11583292484283447
+      - 0.13877588510513306
+      - 0.24770653247833252
+      - 0.5295445322990417
+      - 0.5295445322990417
+    - - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.3425914943218231
+      - 0.18146617710590363
+      - 0.13818304240703583
+      - 0.1400274634361267
+      - 0.18240420520305634
+      - 0.33375421166419983
+      - 0.5295445322990417
+      - 0.5295445322990417
+    - - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.32105553150177
+      - 0.2303597331047058
+      - 0.22243905067443848
+      - 0.3226567804813385
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+    - - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.45504823327064514
+      - 0.4722094237804413
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+    - - 0.0
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.5295445322990417
+      - 0.0
+    label_taum_3h1p:
+    - - 0.2060771882534027
+      - 0.17879104614257812
+      - 0.19309432804584503
+      - 0.22531425952911377
+      - 0.21312838792800903
+      - 0.2150270938873291
+      - 0.22478966414928436
+      - 0.18986660242080688
+      - 0.17194508016109467
+      - 0.20390108227729797
+    - - 0.12205710262060165
+      - 0.09451509267091751
+      - 0.09177487343549728
+      - 0.08968617022037506
+      - 0.08532670140266418
+      - 0.08773026615381241
+      - 0.08857537806034088
+      - 0.08869744092226028
+      - 0.09781880676746368
+      - 0.11948906630277634
+    - - 0.10921625047922134
+      - 0.08150878548622131
+      - 0.06991105526685715
+      - 0.06617351621389389
+      - 0.06060713157057762
+      - 0.06333037465810776
+      - 0.06470989435911179
+      - 0.06608293205499649
+      - 0.07923443615436554
+      - 0.10685905814170837
+    - - 0.06823120266199112
+      - 0.05048217624425888
+      - 0.04146324470639229
+      - 0.0362754724919796
+      - 0.03451811522245407
+      - 0.034395139664411545
+      - 0.03729129582643509
+      - 0.04029514268040657
+      - 0.048921793699264526
+      - 0.06530075520277023
+    - - 0.0659700483083725
+      - 0.045401908457279205
+      - 0.03499987721443176
+      - 0.02973884530365467
+      - 0.027671871706843376
+      - 0.027498479932546616
+      - 0.030170988291502
+      - 0.0353006087243557
+      - 0.0470617413520813
+      - 0.06381173431873322
+    - - 0.07862146943807602
+      - 0.04943531006574631
+      - 0.03603850677609444
+      - 0.02914191409945488
+      - 0.027139049023389816
+      - 0.027783356606960297
+      - 0.02926114946603775
+      - 0.0360586978495121
+      - 0.04827358201146126
+      - 0.07599146664142609
+    - - 0.08997871726751328
+      - 0.0537119135260582
+      - 0.037169262766838074
+      - 0.029327813535928726
+      - 0.026086777448654175
+      - 0.026303544640541077
+      - 0.029119940474629402
+      - 0.037428636103868484
+      - 0.05507539212703705
+      - 0.08881983160972595
+    - - 0.1125258356332779
+      - 0.06603772938251495
+      - 0.04261627048254013
+      - 0.03289511427283287
+      - 0.02970224991440773
+      - 0.029624780640006065
+      - 0.03431567922234535
+      - 0.0427388958632946
+      - 0.06351786851882935
+      - 0.11148633062839508
+    - - 0.177313432097435
+      - 0.08833225816488266
+      - 0.057315025478601456
+      - 0.04220641031861305
+      - 0.037240948528051376
+      - 0.03723376989364624
+      - 0.04193145036697388
+      - 0.057485658675432205
+      - 0.08801017701625824
+      - 0.16820064187049866
+    - - 0.26164543628692627
+      - 0.11405453085899353
+      - 0.0702672153711319
+      - 0.05174017325043678
+      - 0.043696384876966476
+      - 0.04448153078556061
+      - 0.0502849817276001
+      - 0.07151641696691513
+      - 0.11398720741271973
+      - 0.2510979473590851
+    - - 0.35495278239250183
+      - 0.14033018052577972
+      - 0.08821120858192444
+      - 0.06155381724238396
+      - 0.054331548511981964
+      - 0.05186524987220764
+      - 0.061319250613451004
+      - 0.08616435527801514
+      - 0.14991794526576996
+      - 0.34791770577430725
+    - - 0.47795626521110535
+      - 0.1807999163866043
+      - 0.11187388747930527
+      - 0.07779787480831146
+      - 0.06494931876659393
+      - 0.06554457545280457
+      - 0.07868554443120956
+      - 0.11555615067481995
+      - 0.19309432804584503
+      - 0.4809921979904175
+    - - 0.4809921979904175
+      - 0.2375083863735199
+      - 0.14033018052577972
+      - 0.0921691283583641
+      - 0.0772995725274086
+      - 0.07754792273044586
+      - 0.09138396382331848
+      - 0.1402282565832138
+      - 0.26235640048980713
+      - 0.4809921979904175
+    - - 0.4809921979904175
+      - 0.3756698668003082
+      - 0.17634184658527374
+      - 0.11232944577932358
+      - 0.09578091651201248
+      - 0.10025665163993835
+      - 0.11278873682022095
+      - 0.18425031006336212
+      - 0.35626259446144104
+      - 0.4809921979904175
+    - - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.22220291197299957
+      - 0.13694632053375244
+      - 0.11604226380586624
+      - 0.10933993756771088
+      - 0.1377277672290802
+      - 0.22987419366836548
+      - 0.47443321347236633
+      - 0.4809921979904175
+    - - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.27944186329841614
+      - 0.1564783751964569
+      - 0.12244407832622528
+      - 0.1205332800745964
+      - 0.15324945747852325
+      - 0.29706817865371704
+      - 0.4809921979904175
+      - 0.4809921979904175
+    - - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.2540714740753174
+      - 0.19309432804584503
+      - 0.19232502579689026
+      - 0.2659701406955719
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+    - - 0.0
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4048099219799042
+      - 0.4225258529186249
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.0
+    - - 0.0
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.4809921979904175
+      - 0.0
+    label_b:
+    - - 0.052842892706394196
+      - 0.03775966912508011
+      - 0.032713882625103
+      - 0.030697999522089958
+      - 0.030139515176415443
+      - 0.030150126665830612
+      - 0.030721602961421013
+      - 0.03238244354724884
+      - 0.037958774715662
+      - 0.052905287593603134
+    - - 0.05397195741534233
+      - 0.03749683499336243
+      - 0.03126819059252739
+      - 0.028687749058008194
+      - 0.027772273868322372
+      - 0.027779029682278633
+      - 0.028768830001354218
+      - 0.030710585415363312
+      - 0.03777662664651871
+      - 0.053602661937475204
+    - - 0.05476853623986244
+      - 0.03732838109135628
+      - 0.030061090365052223
+      - 0.027201246470212936
+      - 0.02585729956626892
+      - 0.025899484753608704
+      - 0.02732963301241398
+      - 0.029854990541934967
+      - 0.03743564337491989
+      - 0.05491029843688011
+    - - 0.03607701510190964
+      - 0.02378791570663452
+      - 0.018379000946879387
+      - 0.01619291864335537
+      - 0.015153348445892334
+      - 0.015208241529762745
+      - 0.016207369044423103
+      - 0.018294772133231163
+      - 0.02376362681388855
+      - 0.03637123107910156
+    - - 0.0330134816467762
+      - 0.020629163831472397
+      - 0.015240050852298737
+      - 0.012804962694644928
+      - 0.011905238963663578
+      - 0.011898238211870193
+      - 0.01284527312964201
+      - 0.015195131301879883
+      - 0.02057931199669838
+      - 0.03285489231348038
+    - - 0.03505614027380943
+      - 0.020554520189762115
+      - 0.014491195790469646
+      - 0.011632278561592102
+      - 0.010558872483670712
+      - 0.010542944073677063
+      - 0.011585140600800514
+      - 0.014457067474722862
+      - 0.020506255328655243
+      - 0.03475777432322502
+    - - 0.03802742063999176
+      - 0.02090412937104702
+      - 0.013977548107504845
+      - 0.010612113401293755
+      - 0.009543757885694504
+      - 0.009525081142783165
+      - 0.01062340009957552
+      - 0.013971560634672642
+      - 0.020893197506666183
+      - 0.03748217597603798
+    - - 0.04823759198188782
+      - 0.0245464239269495
+      - 0.0157570019364357
+      - 0.011421479284763336
+      - 0.01007663644850254
+      - 0.010022982023656368
+      - 0.011397910304367542
+      - 0.01582403853535652
+      - 0.024564029648900032
+      - 0.0470161959528923
+    - - 0.07550447434186935
+      - 0.035785652697086334
+      - 0.022129418328404427
+      - 0.015233224257826805
+      - 0.013169355690479279
+      - 0.013150500133633614
+      - 0.01519787684082985
+      - 0.02230101078748703
+      - 0.03560361638665199
+      - 0.07354475557804108
+    - - 0.1226341649889946
+      - 0.05203254893422127
+      - 0.031082503497600555
+      - 0.020350277423858643
+      - 0.017261318862438202
+      - 0.017255913466215134
+      - 0.020300300791859627
+      - 0.03136145696043968
+      - 0.05213836207985878
+      - 0.11821345239877701
+    - - 0.18261046707630157
+      - 0.08053996413946152
+      - 0.04510195553302765
+      - 0.028463445603847504
+      - 0.023691173642873764
+      - 0.023571204394102097
+      - 0.028399208560585976
+      - 0.045701704919338226
+      - 0.08049669116735458
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.12996429204940796
+      - 0.06824646890163422
+      - 0.041068192571401596
+      - 0.033662743866443634
+      - 0.03359457477927208
+      - 0.04099515080451965
+      - 0.06840714067220688
+      - 0.1289263218641281
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.0926450863480568
+      - 0.054379045963287354
+      - 0.043643224984407425
+      - 0.043316345661878586
+      - 0.05429467558860779
+      - 0.09378316253423691
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.12736791372299194
+      - 0.07144065946340561
+      - 0.055667076259851456
+      - 0.055958155542612076
+      - 0.07099108397960663
+      - 0.12795257568359375
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.14554454386234283
+      - 0.07976546138525009
+      - 0.06120593100786209
+      - 0.06165219470858574
+      - 0.07979599386453629
+      - 0.14652758836746216
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.13994112610816956
+      - 0.07095116376876831
+      - 0.05260055884718895
+      - 0.052872031927108765
+      - 0.07071256637573242
+      - 0.1395825892686844
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.15685859322547913
+      - 0.06559471040964127
+      - 0.04568558931350708
+      - 0.045572247356176376
+      - 0.0652838796377182
+      - 0.15685346722602844
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.07302388548851013
+      - 0.04615797474980354
+      - 0.04592848941683769
+      - 0.07312411814928055
+      - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.18261046707630157
+    - - 0.18261046707630157
+      - 0.18261046707630157
+      - 0.17365919053554535
+      - 0.029230833053588867
+      - 0.013066491112112999
+      - 0.013046151958405972
+      - 0.02930014580488205
+      - 0.17489449679851532
+      - 0.18261046707630157
+      - 0.18261046707630157
+    label_c:
+    - - 0.043171316385269165
+      - 0.03173293545842171
+      - 0.02779785543680191
+      - 0.025363441556692123
+      - 0.024857262149453163
+      - 0.02497192658483982
+      - 0.025374427437782288
+      - 0.02732684463262558
+      - 0.03178168088197708
+      - 0.04260735586285591
+    - - 0.053908273577690125
+      - 0.039970528334379196
+      - 0.03392232581973076
+      - 0.030816616490483284
+      - 0.029895594343543053
+      - 0.029708579182624817
+      - 0.030807530507445335
+      - 0.03361978009343147
+      - 0.04019194468855858
+      - 0.05377417057752609
+    - - 0.06197444722056389
+      - 0.046044524759054184
+      - 0.039035674184560776
+      - 0.0352540947496891
+      - 0.033709995448589325
+      - 0.03387429937720299
+      - 0.03530333563685417
+      - 0.03849654644727707
+      - 0.04627394303679466
+      - 0.061716970056295395
+    - - 0.044069044291973114
+      - 0.03252031281590462
+      - 0.027215559035539627
+      - 0.024236338213086128
+      - 0.02311819978058338
+      - 0.0230893362313509
+      - 0.024308422580361366
+      - 0.02692820318043232
+      - 0.032422251999378204
+      - 0.04388640448451042
+    - - 0.04244493693113327
+      - 0.030672017484903336
+      - 0.0250568687915802
+      - 0.02202608436346054
+      - 0.02075286954641342
+      - 0.020766137167811394
+      - 0.021902337670326233
+      - 0.02493348903954029
+      - 0.030621975660324097
+      - 0.04205116629600525
+    - - 0.046115655452013016
+      - 0.03237319365143776
+      - 0.025730201974511147
+      - 0.02191987633705139
+      - 0.020660942420363426
+      - 0.020674297586083412
+      - 0.02198113314807415
+      - 0.025637494400143623
+      - 0.032173316925764084
+      - 0.04532738775014877
+    - - 0.050554659217596054
+      - 0.03401730954647064
+      - 0.026184605434536934
+      - 0.021730145439505577
+      - 0.02017117477953434
+      - 0.020172279328107834
+      - 0.021590715274214745
+      - 0.026186903938651085
+      - 0.0338519811630249
+      - 0.049386508762836456
+    - - 0.06485859304666519
+      - 0.04122324660420418
+      - 0.0307623278349638
+      - 0.024592990055680275
+      - 0.02261178381741047
+      - 0.022545909509062767
+      - 0.024476608261466026
+      - 0.030820555984973907
+      - 0.04104295372962952
+      - 0.06350766122341156
+    - - 0.10238248854875565
+      - 0.060084324330091476
+      - 0.043690647929906845
+      - 0.03343936428427696
+      - 0.030165329575538635
+      - 0.030222630128264427
+      - 0.03319905325770378
+      - 0.04367116838693619
+      - 0.060132160782814026
+      - 0.09963408857584
+    - - 0.15908583998680115
+      - 0.08561331033706665
+      - 0.059328593313694
+      - 0.043781884014606476
+      - 0.03916443884372711
+      - 0.039063889533281326
+      - 0.04386337101459503
+      - 0.0599808394908905
+      - 0.08548139035701752
+      - 0.1559591442346573
+    - - 0.1814381182193756
+      - 0.1236933246254921
+      - 0.08076240122318268
+      - 0.05767204239964485
+      - 0.05037590488791466
+      - 0.050025757402181625
+      - 0.057266369462013245
+      - 0.08159708231687546
+      - 0.12237253785133362
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.17338138818740845
+      - 0.1072869673371315
+      - 0.07385110855102539
+      - 0.06360238045454025
+      - 0.06363143026828766
+      - 0.07412882149219513
+      - 0.10701043158769608
+      - 0.17450596392154694
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.12092083692550659
+      - 0.08141164481639862
+      - 0.06929812580347061
+      - 0.06916661560535431
+      - 0.08192981034517288
+      - 0.12124357372522354
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.12477165460586548
+      - 0.08349019289016724
+      - 0.06982921063899994
+      - 0.06972979009151459
+      - 0.08365285396575928
+      - 0.12517528235912323
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.10661911219358444
+      - 0.06590388715267181
+      - 0.052560433745384216
+      - 0.05255426466464996
+      - 0.0653303861618042
+      - 0.10718057304620743
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.09661813080310822
+      - 0.055903345346450806
+      - 0.044046130031347275
+      - 0.04409477487206459
+      - 0.05640585720539093
+      - 0.09746082127094269
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.10264401137828827
+      - 0.05000341311097145
+      - 0.036723945289850235
+      - 0.036883410066366196
+      - 0.04977669566869736
+      - 0.1021139845252037
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.13035783171653748
+      - 0.04788835719227791
+      - 0.031450506299734116
+      - 0.03148509934544563
+      - 0.04797631502151489
+      - 0.13166935741901398
+      - 0.1814381182193756
+      - 0.1814381182193756
+    - - 0.1814381182193756
+      - 0.1814381182193756
+      - 0.0799262747168541
+      - 0.014926726929843426
+      - 0.006860052701085806
+      - 0.006842470727860928
+      - 0.014822573401033878
+      - 0.08005079627037048
+      - 0.1814381182193756
+      - 0.1814381182193756
+    label_uds:
+    - - 0.02620418183505535
+      - 0.02132103592157364
+      - 0.019411038607358932
+      - 0.01814952865242958
+      - 0.017944209277629852
+      - 0.017955997958779335
+      - 0.018114307895302773
+      - 0.01914321817457676
+      - 0.021477505564689636
+      - 0.02586219646036625
+    - - 0.0365070104598999
+      - 0.03045670874416828
+      - 0.02717812918126583
+      - 0.02521049976348877
+      - 0.024447131901979446
+      - 0.024399643763899803
+      - 0.025165604427456856
+      - 0.026813490316271782
+      - 0.030595608055591583
+      - 0.03624359890818596
+    - - 0.0445983000099659
+      - 0.037695109844207764
+      - 0.0338367335498333
+      - 0.031213628128170967
+      - 0.030017130076885223
+      - 0.029941750690340996
+      - 0.031208306550979614
+      - 0.03342251852154732
+      - 0.03781871870160103
+      - 0.04430656135082245
+    - - 0.032796710729599
+      - 0.02766503021121025
+      - 0.02441304549574852
+      - 0.022244062274694443
+      - 0.02126508578658104
+      - 0.021324461326003075
+      - 0.022236716002225876
+      - 0.02427622675895691
+      - 0.02767631597816944
+      - 0.03268760070204735
+    - - 0.03311599791049957
+      - 0.027674058452248573
+      - 0.02399776503443718
+      - 0.021355044096708298
+      - 0.020337119698524475
+      - 0.02035076729953289
+      - 0.02136864885687828
+      - 0.023853551596403122
+      - 0.02770327776670456
+      - 0.033134330064058304
+    - - 0.03627705201506615
+      - 0.030203457921743393
+      - 0.025779852643609047
+      - 0.022735755890607834
+      - 0.021514493972063065
+      - 0.021611474454402924
+      - 0.022761696949601173
+      - 0.025777600705623627
+      - 0.030189618468284607
+      - 0.03619331866502762
+    - - 0.03665328025817871
+      - 0.030457213521003723
+      - 0.02578428015112877
+      - 0.022701825946569443
+      - 0.0214227382093668
+      - 0.021421587094664574
+      - 0.02267029508948326
+      - 0.025854604318737984
+      - 0.030306417495012283
+      - 0.03633175045251846
+    - - 0.03774747624993324
+      - 0.031181102618575096
+      - 0.026687363162636757
+      - 0.023558497428894043
+      - 0.022210342809557915
+      - 0.022267375141382217
+      - 0.023555224761366844
+      - 0.026760675013065338
+      - 0.030937232077121735
+      - 0.037595752626657486
+    - - 0.04430248588323593
+      - 0.035790443420410156
+      - 0.031184501945972443
+      - 0.0271820817142725
+      - 0.0257983710616827
+      - 0.025846358388662338
+      - 0.0271995197981596
+      - 0.031241314485669136
+      - 0.03564416244626045
+      - 0.04381892830133438
+    - - 0.052017997950315475
+      - 0.04063867777585983
+      - 0.035537101328372955
+      - 0.030915193259716034
+      - 0.029380153864622116
+      - 0.029383735731244087
+      - 0.030942251905798912
+      - 0.03557699918746948
+      - 0.040540266782045364
+      - 0.05139490216970444
+    - - 0.052017997950315475
+      - 0.045712120831012726
+      - 0.03919663280248642
+      - 0.0344729982316494
+      - 0.03295404091477394
+      - 0.03297599405050278
+      - 0.03469333052635193
+      - 0.03934314474463463
+      - 0.045689087361097336
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.0516902357339859
+      - 0.04200258478522301
+      - 0.03709845989942551
+      - 0.03543410450220108
+      - 0.035494670271873474
+      - 0.03715430200099945
+      - 0.04208868369460106
+      - 0.051562171429395676
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.049551066011190414
+      - 0.039483435451984406
+      - 0.03446391969919205
+      - 0.03320317342877388
+      - 0.033209916204214096
+      - 0.03461556136608124
+      - 0.03944992646574974
+      - 0.04905127361416817
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.039723049849271774
+      - 0.03377196565270424
+      - 0.03201651573181152
+      - 0.03205316141247749
+      - 0.033794280141592026
+      - 0.0399504192173481
+      - 0.052017997950315475
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.03602615371346474
+      - 0.028586525470018387
+      - 0.026228878647089005
+      - 0.02628089301288128
+      - 0.028596967458724976
+      - 0.03626728430390358
+      - 0.052017997950315475
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.030715474858880043
+      - 0.02334659732878208
+      - 0.021297134459018707
+      - 0.02131989225745201
+      - 0.023325245827436447
+      - 0.0307608749717474
+      - 0.052017997950315475
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.03264681249856949
+      - 0.02095688134431839
+      - 0.017992760986089706
+      - 0.018012331798672676
+      - 0.020974930375814438
+      - 0.032783325761556625
+      - 0.052017997950315475
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.04165409132838249
+      - 0.02211919240653515
+      - 0.017505237832665443
+      - 0.017497478052973747
+      - 0.02214556373655796
+      - 0.0416838601231575
+      - 0.052017997950315475
+      - 0.052017997950315475
+    - - 0.052017997950315475
+      - 0.052017997950315475
+      - 0.021290550008416176
+      - 0.005333031062036753
+      - 0.002965976484119892
+      - 0.002958079567179084
+      - 0.005324119236320257
+      - 0.021299265325069427
+      - 0.052017997950315475
+      - 0.052017997950315475
+    label_g:
+    - - 0.011082123965024948
+      - 0.00805360171943903
+      - 0.0069057089276611805
+      - 0.006149623543024063
+      - 0.0060009644366800785
+      - 0.005994999781250954
+      - 0.006151360459625721
+      - 0.0068100555799901485
+      - 0.00811103917658329
+      - 0.010860752314329147
+    - - 0.01808723248541355
+      - 0.013213940896093845
+      - 0.010930162854492664
+      - 0.009477375075221062
+      - 0.009047863073647022
+      - 0.009030045941472054
+      - 0.009463244117796421
+      - 0.01077339332550764
+      - 0.013233702629804611
+      - 0.017739638686180115
+    - - 0.026758717373013496
+      - 0.01964690163731575
+      - 0.0161714106798172
+      - 0.013803462497889996
+      - 0.013009048998355865
+      - 0.01296832412481308
+      - 0.013747493736445904
+      - 0.01601681113243103
+      - 0.019709546118974686
+      - 0.02633749134838581
+    - - 0.024938609451055527
+      - 0.01818840578198433
+      - 0.014759615063667297
+      - 0.012455050833523273
+      - 0.011646071448922157
+      - 0.011608141474425793
+      - 0.012415802106261253
+      - 0.014686857350170612
+      - 0.018204884603619576
+      - 0.024624641984701157
+    - - 0.031549450010061264
+      - 0.02243991568684578
+      - 0.01789465732872486
+      - 0.014864428900182247
+      - 0.013809585943818092
+      - 0.013783015310764313
+      - 0.014858349226415157
+      - 0.017846236005425453
+      - 0.022493045777082443
+      - 0.03109808638691902
+    - - 0.04143989458680153
+      - 0.028604108840227127
+      - 0.02221640758216381
+      - 0.018178055062890053
+      - 0.01674036867916584
+      - 0.01671679876744747
+      - 0.01812819205224514
+      - 0.022222068160772324
+      - 0.0285820160061121
+      - 0.041006360203027725
+    - - 0.04960322752594948
+      - 0.03293352946639061
+      - 0.024712657555937767
+      - 0.019855163991451263
+      - 0.01820407062768936
+      - 0.018180053681135178
+      - 0.01985732465982437
+      - 0.024777419865131378
+      - 0.032747309654951096
+      - 0.049085427075624466
+    - - 0.06262890249490738
+      - 0.03912471607327461
+      - 0.028378501534461975
+      - 0.022301582619547844
+      - 0.02022075280547142
+      - 0.02022234909236431
+      - 0.022309262305498123
+      - 0.028518138453364372
+      - 0.039040714502334595
+      - 0.06179703772068024
+    - - 0.08865965902805328
+      - 0.0516362302005291
+      - 0.036084629595279694
+      - 0.027460550889372826
+      - 0.02469962276518345
+      - 0.024720855057239532
+      - 0.02756894938647747
+      - 0.03627942129969597
+      - 0.05145112797617912
+      - 0.08691074699163437
+    - - 0.1213705837726593
+      - 0.06469638645648956
+      - 0.04325774312019348
+      - 0.03189351409673691
+      - 0.028117623180150986
+      - 0.028106918558478355
+      - 0.031723085790872574
+      - 0.04338482767343521
+      - 0.0641704574227333
+      - 0.11999533325433731
+    - - 0.16804590821266174
+      - 0.08415418118238449
+      - 0.05325039476156235
+      - 0.03717681020498276
+      - 0.03225099295377731
+      - 0.03221309930086136
+      - 0.03713202476501465
+      - 0.053450316190719604
+      - 0.08429045975208282
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.11737877130508423
+      - 0.06886622309684753
+      - 0.046804700046777725
+      - 0.0397130586206913
+      - 0.03977624699473381
+      - 0.046898454427719116
+      - 0.06901532411575317
+      - 0.11733105033636093
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.13621319830417633
+      - 0.07533348351716995
+      - 0.049233853816986084
+      - 0.04107841104269028
+      - 0.04104813560843468
+      - 0.049211420118808746
+      - 0.07566815614700317
+      - 0.13636882603168488
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.09559277445077896
+      - 0.057858772575855255
+      - 0.046746399253606796
+      - 0.04694518819451332
+      - 0.05769852548837662
+      - 0.09565555304288864
+      - 0.16804590821266174
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.1054561659693718
+      - 0.061649203300476074
+      - 0.048735957592725754
+      - 0.048750925809144974
+      - 0.061480872333049774
+      - 0.10618413239717484
+      - 0.16804590821266174
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.11357694864273071
+      - 0.05963120609521866
+      - 0.04535134881734848
+      - 0.045448336750268936
+      - 0.05954665318131447
+      - 0.11338064074516296
+      - 0.16804590821266174
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.15921708941459656
+      - 0.07119245827198029
+      - 0.0510852076113224
+      - 0.050871897488832474
+      - 0.07107897102832794
+      - 0.16006475687026978
+      - 0.16804590821266174
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.09964673221111298
+      - 0.06511568278074265
+      - 0.0648684948682785
+      - 0.09838075190782547
+      - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.16804590821266174
+    - - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.04982524737715721
+      - 0.022166462615132332
+      - 0.022049032151699066
+      - 0.04965738207101822
+      - 0.16804590821266174
+      - 0.16804590821266174
+      - 0.16804590821266174
+  domain_classes:
+  - label_mc_zll
+  - label_mc_emu
+  - label_mc_mut
+  - label_mc_dijet
+  - label_mc_ttcharm
+  - label_data_zll
+  - label_data_emu
+  - label_data_mut
+  - label_data_dijet
+  - label_data_ttcharm
+  domain_weights:
+  - 2
+  - 2
+  - 3
+  - 2
+  - 2
+  - 3
+  - 7
+  - 12
+  - 4
+  - 16
