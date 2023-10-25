@@ -58,7 +58,7 @@ def get_model(data_config, **kwargs):
         split_reg = kwargs.get('split_reg',True),
         ## DA parameters
         alpha_grad = kwargs.get('alpha_grad',1),
-        split_da_outputs = kwargs.get('split_da',True),        
+        split_da = kwargs.get('split_da',True),        
         fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
         ## Contrastive
         fc_contrastive_params = [(256, 0.05)],
