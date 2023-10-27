@@ -157,7 +157,7 @@ inputs:
    lt_features:
       length: 5
       vars:
-          - [jet_losttrack_pt_log, 1, 0.5, -10, 10]
+         - [jet_losttrack_pt_log, 1, 0.5, -10, 10]
          - [jet_losttrack_eta, 0, 0.5, -5, 5]
          - [jet_losttrack_deta, 0, 1, -1, 1]
          - [jet_losttrack_dphi, 0, 1, -1, 1]
