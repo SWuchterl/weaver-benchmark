@@ -4,7 +4,7 @@ selection:
    >-
    (np.abs(jet_eta)<2.5) & (jet_pt>=250) & (jet_pt<=5000) & (event%7!=0) & (jet_genmatch_pt>0) & (jet_mass_truth>=10) & (jet_mass_truth<=220) &
    (((jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
-    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1) | 
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)) | 
     ((jet_flav_2prong_partonjet_match==1)  & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==2)) |
     ((jet_flav_2prong_partonjet_match==2)  & (jet_tauflav==0) & (jet_muflav==2) & (jet_elflav==0)) |
     ((jet_flav_2prong_partonjet_match>=2)  & (jet_flav_2prong_partonjet_match<=6) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
