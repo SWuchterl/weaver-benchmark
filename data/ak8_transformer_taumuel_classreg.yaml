@@ -55,7 +55,7 @@ new_variables:
    label_lept: (jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)
    label_QCD_2hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & ((jet_nbhad>=2) | ((jet_nbhad==0) & (jet_nchad>=2)))
    label_QCD_1hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & ((jet_nbhad==1) | ((jet_nbhad==0) & (jet_nchad==1))) 
-   label_QCD_0hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & (jet_nbhad==0) & (jet_chad==0)
+   label_QCD_0hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & (jet_nbhad==0) & (jet_nchad==0)
 
 preprocess:
    ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
