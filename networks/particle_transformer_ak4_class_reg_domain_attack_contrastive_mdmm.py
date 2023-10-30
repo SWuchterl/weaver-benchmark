@@ -191,15 +191,19 @@ class LossContrastive (torch.nn.L1Loss):
     
 ############
 class CrossEntropyContrastiveLogCoshLossDomainAttack(torch.nn.L1Loss):
-    __constants__ = ['reduction','mdmm_max','mdmm_reg_scale','mdmm_q_scale','mdmm_da_scale','mdmm_attack_scale','mdmm_cont_scale','mdmm_damp','quantiles','domain_weight','domain_dim','temperature']
+    __constants__ = ['reduction','mdmm_reg_value','mdmm_reg_scale','mdmm_q_value','mdmm_q_scale','mdmm_da_value','mdmm_da_scale','mdmm_da_scale','mdmm_attack_scale','mdmm_cont_value','mdmm_cont_scale','mdmm_damp','quantiles','domain_weight','domain_dim','temperature']
     def __init__(self, 
                  reduction: str = 'mean',
                  temperature: float = 0.1,
-                 mdmm_max: float = 1.,
+                 mdmm_reg_value: float = 1.,
                  mdmm_reg_scale: float = 1.,
+                 mdmm_q_value: float = 1.,
                  mdmm_q_scale: float = 1.,
+                 mdmm_da_value: float = 1.,
                  mdmm_da_scale: float = 1.,
+                 mdmm_attack_value: float = 1.,
                  mdmm_attack_scale: float = 1.,
+                 mdmm_cont_value: float = 1.,
                  mdmm_cont_scale: float = 1.,
                  mdmm_damp: float = 1.,
                  quantiles: list = [],
@@ -214,12 +218,16 @@ class CrossEntropyContrastiveLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
-        self.mdmm_max = mdmm_max;
         self.mdmm_damp = mdmm_damp;
+        self.mdmm_reg_value = mdmm_reg_value;
         self.mdmm_reg_scale = mdmm_reg_scale;
+        self.mdmm_q_value = mdmm_q_value;
         self.mdmm_q_scale = mdmm_q_scale;
+        self.mdmm_da_value = mdmm_da_value;
         self.mdmm_da_scale = mdmm_da_scale;
+        self.mdmm_cont_value = mdmm_cont_value;
         self.mdmm_cont_scale = mdmm_cont_scale;
+        self.mdmm_attack_value = mdmm_attack_value;
         self.mdmm_attack_scale = mdmm_attack_scale;
         ## losses 
         self.loss_class = LossCategorization(reduction=self.reduction);
@@ -229,11 +237,11 @@ class CrossEntropyContrastiveLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.loss_attack = LossAttack(reduction=self.reduction);
         self.loss_cont = LossContrastive(reduction=self.reduction,temperature=self.temperature);
         ## constraint
-        self.constraint_reg = MaxConstraint(self.loss_reg,max=self.mdmm_max,scale=self.mdmm_reg_scale,damping=self.mdmm_damp);
-        self.constraint_quant = MaxConstraint(self.loss_quant,max=self.mdmm_max,scale=self.mdmm_q_scale,damping=self.mdmm_damp);
-        self.constraint_domain = MaxConstraint(self.loss_domain,max=self.mdmm_max,scale=self.mdmm_da_scale,damping=self.mdmm_damp);
-        self.constraint_attack = MaxConstraint(self.loss_attack,max=self.mdmm_max,scale=self.mdmm_attack_scale,damping=self.mdmm_damp);
-        self.constraint_cont = MaxConstraint(self.loss_cont,max=self.mdmm_max,scale=self.mdmm_cont_scale,damping=self.mdmm_damp);
+        self.constraint_reg = EqConstraint(self.loss_reg,value=self.mdmm_reg_value,scale=self.mdmm_reg_scale,damping=self.mdmm_damp);
+        self.constraint_quant = EqConstraint(self.loss_quant,value=self.mdmm_q_value,scale=self.mdmm_q_scale,damping=self.mdmm_damp);
+        self.constraint_domain = EqConstraint(self.loss_domain,value=self.mdmm_da_value,scale=self.mdmm_da_scale,damping=self.mdmm_damp);
+        self.constraint_attack = EqConstraint(self.loss_attack,value=self.mdmm_attack_value,scale=self.mdmm_attack_scale,damping=self.mdmm_damp);
+        self.constraint_cont = EqConstraint(self.loss_cont,value=self.mdmm_cont_value,scale=self.mdmm_cont_scale,damping=self.mdmm_damp);
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack,self.constraint_cont]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
@@ -289,12 +297,16 @@ def get_loss(data_config, **kwargs):
     return CrossEntropyContrastiveLogCoshLossDomainAttack(
         reduction=kwargs.get('reduction','mean'),
         temperature=kwargs.get('temperature',0.1),
-        mdmm_max=kwargs.get('mdmm_max',1.),
         mdmm_damp=kwargs.get('mdmm_damp',1.),
+        mdmm_reg_value=kwargs.get('mdmm_reg_value',0.001),
         mdmm_reg_scale=kwargs.get('mdmm_reg_scale',1.),
+        mdmm_q_value=kwargs.get('mdmm_q_value',0.001),
         mdmm_q_scale=kwargs.get('mdmm_q_scale',1.),
+        mdmm_da_value=kwargs.get('mdmm_da_value',0.001),
         mdmm_da_scale=kwargs.get('mdmm_da_scale',1.),
+        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.001),
         mdmm_attack_scale=kwargs.get('mdmm_attack_scale',1.),
+        mdmm_cont_value=kwargs.get('mdmm_cont_value',0.001),
         mdmm_cont_scale=kwargs.get('mdmm_cont_scale',1.),
         quantiles=quantiles,
         domain_weight=wdomain,

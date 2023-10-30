@@ -265,13 +265,13 @@ def get_loss(data_config, **kwargs):
         reduction=kwargs.get('reduction','mean'),
         mdmm_damp=kwargs.get('mdmm_damp',1.),
         mdmm_reg_scale=kwargs.get('mdmm_reg_scale',1.),
-        mdmm_reg_value=kwargs.get('mdmm_reg_value',0.), ## target is 0 for regression
+        mdmm_reg_value=kwargs.get('mdmm_reg_value',0.001), ## target is 0 for regression
         mdmm_q_scale=kwargs.get('mdmm_q_scale',1.),
-        mdmm_q_value=kwargs.get('mdmm_q_value',0.), ## target is 0 for regression
+        mdmm_q_value=kwargs.get('mdmm_q_value',0.001), ## target is 0 for regression
         mdmm_da_scale=kwargs.get('mdmm_da_scale',1.),
-        mdmm_da_value=kwargs.get('mdmm_da_value',0.), ## target value is 0 for CELoss 
+        mdmm_da_value=kwargs.get('mdmm_da_value',0.001), ## target value is 0 for CELoss 
         mdmm_attack_scale=kwargs.get('mdmm_attack_scale',1.),
-        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.), ## target is 0 for attack KL
+        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.001), ## target is 0 for attack KL
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
