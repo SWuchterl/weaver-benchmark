@@ -256,7 +256,7 @@ def get_loss(data_config, **kwargs):
 
     return CrossEntropyLogCoshLossDomainAttack(
         reduction=kwargs.get('reduction','mean'),
-        mdmm_max=kwargs.get('mdmm_max',0.01),
+        mdmm_max=kwargs.get('mdmm_max',1.),
         mdmm_damp=kwargs.get('mdmm_damp',1.),
         mdmm_reg_scale=kwargs.get('mdmm_reg_scale',1.),
         mdmm_q_scale=kwargs.get('mdmm_q_scale',1.),
