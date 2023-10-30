@@ -204,10 +204,10 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.loss_domain = LossDomain(reduction=self.reduction,wdomain=self.domain_weight,ddomain=self.domain_dim);
         self.loss_attack = LossAttack(reduction=self.reduction);
         ## constraint
-        self.constraint_reg = EqConstraint(self.loss_reg,max=self.mdmm_max,scale=self.mdmm_reg_scale,damping=self.mdmm_damp);
-        self.constraint_quant = EqConstraint(self.loss_quant,max=self.mdmm_max,scale=self.mdmm_q_scale,damping=self.mdmm_damp);
-        self.constraint_domain = EqConstraint(self.loss_domain,max=self.mdmm_max,scale=self.mdmm_da_scale,damping=self.mdmm_damp);
-        self.constraint_attack = EqConstraint(self.loss_attack,max=self.mdmm_max,scale=self.mdmm_attack_scale,damping=self.mdmm_damp);
+        self.constraint_reg = EqConstraint(self.loss_reg,vale=self.mdmm_value,scale=self.mdmm_reg_scale,damping=self.mdmm_damp);
+        self.constraint_quant = EqConstraint(self.loss_quant,value=self.mdmm_value,scale=self.mdmm_q_scale,damping=self.mdmm_damp);
+        self.constraint_domain = EqConstraint(self.loss_domain,value=self.mdmm_value,scale=self.mdmm_da_scale,damping=self.mdmm_damp);
+        self.constraint_attack = EqConstraint(self.loss_attack,value=self.mdmm_value,scale=self.mdmm_attack_scale,damping=self.mdmm_damp);
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
@@ -256,7 +256,7 @@ def get_loss(data_config, **kwargs):
 
     return CrossEntropyLogCoshLossDomainAttack(
         reduction=kwargs.get('reduction','mean'),
-        mdmm_max=kwargs.get('mdmm_max',1.),
+        mdmm_value=kwargs.get('mdmm_value',1.),
         mdmm_damp=kwargs.get('mdmm_damp',1.),
         mdmm_reg_scale=kwargs.get('mdmm_reg_scale',1.),
         mdmm_q_scale=kwargs.get('mdmm_q_scale',1.),
