@@ -245,7 +245,6 @@ class CrossEntropyContrastiveLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack,self.constraint_cont]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
-        print(self.lambdas," ",self.slacks);
                 
     def forward(self, input_cat: Tensor, y_cat: Tensor, input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,

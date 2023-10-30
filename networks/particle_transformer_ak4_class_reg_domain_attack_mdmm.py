@@ -210,10 +210,10 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.loss_domain = LossDomain(reduction=self.reduction,wdomain=self.domain_weight,ddomain=self.domain_dim);
         self.loss_attack = LossAttack(reduction=self.reduction);
         ## constraint
-        self.constraint_reg = EqConstraint(self.loss_reg,scale=self.mdmm_reg_scale,value=self.mdmm_reg_value,damping=self.mdmm_damp);
-        self.constraint_quant = EqConstraint(self.loss_quant,scale=self.mdmm_q_scale,value=self.mdmm_q_value,damping=self.mdmm_damp);
-        self.constraint_domain = EqConstraint(self.loss_domain,scale=self.mdmm_da_scale,value=self.mdmm_da_value,damping=self.mdmm_damp);
-        self.constraint_attack = EqConstraint(self.loss_attack,scale=self.mdmm_attack_scale,value=self.mdmm_attack_value,damping=self.mdmm_damp);
+        self.constraint_reg = MaxConstraint(self.loss_reg,scale=self.mdmm_reg_scale,max=self.mdmm_reg_value,damping=self.mdmm_damp);
+        self.constraint_quant = MaxConstraint(self.loss_quant,scale=self.mdmm_q_scale,max=self.mdmm_q_value,damping=self.mdmm_damp);
+        self.constraint_domain = MaxConstraint(self.loss_domain,scale=self.mdmm_da_scale,max=self.mdmm_da_value,damping=self.mdmm_damp);
+        self.constraint_attack = MaxConstraint(self.loss_attack,scale=self.mdmm_attack_scale,max=self.mdmm_attack_value,damping=self.mdmm_damp);
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
@@ -271,7 +271,7 @@ def get_loss(data_config, **kwargs):
         mdmm_da_scale=kwargs.get('mdmm_da_scale',1.),
         mdmm_da_value=kwargs.get('mdmm_da_value',0.01), ## target value is 0 for CELoss 
         mdmm_attack_scale=kwargs.get('mdmm_attack_scale',1.),
-        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.0001), ## target is 0 for attack KL
+        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.001), ## target is 0 for attack KL
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
