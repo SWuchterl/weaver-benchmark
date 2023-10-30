@@ -2,7 +2,7 @@ import numpy as np
 import math
 import torch
 from torch import Tensor
-from nn.model.ParticleTransformer import ParticleTransformerTaggerV2
+from nn.model.ParticleTransformerV2 import ParticleTransformerTaggerV2
 
 ## get model
 def get_model(data_config, **kwargs):
