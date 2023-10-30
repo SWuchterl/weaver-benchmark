@@ -289,5 +289,5 @@ weights:
       jet_mass_truth: [10,35,55,65,85,105,125,145,165,220]
    reweight_classes: [label_H_tt, label_H_tm, label_H_te, label_H_mm, label_H_ee, label_H_bb, label_H_cc, label_H_qq, label_H_gg, label_lept, label_QCD_2hf, label_QCD_1hf, label_QCD_0hf]
    class_weights: [2.0, 2.0, 2.0, 1.5, 1.5, 2.0, 2.0, 1.5, 1.5, 2.0, 1.0, 2.0, 3.0]
-   reweight_threshold: 15
+   reweight_threshold: 25
    reweight_hists:
