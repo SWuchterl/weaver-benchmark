@@ -217,7 +217,7 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
-                
+
     def forward(self, input_cat: Tensor, y_cat: Tensor, input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,
                 input_cat_attack: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor()) -> Tensor:
@@ -229,24 +229,30 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
             loss_class = self.loss_class(input_cat,y_cat);
             total_loss += loss_class;
         ## regression
+        print("##############");
         loss_reg = 0;
         loss_quant = 0;
         if input_reg.nelement() and y_reg.nelement():
             loss_reg = self.constraint_reg([input_reg-y_reg]).value;
             loss_quant = self.constraint_quant([input_reg-y_reg]).value;
             total_loss += loss_reg+loss_quant;
-            loss_reg   += loss_quant
-        
+            print("loss_reg=",loss_reg.item()," slack=",self.constraint_reg.slack.item()," lambda=",self.constraint_reg.lmbda.item());
+            print("loss_quant=",loss_quant.item()," slack=",self.constraint_quant.slack.item()," lambda=",self.constraint_quant.lmbda.item());
+            loss_reg   += loss_quant        
         ## domain
         loss_domain = 0;
         if input_domain.nelement() and y_domain.nelement() and y_domain_check.nelement():
             loss_domain = self.constraint_domain([input_domain,y_domain,y_domain_check]).value;
+            print("loss_domain=",loss_domain.item()," slack=",self.constraint_domain.slack.item()," lambda=",self.constraint_domain.lmbda.item());
             total_loss += loss_domain;
         ## attack
         loss_attack = 0;
         if input_cat_attack.nelement() and input_cat_ref.nelement():
             loss_attack = self.constraint_attack([input_cat_ref,input_cat_attack]).value;
+            print("loss_attack=",loss_attack.item()," slack=",self.constraint_attack.slack.item()," lambda=",self.constraint_attack.lmbda.item());
             total_loss += loss_attack
+        print("##############");
+        
         return total_loss,loss_class,loss_reg,loss_domain,loss_attack
 
     
