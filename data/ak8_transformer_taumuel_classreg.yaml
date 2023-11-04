@@ -3,24 +3,27 @@ selection:
    ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
    >-
    (np.abs(jet_eta)<2.5) & (jet_pt>=250) & (jet_pt<=5000) & (event%7!=0) & (jet_genmatch_pt>0) & (jet_mass_truth>=10) & (jet_mass_truth<=220) &
-   (((jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
+   (((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & (jet_nbhad==0) & (jet_nchad==0)) |
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & ((jet_nbhad==1) | ((jet_nbhad==0) & (jet_nchad==1)))) | 		  
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & ((jet_nbhad>=2) | ((jet_nbhad==0) & (jet_nchad>=2)))) | 		  
     ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)) | 
     ((jet_flav_2prong_partonjet_match==1)  & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==2)) |
     ((jet_flav_2prong_partonjet_match==2)  & (jet_tauflav==0) & (jet_muflav==2) & (jet_elflav==0)) |
-    ((jet_flav_2prong_partonjet_match>=2)  & (jet_flav_2prong_partonjet_match<=6) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
+    ((jet_flav_2prong_partonjet_match>=2)  & (jet_flav_2prong_partonjet_match<=6) & (jet_lepflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==2) & (jet_muflav==0) & (jet_elflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==1) & (jet_muflav==1) & (jet_elflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==1) & (jet_muflav==0) & (jet_elflav==1)))
 
-
 test_time_selection:
    >-
    (np.abs(jet_eta)<2.5) & (jet_pt>=250) & (jet_pt<=5000) & (event%7==0) & (jet_genmatch_pt>0) & (jet_mass_truth>=10) & (jet_mass_truth<=220) &
-   (((jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
-    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)) |
+   (((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & (jet_nbhad==0) & (jet_nchad==0)) |
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & ((jet_nbhad==1) | ((jet_nbhad==0) & (jet_nchad==1)))) | 		  
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & ((jet_nbhad>=2) | ((jet_nbhad==0) & (jet_nchad>=2)))) | 		  
+    ((jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)) | 
     ((jet_flav_2prong_partonjet_match==1)  & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==2)) |
     ((jet_flav_2prong_partonjet_match==2)  & (jet_tauflav==0) & (jet_muflav==2) & (jet_elflav==0)) |
-    ((jet_flav_2prong_partonjet_match>=2)  & (jet_flav_2prong_partonjet_match<=6) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)) |
+    ((jet_flav_2prong_partonjet_match>=2)  & (jet_flav_2prong_partonjet_match<=6) & (jet_lepflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==2) & (jet_muflav==0) & (jet_elflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==1) & (jet_muflav==1) & (jet_elflav==0)) |
     ((jet_flav_2prong_partonjet_match==7)  & (jet_tauflav==1) & (jet_muflav==0) & (jet_elflav==1)))
@@ -53,9 +56,9 @@ new_variables:
    label_H_qq: (jet_flav_2prong_partonjet_match==4) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)
    label_H_gg: (jet_flav_2prong_partonjet_match==3) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0)
    label_lept: (jet_flav_2prong_partonjet_match==-1) & (jet_lepflav>=1)
-   label_QCD_2hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & ((jet_nbhad>=2) | ((jet_nbhad==0) & (jet_nchad>=2)))
-   label_QCD_1hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & ((jet_nbhad==1) | ((jet_nbhad==0) & (jet_nchad==1))) 
-   label_QCD_0hf: (jet_flav_2prong_partonjet_match==-1) & (jet_tauflav==0) & (jet_muflav==0) & (jet_elflav==0) & (jet_nbhad==0) & (jet_nchad==0)
+   label_QCD_2hf: (jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & ((jet_nbhad>=2) | ((jet_nbhad==0) & (jet_nchad>=2)))
+   label_QCD_1hf: (jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & ((jet_nbhad==1) | ((jet_nbhad==0) & (jet_nchad==1))) 
+   label_QCD_0hf: (jet_flav_2prong_partonjet_match==-1) & (jet_lepflav==0) & (jet_nbhad==0) & (jet_nchad==0)
 
 preprocess:
    ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
