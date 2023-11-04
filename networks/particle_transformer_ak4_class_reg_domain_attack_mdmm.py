@@ -210,10 +210,10 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         self.loss_domain = LossDomain(reduction=self.reduction,wdomain=self.domain_weight,ddomain=self.domain_dim);
         self.loss_attack = LossAttack(reduction=self.reduction);
         ## constraint
-        self.constraint_reg = MaxConstraint(self.loss_reg,scale=self.mdmm_reg_scale,max=self.mdmm_reg_value,damping=self.mdmm_damp);
-        self.constraint_quant = MaxConstraint(self.loss_quant,scale=self.mdmm_q_scale,max=self.mdmm_q_value,damping=self.mdmm_damp);
-        self.constraint_domain = MaxConstraint(self.loss_domain,scale=self.mdmm_da_scale,max=self.mdmm_da_value,damping=self.mdmm_damp);
-        self.constraint_attack = MaxConstraint(self.loss_attack,scale=self.mdmm_attack_scale,max=self.mdmm_attack_value,damping=self.mdmm_damp);
+        self.constraint_reg = EqConstraint(self.loss_reg,scale=self.mdmm_reg_scale,value=self.mdmm_reg_value,damping=self.mdmm_damp);
+        self.constraint_quant = EqConstraint(self.loss_quant,scale=self.mdmm_q_scale,value=self.mdmm_q_value,damping=self.mdmm_damp);
+        self.constraint_domain = EqConstraint(self.loss_domain,scale=self.mdmm_da_scale,value=self.mdmm_da_value,damping=self.mdmm_damp);
+        self.constraint_attack = EqConstraint(self.loss_attack,scale=self.mdmm_attack_scale,value=self.mdmm_attack_value,damping=self.mdmm_damp);
         self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
@@ -229,29 +229,23 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
             loss_class = self.loss_class(input_cat,y_cat);
             total_loss += loss_class;
         ## regression
-        print("##############");
         loss_reg = 0;
         loss_quant = 0;
         if input_reg.nelement() and y_reg.nelement():
             loss_reg = self.constraint_reg([input_reg-y_reg]).value;
             loss_quant = self.constraint_quant([input_reg-y_reg]).value;
             total_loss += loss_reg+loss_quant;
-            print("loss_reg=",loss_reg.item()," slack=",self.constraint_reg.slack.item()," lambda=",self.constraint_reg.lmbda.item());
-            print("loss_quant=",loss_quant.item()," slack=",self.constraint_quant.slack.item()," lambda=",self.constraint_quant.lmbda.item());
             loss_reg   += loss_quant        
         ## domain
         loss_domain = 0;
         if input_domain.nelement() and y_domain.nelement() and y_domain_check.nelement():
             loss_domain = self.constraint_domain([input_domain,y_domain,y_domain_check]).value;
-            print("loss_domain=",loss_domain.item()," slack=",self.constraint_domain.slack.item()," lambda=",self.constraint_domain.lmbda.item());
             total_loss += loss_domain;
         ## attack
         loss_attack = 0;
         if input_cat_attack.nelement() and input_cat_ref.nelement():
             loss_attack = self.constraint_attack([input_cat_ref,input_cat_attack]).value;
-            print("loss_attack=",loss_attack.item()," slack=",self.constraint_attack.slack.item()," lambda=",self.constraint_attack.lmbda.item());
             total_loss += loss_attack
-        print("##############");
         
         return total_loss,loss_class,loss_reg,loss_domain,loss_attack
 
