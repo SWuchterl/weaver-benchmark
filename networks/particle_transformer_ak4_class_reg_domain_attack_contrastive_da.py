@@ -93,6 +93,7 @@ class RBF(nn.Module):
     def forward(self, X):
         L2_distances = torch.cdist(X, X) ** 2
         L2_distances = L2_distances.to(X.device,non_blocking=True)
+        self.bandwidth_multipliers = self.bandwidth_multipliers.to(X.device,non_blocking=True);
         return torch.exp(-L2_distances[None, ...] / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
 ## MMDLoss                                                                                                                                                                                           
 class MMDLoss(nn.Module):
