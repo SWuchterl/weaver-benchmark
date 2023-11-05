@@ -82,7 +82,9 @@ class RBF(nn.Module):
 
     def forward(self, X):
         L2_distances = torch.cdist(X, X) ** 2
-        return torch.exp(-L2_distances[None, ...] / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
+        L2_distances = L2_distances.to(X.device,non_blocking=True);
+        return torch.exp(-L2_distances[None, ...]  / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
+    
 ## MMDLoss                                                                                                                                                                                             
 class MMDLoss(nn.Module):
 
@@ -91,7 +93,7 @@ class MMDLoss(nn.Module):
         self.kernel = kernel
 
     def forward(self, X, Y):
-        K = self.kernel(torch.vstack([X, Y]))
+        K = self.kernel(torch.vstack([X, Y]).to(X.device,non_blocking=True))
         X_size = X.shape[0]
         XX = K[:X_size, :X_size].mean()
         XY = K[:X_size, X_size:].mean()
@@ -187,7 +189,7 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         loss_attack = 0;
         if input_cat_attack.nelement() and input_cat_ref.nelement():
             if self.use_mmd_loss:
-                loss_attack = self.MMDLoss(input_cat_ref,input_cat_attack);
+                loss_attack = self.loss_attack*self.MMDLoss(torch.softmax(input_cat_ref,dim=1),torch.softmax(input_cat_attack,dim=1));
             else:
                 input_cat_attack = torch.log_softmax(input_cat_attack,dim=1);
                 input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
