@@ -48,9 +48,10 @@ def get_model(data_config, **kwargs):
         for_inference = kwargs.get('for_inference',False),
         alpha_grad = kwargs.get('alpha_grad',1),
         use_amp = kwargs.get('use_amp',False),
-        split_domain_outputs = kwargs.get('split_domain_outputs',False),
+        split_da = kwargs.get('split_da',True),
+        split_reg = kwargs.get('split_reg',True),
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
-        fc_domain_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
+        fc_da_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
     );
 
     model = ParticleTransformerTagger(**cfg)

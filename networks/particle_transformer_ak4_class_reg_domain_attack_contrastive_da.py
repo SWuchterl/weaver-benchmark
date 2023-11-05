@@ -76,9 +76,40 @@ def get_model(data_config, **kwargs):
 
     return model, model_info
 
+##
+class RBF(nn.Module):
+    def __init__(self, n_kernels=5, mul_factor=2.0, bandwidth=None):
+        super().__init__()
+        self.bandwidth_multipliers = mul_factor ** (torch.arange(n_kernels) - n_kernels // 2)
+        self.bandwidth = bandwidth
+
+    def get_bandwidth(self, L2_distances):
+        if self.bandwidth is None:
+            n_samples = L2_distances.shape[0]
+            return L2_distances.data.sum() / (n_samples ** 2 - n_samples)
+
+        return self.bandwidth
+
+    def forward(self, X):
+        L2_distances = torch.cdist(X, X) ** 2
+        return torch.exp(-L2_distances[None, ...] / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
+## MMDLoss                                                                                                                                                                                           
+class MMDLoss(nn.Module):
+
+    def __init__(self, kernel=RBF()):
+        super().__init__()
+        self.kernel = kernel
+
+    def forward(self, X, Y):
+        K = self.kernel(torch.vstack([X, Y]))
+        X_size = X.shape[0]
+        XX = K[:X_size, :X_size].mean()
+        XY = K[:X_size, X_size:].mean()
+        YY = K[X_size:, X_size:].mean()
+        return XX - 2 * XY + YY
 
 class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
-    __constants__ = ['reduction','select_label','loss_reg','loss_res','quantiles','loss_da','domain_weight','domain_dim','loss_attack','loss_cont','use_cont_domain','temperature']
+    __constants__ = ['reduction','loss_reg','loss_res','quantiles','loss_da','domain_weight','domain_dim','loss_attack','loss_cont','use_cont_domain','temperature','use_mmd_loss']
     def __init__(self, 
                  reduction: str = 'mean',
                  loss_reg: float = 1., 
@@ -86,8 +117,8 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
                  loss_da: float = 1., 
                  loss_attack: float = 1.,
                  loss_cont: float = 1.,
-                 select_label: bool = False,
                  use_cont_domain: bool = False,
+                 use_mmd_loss: bool = False,
                  temperature: float = 0.1,
                  quantiles: list = [],
                  domain_weight: list = [],
@@ -100,12 +131,15 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         self.loss_attack = loss_attack;
         self.loss_cont = loss_cont;
         self.temperature = temperature;
-        self.select_label = select_label;
         self.use_cont_domain = use_cont_domain;
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
-        
+        self.use_mmd_loss = use_mmd_loss;
+        if self.use_mmd_loss:
+            self.MMDLoss = MMDLoss();
+        else:
+            self.MMDLoss = None;
     def forward(self, 
                 input_cat: Tensor, y_cat: Tensor, 
                 input_reg: Tensor, y_reg: Tensor, 
@@ -169,19 +203,17 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         ## attack term
         loss_attack = 0;
         if input_cat_attack.nelement() and input_cat_ref.nelement():
-            if self.select_label: ## build KL divergence only on the score of y-cat type
-                input_cat_attack = torch.softmax(input_cat_attack,dim=1);
-                input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
-                loss_attack = torch.nn.functional.mse_loss(input=input_cat_attack.gather(1,y_cat.view(-1,1)),target=input_cat_ref.gather(1,y_cat.view(-1,1)),reduction='none');
+            if self.use_mmd_loss:
+                loss_attack = self.MMDLoss(input_cat_ref,input_cat_attack);
             else:
-                input_cat_attack = torch.log_softmax(input_cat_attack,dim=1);
-                input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
-                loss_attack = torch.nn.functional.kl_div(input=input_cat_attack,target=input_cat_ref,reduction='none');
-            if self.reduction == 'mean':
-                loss_attack = self.loss_attack*loss_attack.mean();
-            elif self.reduction == 'sum':
-                loss_attack = self.loss_attack*loss_attack.sum();
-
+              input_cat_attack = torch.log_softmax(input_cat_attack,dim=1);
+              input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
+              loss_attack = torch.nn.functional.kl_div(input=input_cat_attack,target=input_cat_ref,reduction='none');
+              if self.reduction == 'mean':
+                  loss_attack = self.loss_attack*loss_attack.mean();
+              elif self.reduction == 'sum':
+                  loss_attack = self.loss_attack*loss_attack.sum();
+                  
         ## contrastive term
         loss_contrastive = 0;
         if input_cont.nelement():
@@ -226,10 +258,10 @@ def get_loss(data_config, **kwargs):
         loss_da=kwargs.get('loss_da',1),
         loss_attack=kwargs.get('loss_attack',1),
         loss_cont=kwargs.get('loss_cont',1),
+        use_mmd_loss=kwargs.get('use_mmd_loss',False),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain,
-        select_label=kwargs.get('select_label',False),
         use_cont_domain=kwargs.get('use_contrastive_domain',False),
         temperature=kwargs.get('temperature',0.1),
     );
