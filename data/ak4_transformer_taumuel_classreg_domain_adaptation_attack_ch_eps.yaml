@@ -1,0 +1,1184 @@
+selection: (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000) & (((domain<0)
+  & (event%7!=0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0) & (jet_elflav==0)
+  & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0)) & ~((jet_muflav==0)
+  & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4) & (jet_hflav==0))
+  & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5)
+  & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1)
+  & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11)))
+  | ((domain>=0) & (event%5!=0)))
+test_time_selection: (np.abs(jet_eta)<2.5) & (jet_pt_raw>=15) & (jet_pt_raw<=3000)
+  & (((domain<0) & (event%7==0) & (jet_genmatch_pt>0) & (jet_lepflav<=1) & ~((jet_muflav==0)
+  & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==0) & (jet_hflav==0))
+  & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==4)
+  & (jet_hflav==0)) & ~((jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (np.abs(jet_pflav)==5)
+  & (jet_hflav==0)) & ~((jet_tauflav==1) & (jet_taudecaymode<0)) & ~((jet_tauflav==1)
+  & (jet_taudecaymode>2) & (jet_taudecaymode<10)) & ~((jet_tauflav==1) & (jet_taudecaymode>11)))
+  | ((domain>=0) & (event%5==0)))
+new_variables:
+  pfcand_ch_mask: ak.ones_like(jet_pfcand_ch_deta)
+  pfcand_neu_mask: ak.ones_like(jet_pfcand_neu_deta)
+  sv_mask: ak.ones_like(jet_sv_deta)
+  lt_mask: ak.ones_like(jet_losttrack_deta)
+  jet_pfcand_ch_p4: _p4_from_ptetaphie(jet_pfcand_ch_pt,jet_pfcand_ch_eta,jet_pfcand_ch_phi,jet_pfcand_ch_energy)
+  jet_pfcand_ch_px: jet_pfcand_ch_p4.px
+  jet_pfcand_ch_py: jet_pfcand_ch_p4.py
+  jet_pfcand_ch_pz: jet_pfcand_ch_p4.pz
+  jet_pfcand_neu_p4: _p4_from_ptetaphie(jet_pfcand_neu_pt,jet_pfcand_neu_eta,jet_pfcand_neu_phi,jet_pfcand_neu_energy)
+  jet_pfcand_neu_px: jet_pfcand_neu_p4.px
+  jet_pfcand_neu_py: jet_pfcand_neu_p4.py
+  jet_pfcand_neu_pz: jet_pfcand_neu_p4.pz
+  jet_sv_p4: _p4_from_ptetaphie(jet_sv_pt,jet_sv_eta,jet_sv_phi,jet_sv_energy)
+  jet_sv_px: jet_sv_p4.px
+  jet_sv_py: jet_sv_p4.py
+  jet_sv_pz: jet_sv_p4.pz
+  jet_losttrack_p4: _p4_from_ptetaphie(jet_losttrack_pt,jet_losttrack_eta,jet_losttrack_phi,jet_losttrack_energy)
+  jet_losttrack_px: jet_losttrack_p4.px
+  jet_losttrack_py: jet_losttrack_p4.py
+  jet_losttrack_pz: jet_losttrack_p4.pz
+  label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
+  label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
+  label_mc_emu: (domain==2) & (isdata==0)
+  label_data_emu: (domain==2) & (isdata==1)
+  label_mc_mut: (domain==3) & (isdata==0)
+  label_data_mut: (domain==3) & (isdata==1)
+  label_mc_dijet: (domain==5) & (isdata==0)
+  label_data_dijet: (domain==5) & (isdata==1)
+  label_mc_ttcharm: (domain==6) & (isdata==0)
+  label_data_ttcharm: (domain==6) & (isdata==1)
+  label_mu: (jet_muflav==1) & (jet_elflav==0) & (jet_tauflav==0) & (domain<0)
+  label_el: (jet_muflav==0) & (jet_elflav==1) & (jet_tauflav==0) & (domain<0)
+  label_taup_1h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==0)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_1h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==1)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_1h2p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==2)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_3h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==10)
+    & (jet_taucharge>0) & (domain<0)
+  label_taup_3h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==11)
+    & (jet_taucharge>0) & (domain<0)
+  label_taum_1h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==0)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_1h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==1)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_1h2p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==2)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_3h0p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==10)
+    & (jet_taucharge<0) & (domain<0)
+  label_taum_3h1p: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==1) & (jet_taudecaymode==11)
+    & (jet_taucharge<0) & (domain<0)
+  label_b: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==5) &
+    (domain<0)
+  label_c: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==4) &
+    (domain<0)
+  label_uds: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0)
+    & (np.abs(jet_pflav)>=0) & (np.abs(jet_pflav)<4) & (domain<0)
+  label_g: (jet_muflav==0) & (jet_elflav==0) & (jet_tauflav==0) & (jet_hflav==0) &
+    (np.abs(jet_pflav)==21) & (domain<0)
+preprocess:
+  method: manual
+  data_fraction: null
+inputs:
+  pf_ch_features:
+    length: 26
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_ch_pt_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.43498
+      - 2.20095
+    - - jet_pfcand_ch_energy_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.22572
+      - 2.36043
+    - - jet_pfcand_ch_eta
+      - 0
+      - 0.5
+      - -5
+      - 5
+      - -1.28594
+      - 1.28812
+    - - jet_pfcand_ch_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.40225
+      - 0.40265
+    - - jet_pfcand_ch_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.36965
+      - 0.36946
+    - - jet_pfcand_ch_charge
+      - 0
+      - 1
+      - -2
+      - 2
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_frompv
+      - 2
+      - 1
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_dz
+      - 0
+      - 0.1
+      - -20
+      - 20
+      - -2.52945
+      - 2.50356
+    - - jet_pfcand_ch_dzsig
+      - 0
+      - 0.01
+      - -1
+      - 50
+      - -0.00036
+      - 12.83433
+    - - jet_pfcand_ch_dxy
+      - 0
+      - 0.25
+      - -25
+      - 25
+      - -2.44796
+      - 2.28637
+    - - jet_pfcand_ch_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 50
+      - -0.00036
+      - 1.38776
+    - - jet_pfcand_ch_etarel
+      - 1.5
+      - 0.5
+      - -5
+      - 5
+      - -0.24344
+      - 2.49977
+    - - jet_pfcand_ch_pperp_ratio
+      - 0
+      - 1
+      - 0
+      - 10
+      - 3.0e-05
+      - 1.59941
+    - - jet_pfcand_ch_ppara_ratio
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.92503
+      - 0.99999
+    - - jet_pfcand_ch_track_chi2
+      - 1
+      - 0.2
+      - -5
+      - 10
+      - -0.2
+      - 2.99985
+    - - jet_pfcand_ch_track_qual
+      - 0
+      - 0.2
+      - -5
+      - 10
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_trackjet_d3d
+      - 0
+      - 0.1
+      - -10
+      - 10
+      - -1.38181
+      - 1.7875
+    - - jet_pfcand_ch_trackjet_d3dsig
+      - 0
+      - 0.005
+      - -1
+      - 50
+      - -0.00035
+      - 4.7753
+    - - jet_pfcand_ch_trackjet_dist
+      - 0
+      - 0.1
+      - 0
+      - 10
+      - 0.0
+      - 1.4425
+    - - jet_pfcand_ch_trackjet_decayL
+      - 0
+      - 0.01
+      - -5
+      - 5
+      - -0.46657
+      - 1.08634
+    - - jet_pfcand_ch_npixhits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_nstriphits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_nlosthits
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_npixlayers
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_nstriplayers
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_track_pterr
+      - 0
+      - 0.05
+      - -1
+      - 5
+      - -0.00015
+      - 0.01137
+    - - jet_pfcand_ch_track_etaerr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.0
+      - 0.03607
+    - - jet_pfcand_ch_track_phierr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.0
+      - 0.01979
+    - - jet_pfcand_ch_id
+      - 2
+      - 0.2
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_tau_signal
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_hcalfraction
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.0
+      - 0.95999
+    - - jet_pfcand_ch_calofraction
+      - 0
+      - 1
+      - 0
+      - 5
+      - 0.0
+      - 2.09989
+    - - jet_pfcand_ch_muon_isglobal
+      - 0
+      - 1
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_muon_chi2
+      - 1
+      - 0.2
+      - -5
+      - 10
+      - -0.19997
+      - -0.19943
+    - - jet_pfcand_ch_muon_segcomp
+      - 0
+      - 1
+      - -5
+      - 5
+      - 2.0e-05
+      - 0.00038
+    - - jet_pfcand_ch_muon_nvalidhit
+      - 0
+      - 1
+      - -1
+      - 50
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_muon_nstation
+      - 0
+      - 1
+      - -1
+      - 10
+      - 0.0
+      - 0.0
+    - - jet_pfcand_ch_electron_detaIn
+      - 0
+      - 25
+      - -5
+      - 5
+      - 2.0e-05
+      - 0.00038
+    - - jet_pfcand_ch_electron_dphiIn
+      - 0
+      - 25
+      - -5
+      - 5
+      - 2.0e-05
+      - 0.00038
+    - - jet_pfcand_ch_electron_sigIetaIeta
+      - 0.002
+      - 50
+      - -1
+      - 5
+      - -0.09999
+      - -0.09977
+    - - jet_pfcand_ch_electron_sigIphiIphi
+      - 0.001
+      - 100
+      - -1
+      - 10
+      - -0.10018
+      - -0.09978
+    - - jet_pfcand_ch_electron_r9
+      - 0
+      - 1
+      - -1
+      - 2
+      - -3.0e-05
+      - 8.0e-05
+    - - jet_pfcand_ch_electron_convProb
+      - 0
+      - 1
+      - -2
+      - 2
+      - 1.0e-05
+      - 0.00015
+  pf_ch_vectors:
+    length: 26
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_ch_px
+      - null
+      - null
+      - null
+      - null
+      - -95.21973
+      - 92.89498
+    - - jet_pfcand_ch_py
+      - null
+      - null
+      - null
+      - null
+      - -94.77938
+      - 93.21965
+    - - jet_pfcand_ch_pz
+      - null
+      - null
+      - null
+      - null
+      - -121.59277
+      - 121.01571
+    - - jet_pfcand_ch_energy
+      - null
+      - null
+      - null
+      - null
+      - 0.22488
+      - 291.4225
+  pf_ch_mask:
+    length: 26
+    vars:
+    - - pfcand_ch_mask
+      - null
+  pf_neu_features:
+    length: 26
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_neu_pt_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.41196
+      - 2.59003
+    - - jet_pfcand_neu_energy_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -1.11781
+      - 2.69381
+    - - jet_pfcand_neu_eta
+      - 0
+      - 0.5
+      - -5
+      - 5
+      - -1.13894
+      - 1.13971
+    - - jet_pfcand_neu_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.37376
+      - 0.3739
+    - - jet_pfcand_neu_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.37573
+      - 0.37581
+    - - jet_pfcand_neu_charge
+      - 0
+      - 1
+      - -2
+      - 2
+      - 0.0
+      - 0.0
+    - - jet_pfcand_neu_frompv
+      - 2
+      - 1
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_neu_dz
+      - 0
+      - 0.1
+      - -20
+      - 20
+      - 1.0e-05
+      - 0.00159
+    - - jet_pfcand_neu_dxy
+      - 0
+      - 0.25
+      - -25
+      - 25
+      - 1.0e-05
+      - 0.00199
+    - - jet_pfcand_neu_etarel
+      - 1.5
+      - 0.5
+      - -5
+      - 5
+      - -0.11053
+      - 2.27338
+    - - jet_pfcand_neu_pperp_ratio
+      - 0
+      - 1
+      - 0
+      - 10
+      - 5.0e-05
+      - 1.09097
+    - - jet_pfcand_neu_ppara_ratio
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.92774
+      - 0.99999
+    - - jet_pfcand_neu_id
+      - 2
+      - 0.2
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_pfcand_neu_tau_signal
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.0
+      - 0.0
+    - - jet_pfcand_neu_hcalfraction
+      - 0
+      - 1
+      - 0
+      - 1
+      - 0.0
+      - 4.0e-05
+    - - jet_pfcand_neu_calofraction
+      - 0
+      - 1
+      - 0
+      - 5
+      - 0.0
+      - 1.0002
+    - - jet_pfcand_neu_photon_sigIetaIeta
+      - 0.002
+      - 50
+      - -1
+      - 5
+      - -0.09999
+      - -0.09976
+    - - jet_pfcand_neu_photon_r9
+      - 0
+      - 1
+      - -1
+      - 2
+      - -3.0e-05
+      - 8.0e-05
+    - - jet_pfcand_neu_photon_eVeto
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.0
+      - 8.0e-05
+  pf_neu_vectors:
+    length: 26
+    pad_mode: wrap
+    vars:
+    - - jet_pfcand_neu_px
+      - null
+      - null
+      - null
+      - null
+      - -158.96673
+      - 163.88693
+    - - jet_pfcand_neu_py
+      - null
+      - null
+      - null
+      - null
+      - -159.79387
+      - 163.27303
+    - - jet_pfcand_neu_pz
+      - null
+      - null
+      - null
+      - null
+      - -160.69198
+      - 163.54512
+    - - jet_pfcand_neu_energy
+      - null
+      - null
+      - null
+      - null
+      - 0.24854
+      - 492.71607
+  pf_neu_mask:
+    length: 26
+    vars:
+    - - pfcand_neu_mask
+      - null
+  sv_features:
+    length: 6
+    vars:
+    - - jet_sv_pt_log
+      - 3
+      - 0.5
+      - -5
+      - 5
+      - -1.18248
+      - 1.76816
+    - - jet_sv_mass
+      - 1.0
+      - 0.25
+      - -1
+      - 5
+      - -0.17819
+      - 4.04682
+    - - jet_sv_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.32108
+      - 0.32097
+    - - jet_sv_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.32167
+      - 0.3219
+    - - jet_sv_ntrack
+      - 3
+      - 1
+      - -5
+      - 20
+      - 0.0
+      - 0.0
+    - - jet_sv_chi2
+      - 0
+      - 0.25
+      - -0.001
+      - 2.5
+      - 5.0e-05
+      - 2.12626
+    - - jet_sv_dxy
+      - 0.2
+      - 0.25
+      - -5
+      - 5
+      - -4.0941
+      - -0.03705
+    - - jet_sv_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 5
+      - 0.00153
+      - 3.58633
+    - - jet_sv_d3d
+      - 0.5
+      - 0.2
+      - -5
+      - 5
+      - -1.26718
+      - 3.97445
+    - - jet_sv_d3dsig
+      - 0
+      - 0.01
+      - -1
+      - 5
+      - 0.00159
+      - 3.58763
+  sv_vectors:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_sv_px
+      - null
+      - null
+      - null
+      - null
+      - -374.00022
+      - 364.74051
+    - - jet_sv_py
+      - null
+      - null
+      - null
+      - null
+      - -375.69472
+      - 366.04183
+    - - jet_sv_pz
+      - null
+      - null
+      - null
+      - null
+      - -405.29437
+      - 403.43265
+    - - jet_sv_energy
+      - null
+      - null
+      - null
+      - null
+      - 2.45552
+      - 715.52759
+  sv_mask:
+    length: 6
+    vars:
+    - - sv_mask
+      - null
+  lt_features:
+    length: 6
+    vars:
+    - - jet_losttrack_pt_log
+      - 1
+      - 0.5
+      - -10
+      - 10
+      - -0.49027
+      - 3.36564
+    - - jet_losttrack_eta
+      - 0
+      - 0.5
+      - -5
+      - 5
+      - -1.24206
+      - 1.24273
+    - - jet_losttrack_deta
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.18121
+      - 0.18136
+    - - jet_losttrack_dphi
+      - 0
+      - 1
+      - -1
+      - 1
+      - -0.18588
+      - 0.18557
+    - - jet_losttrack_charge
+      - 0
+      - 1
+      - -2
+      - 2
+      - 0.0
+      - 0.0
+    - - jet_losttrack_frompv
+      - 2
+      - 1
+      - -5
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_dz
+      - 0
+      - 0.1
+      - -20
+      - 20
+      - -2.76831
+      - 2.77536
+    - - jet_losttrack_dzsig
+      - 0
+      - 0.01
+      - -1
+      - 50
+      - -9.0e-05
+      - 24.1088
+    - - jet_losttrack_dxy
+      - 0
+      - 0.25
+      - -25
+      - 25
+      - -1.91826
+      - 1.93941
+    - - jet_losttrack_dxysig
+      - 0
+      - 0.01
+      - -1
+      - 50
+      - -3.0e-05
+      - 2.68744
+    - - jet_losttrack_etarel
+      - 1.5
+      - 0.5
+      - -5
+      - 5
+      - 0.41578
+      - 2.72551
+    - - jet_losttrack_track_chi2
+      - 1
+      - 0.2
+      - -5
+      - 10
+      - -0.19999
+      - 2.99995
+    - - jet_losttrack_track_qual
+      - 0
+      - 0.2
+      - -5
+      - 10
+      - 0.0
+      - 0.0
+    - - jet_losttrack_trackjet_d3d
+      - 0
+      - 0.1
+      - -10
+      - 10
+      - -1.24117
+      - 1.70526
+    - - jet_losttrack_trackjet_d3dsig
+      - 0
+      - 0.005
+      - -1
+      - 50
+      - 0.00032
+      - 6.56192
+    - - jet_losttrack_trackjet_dist
+      - 0
+      - 0.1
+      - 0
+      - 10
+      - 1.0e-05
+      - 1.35911
+    - - jet_losttrack_trackjet_decayL
+      - 0
+      - 0.01
+      - -5
+      - 5
+      - -1.14335
+      - 2.35311
+    - - jet_losttrack_npixhits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_nstriphits
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_nlosthits
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_npixlayers
+      - 0
+      - 0.5
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_nstriplayers
+      - 0
+      - 0.1
+      - -1
+      - 5
+      - 0.0
+      - 0.0
+    - - jet_losttrack_track_pterr
+      - 0
+      - 0.05
+      - -1
+      - 5
+      - 0.00033
+      - 0.41103
+    - - jet_losttrack_track_etaerr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 0.00011
+      - 0.05272
+    - - jet_losttrack_track_phierr
+      - 0
+      - 1
+      - -1
+      - 1
+      - 6.0e-05
+      - 0.01597
+  lt_vectors:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_losttrack_px
+      - null
+      - null
+      - null
+      - null
+      - -341.66206
+      - 319.70299
+    - - jet_losttrack_py
+      - null
+      - null
+      - null
+      - null
+      - -332.4971
+      - 335.03654
+    - - jet_losttrack_pz
+      - null
+      - null
+      - null
+      - null
+      - -417.9005
+      - 405.47919
+    - - jet_losttrack_energy
+      - null
+      - null
+      - null
+      - null
+      - 1.27084
+      - 687.11779
+  lt_mask:
+    length: 6
+    vars:
+    - - lt_mask
+      - null
+labels:
+  type: simple
+  value:
+  - label_mu
+  - label_el
+  - label_taup_1h0p
+  - label_taup_1h1p
+  - label_taup_1h2p
+  - label_taup_3h0p
+  - label_taup_3h1p
+  - label_taum_1h0p
+  - label_taum_1h1p
+  - label_taum_1h2p
+  - label_taum_3h0p
+  - label_taum_3h1p
+  - label_b
+  - label_c
+  - label_uds
+  - label_g
+labels_domain:
+  type: custom
+  value:
+    label_domain_zll:
+    - label_data_zll
+    - label_mc_zll
+    label_domain_emu:
+    - label_data_emu
+    - label_mc_emu
+    label_domain_mut:
+    - label_data_mut
+    - label_mc_mut
+    label_domain_dijet:
+    - label_data_dijet
+    - label_mc_dijet
+    label_domain_ttcharm:
+    - label_data_ttcharm
+    - label_mc_ttcharm
+  loss_weight:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+targets:
+  type: custom
+  value:
+    target_pt: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_q16: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_q84: np.clip((domain<0)*((label_b) | (label_c) | (label_uds) | (label_g))*np.nan_to_num(jet_genmatch_pt/jet_pt_raw,nan=0,posinf=0,neginf=0)+(label_mu)*((jet_mumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_mumatch_pt,nan=0,posinf=0,neginf=0)+(jet_mumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(label_el)*((jet_elematch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_elematch_pt,nan=0,posinf=0,neginf=0)+(jet_elematch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+((label_taup_1h0p)
+      | (label_taup_1h1p) |(label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p)
+      | (label_taum_1h0p) | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p)
+      | (label_taum_3h1p))*((jet_taumatch_pt>0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_taumatch_pt,nan=0,posinf=0,neginf=0)+(jet_taumatch_pt<=0)*np.nan_to_num(jet_genmatch_lep_vis_pt/jet_pt_raw,nan=0,posinf=0,neginf=0))+(domain>=0),0.3,2)
+    target_pt_nu: ((domain<0)*(((label_b) | (label_c) | (label_uds) | (label_g))*np.clip(np.nan_to_num(jet_genmatch_wnu_pt/jet_genmatch_pt,nan=0,posinf=0,neginf=0),0.9,2)+((label_mu)
+      | (label_el))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,2.0)+((label_taup_1h1p)
+      | (label_taup_1h2p) | (label_taup_3h0p) | (label_taup_3h1p) | (label_taum_1h0p)
+      | (label_taum_1h1p) | (label_taum_1h2p) | (label_taum_3h0p) | (label_taum_3h1p))*np.clip(np.nan_to_num(jet_genmatch_lep_pt/jet_genmatch_lep_vis_pt,nan=0,posinf=0,neginf=0),0.9,5.0))+(domain>=0))
+  quantile:
+  - -1
+  - 0.16
+  - 0.84
+  - -1
+observers:
+- event
+- rho
+- npv
+- wgt
+- met
+- npu
+- sample
+- domain
+- isdata
+- jet_pt
+- jet_pt_raw
+- jet_eta
+- jet_phi
+- jet_mass
+- jet_energy
+- jet_ncand
+- jet_hflav
+- jet_pflav
+- jet_muflav
+- jet_elflav
+- jet_tauflav
+- jet_taudecaymode
+- jet_taucharge
+- jet_lepflav
+- jet_genmatch_pt
+- jet_genmatch_eta
+- jet_genmatch_phi
+- jet_genmatch_mass
+- jet_genmatch_energy
+- jet_genmatch_wnu_pt
+- jet_genmatch_wnu_eta
+- jet_genmatch_wnu_phi
+- jet_genmatch_wnu_mass
+- jet_genmatch_wnu_energy
+- jet_genmatch_lep_pt
+- jet_genmatch_lep_eta
+- jet_genmatch_lep_phi
+- jet_genmatch_lep_mass
+- jet_genmatch_lep_energy
+- jet_genmatch_lep_vis_pt
+- jet_genmatch_lep_vis_eta
+- jet_genmatch_lep_vis_phi
+- jet_genmatch_lep_vis_mass
+- jet_genmatch_lep_vis_energy
+- jet_pnetlast_probb
+- jet_pnetlast_probc
+- jet_pnetlast_probuds
+- jet_pnetlast_probg
+- jet_pnetlast_probmu
+- jet_pnetlast_probele
+- jet_pnetlast_probtaup1h0p
+- jet_pnetlast_probtaup1h1p
+- jet_pnetlast_probtaup1h2p
+- jet_pnetlast_probtaup3h0p
+- jet_pnetlast_probtaup3h1p
+- jet_pnetlast_probtaum1h0p
+- jet_pnetlast_probtaum1h1p
+- jet_pnetlast_probtaum1h2p
+- jet_pnetlast_probtaum3h0p
+- jet_pnetlast_probtaum3h1p
+- jet_pnetlast_ptcorr
+- jet_parTlast_probb
+- jet_parTlast_probc
+- jet_parTlast_probuds
+- jet_parTlast_probg
+- jet_parTlast_probmu
+- jet_parTlast_probele
+- jet_parTlast_probtaup1h0p
+- jet_parTlast_probtaup1h1p
+- jet_parTlast_probtaup1h2p
+- jet_parTlast_probtaup3h0p
+- jet_parTlast_probtaup3h1p
+- jet_parTlast_probtaum1h0p
+- jet_parTlast_probtaum1h1p
+- jet_parTlast_probtaum1h2p
+- jet_parTlast_probtaum3h0p
+- jet_parTlast_probtaum3h1p
+- jet_parTlast_ptcorr
+- jet_taumatch_pt
+- jet_taumatch_eta
+- jet_taumatch_phi
+- jet_taumatch_mass
+- jet_taumatch_decaymode
+- jet_taumatch_charge
+- jet_taumatch_idjet
+- jet_taumatch_idmu
+- jet_taumatch_idele
+- jet_taumatch_dxy
+- jet_taumatch_dz
+- jet_mumatch_pt
+- jet_mumatch_eta
+- jet_mumatch_phi
+- jet_mumatch_id
+- jet_mumatch_iso
+- jet_elematch_pt
+- jet_elematch_eta
+- jet_elematch_phi
+- jet_elematch_idscore
+monitor_variables: null
+weights:
+  use_precomputed_weights: false
+  reweight_method: flat
+  reweight_vars:
+    jet_pt_raw:
+    - 15
+    - 20
+    - 25
+    - 30
+    - 38
+    - 48
+    - 60
+    - 76
+    - 97
+    - 122
+    - 154
+    - 195
+    - 246
+    - 311
+    - 393
+    - 496
+    - 627
+    - 792
+    - 1000
+    - 3000
+    jet_eta:
+    - -2.5
+    - -2.0
+    - -1.5
+    - -1.0
+    - -0.5
+    - 0.0
+    - 0.5
+    - 1.0
+    - 1.5
+    - 2.0
+    - 2.5
+  reweight_classes:
+  - label_mu
+  - label_el
+  - label_taup_1h0p
+  - label_taup_1h1p
+  - label_taup_1h2p
+  - label_taup_3h0p
+  - label_taup_3h1p
+  - label_taum_1h0p
+  - label_taum_1h1p
+  - label_taum_1h2p
+  - label_taum_3h0p
+  - label_taum_3h1p
+  - label_b
+  - label_c
+  - label_uds
+  - label_g
+  class_weights:
+  - 1.0
+  - 1.0
+  - 0.15
+  - 0.3
+  - 0.12
+  - 0.12
+  - 0.06
+  - 0.15
+  - 0.3
+  - 0.12
+  - 0.12
+  - 0.06
+  - 1.5
+  - 2.0
+  - 3.0
+  - 5.0
+  reweight_threshold: 15
+  reweight_hists: null
+  domain_classes:
+  - label_mc_zll
+  - label_mc_emu
+  - label_mc_mut
+  - label_mc_dijet
+  - label_mc_ttcharm
+  - label_data_zll
+  - label_data_emu
+  - label_data_mut
+  - label_data_dijet
+  - label_data_ttcharm
+  domain_weights:
+  - 2
+  - 2
+  - 3
+  - 2
+  - 2
+  - 3
+  - 7
+  - 12
+  - 4
+  - 16
