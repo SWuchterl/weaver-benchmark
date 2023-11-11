@@ -36,7 +36,7 @@ def get_model(data_config, **kwargs):
         save_grad_inputs = False,
         pair_input_dim = len(data_config.input_dicts['pf_ch_vectors']),
         pair_extra_dim = 0,
-        embed_dims = [64, 128, 64],
+        embed_dims = [128, 256, 128],
         pair_embed_dims = [64, 64, 64],
         block_params = None,
         cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
