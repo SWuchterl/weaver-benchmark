@@ -77,7 +77,7 @@ def get_model(data_config, **kwargs):
     return model, model_info
 
 ##
-class RBF(nn.Module):
+class RBF(torch.nn.Module):
     def __init__(self, n_kernels=5, mul_factor=2.0, bandwidth=None):
         super().__init__()
         self.bandwidth_multipliers = mul_factor ** (torch.arange(n_kernels) - n_kernels // 2)
@@ -96,7 +96,7 @@ class RBF(nn.Module):
         self.bandwidth_multipliers = self.bandwidth_multipliers.to(X.device,non_blocking=True);
         return torch.exp(-L2_distances[None, ...] / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
 ## MMDLoss                                                                                                                                                                                           
-class MMDLoss(nn.Module):
+class MMDLoss(torch.nn.Module):
 
     def __init__(self, kernel=RBF()):
         super().__init__()
