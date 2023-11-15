@@ -2,7 +2,7 @@ import numpy as np
 import math
 import torch
 from torch import Tensor
-from nn.model.ParticleTransformerV2 import ParticleTransformerTagger
+from nn.model.ParticleTransformerCharged import ParticleTransformerTagger
 from nn.loss.mdmm import Constraint, EqConstraint, MaxConstraint, MinConstraint
 
 def get_model(data_config, **kwargs):
@@ -27,7 +27,8 @@ def get_model(data_config, **kwargs):
 
     ## options                                                                                                                                                                                   
     cfg = dict(
-        pf_input_dim = len(data_config.input_dicts['pf_features']),
+        pf_ch_input_dim = len(data_config.input_dicts['pf_ch_features']),
+        pf_neu_input_dim = len(data_config.input_dicts['pf_neu_features']),
         sv_input_dim = len(data_config.input_dicts['sv_features']),
         lt_input_dim = len(data_config.input_dicts['lt_features']),
         num_classes = num_classes,
@@ -53,6 +54,7 @@ def get_model(data_config, **kwargs):
         split_reg = kwargs.get('split_reg',True),
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
         fc_da_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
+        fc_contrastive_params = [(128, 0.05)],
         alpha_grad = kwargs.get('alpha_grad',1)
     );
 
@@ -167,60 +169,88 @@ class LossAttack (torch.nn.L1Loss):
             elif self.reduction == 'sum':
                 loss = loss.sum();
         return loss;
-
-
+    
 ############
-class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
-    __constants__ = ['reduction','mdmm_reg_scale','mdmm_reg_value','mdmm_q_scale','mdmm_q_value','mdmm_da_scale','mdmm_da_value','mdmm_attack_scale','mdmm_attack_value','mdmm_damp','quantiles','domain_weight','domain_dim',]
+class LossContrastive (torch.nn.L1Loss):
+    def __init__(self, reduction: str = 'mean', temperature: float = 0.1):
+        super().__init__()
+        self.reduction = reduction;
+        self.temperature = temperature;
+
+    def forward(self, inputs_cont, inputs_cat, classes):
+        loss = 0;
+        if inputs_cont.nelement():
+            logits_contrastive = torch.nn.functional.normalize(inputs_cont, dim=1)
+            logits_contrastive = torch.div(torch.matmul(logits_contrastive,logits_contrastive.permute(1,0)),self.temperature);
+            logits_mask = torch.zeros(inputs_cat.shape).float().to(logits_contrastive.device,non_blocking=True);
+            r, c = classes.view(-1,1).shape;
+            logits_mask[torch.arange(r).reshape(-1,1).repeat(1,c).flatten(),classes.flatten()] = 1;
+            logits_mask = torch.matmul(logits_mask,logits_mask.permute(1,0))
+            logits_mask /= torch.sum(logits_mask,dim=1,keepdims=True)
+            loss = torch.nn.functional.cross_entropy(logits_contrastive,logits_mask,reduction=self.reduction);
+        return loss;
+    
+############
+class CrossEntropyContrastiveLogCoshLossDomainAttack(torch.nn.L1Loss):
+    __constants__ = ['reduction','mdmm_reg_value','mdmm_reg_scale','mdmm_q_value','mdmm_q_scale','mdmm_da_value','mdmm_da_scale','mdmm_da_scale','mdmm_attack_scale','mdmm_cont_value','mdmm_cont_scale','mdmm_damp','quantiles','domain_weight','domain_dim','temperature']
     def __init__(self, 
                  reduction: str = 'mean',
-                 mdmm_reg_scale: float = 1.,
+                 temperature: float = 0.1,
                  mdmm_reg_value: float = 1.,
-                 mdmm_q_scale: float = 1.,
+                 mdmm_reg_scale: float = 1.,
                  mdmm_q_value: float = 1.,
-                 mdmm_da_scale: float = 1.,
+                 mdmm_q_scale: float = 1.,
                  mdmm_da_value: float = 1.,
-                 mdmm_attack_scale: float = 1.,
+                 mdmm_da_scale: float = 1.,
                  mdmm_attack_value: float = 1.,
+                 mdmm_attack_scale: float = 1.,
+                 mdmm_cont_value: float = 1.,
+                 mdmm_cont_scale: float = 1.,
                  mdmm_damp: float = 1.,
                  quantiles: list = [],
                  domain_weight: list = [],
                  domain_dim: list = [],
              ) -> None:
 
-        super(CrossEntropyLogCoshLossDomainAttack, self).__init__(None, None, reduction)
+        super(CrossEntropyContrastiveLogCoshLossDomainAttack, self).__init__(None, None, reduction)
         ## inputs needed
         self.reduction = reduction
+        self.temperature = temperature
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
         self.mdmm_damp = mdmm_damp;
-        self.mdmm_reg_scale = mdmm_reg_scale;
         self.mdmm_reg_value = mdmm_reg_value;
-        self.mdmm_q_scale = mdmm_q_scale;
+        self.mdmm_reg_scale = mdmm_reg_scale;
         self.mdmm_q_value = mdmm_q_value;
-        self.mdmm_da_scale = mdmm_da_scale;
+        self.mdmm_q_scale = mdmm_q_scale;
         self.mdmm_da_value = mdmm_da_value;
-        self.mdmm_attack_scale = mdmm_attack_scale;
+        self.mdmm_da_scale = mdmm_da_scale;
+        self.mdmm_cont_value = mdmm_cont_value;
+        self.mdmm_cont_scale = mdmm_cont_scale;
         self.mdmm_attack_value = mdmm_attack_value;
+        self.mdmm_attack_scale = mdmm_attack_scale;
         ## losses 
         self.loss_class = LossCategorization(reduction=self.reduction);
         self.loss_reg = LossRegression(reduction=self.reduction,quantiles=self.quantiles);
         self.loss_quant = LossQuantile(reduction=self.reduction,quantiles=self.quantiles);
         self.loss_domain = LossDomain(reduction=self.reduction,wdomain=self.domain_weight,ddomain=self.domain_dim);
         self.loss_attack = LossAttack(reduction=self.reduction);
+        self.loss_cont = LossContrastive(reduction=self.reduction,temperature=self.temperature);
         ## constraint
-        self.constraint_reg = EqConstraint(self.loss_reg,scale=self.mdmm_reg_scale,value=self.mdmm_reg_value,damping=self.mdmm_damp);
-        self.constraint_quant = EqConstraint(self.loss_quant,scale=self.mdmm_q_scale,value=self.mdmm_q_value,damping=self.mdmm_damp);
-        self.constraint_domain = EqConstraint(self.loss_domain,scale=self.mdmm_da_scale,value=self.mdmm_da_value,damping=self.mdmm_damp);
-        self.constraint_attack = EqConstraint(self.loss_attack,scale=self.mdmm_attack_scale,value=self.mdmm_attack_value,damping=self.mdmm_damp);
-        self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack]
+        self.constraint_reg = MaxConstraint(self.loss_reg,max=self.mdmm_reg_value,scale=self.mdmm_reg_scale,damping=self.mdmm_damp);
+        self.constraint_quant = MaxConstraint(self.loss_quant,max=self.mdmm_q_value,scale=self.mdmm_q_scale,damping=self.mdmm_damp);
+        self.constraint_domain = MaxConstraint(self.loss_domain,max=self.mdmm_da_value,scale=self.mdmm_da_scale,damping=self.mdmm_damp);
+        self.constraint_attack = MaxConstraint(self.loss_attack,max=self.mdmm_attack_value,scale=self.mdmm_attack_scale,damping=self.mdmm_damp);
+        self.constraint_cont = MaxConstraint(self.loss_cont,max=self.mdmm_cont_value,scale=self.mdmm_cont_scale,damping=self.mdmm_damp);
+        self.constraints = [self.constraint_reg,self.constraint_quant,self.constraint_domain,self.constraint_attack,self.constraint_cont]
         self.lambdas = [c.lmbda for c in self.constraints];
         self.slacks = [c.slack for c in self.constraints if hasattr(c, 'slack')];
-
+                
     def forward(self, input_cat: Tensor, y_cat: Tensor, input_reg: Tensor, y_reg: Tensor, 
                 input_domain: Tensor, y_domain: Tensor, y_domain_check: Tensor,
-                input_cat_attack: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor()) -> Tensor:
+                input_cat_attack: Tensor = torch.Tensor(), input_cat_ref: Tensor = torch.Tensor(),
+                input_cont: Tensor = torch.Tensor()) -> Tensor:
 
         ## classification 
         total_loss = 0;
@@ -235,7 +265,7 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
             loss_reg = self.constraint_reg([input_reg-y_reg]).value;
             loss_quant = self.constraint_quant([input_reg-y_reg]).value;
             total_loss += loss_reg+loss_quant;
-            loss_reg   += loss_quant        
+            loss_reg   += loss_quant
         ## domain
         loss_domain = 0;
         if input_domain.nelement() and y_domain.nelement() and y_domain_check.nelement():
@@ -246,8 +276,12 @@ class CrossEntropyLogCoshLossDomainAttack(torch.nn.L1Loss):
         if input_cat_attack.nelement() and input_cat_ref.nelement():
             loss_attack = self.constraint_attack([input_cat_ref,input_cat_attack]).value;
             total_loss += loss_attack
-        
-        return total_loss,loss_class,loss_reg,loss_domain,loss_attack
+        ## contrastive
+        loss_cont = 0;
+        if input_cont.nelement():
+            loss_cont = self.constraint_cont([input_cont,input_cat,y_cat]).value;
+            total_loss += loss_cont
+        return total_loss,loss_class,loss_reg,loss_domain,loss_attack,loss_cont
 
     
 def get_loss(data_config, **kwargs):
@@ -261,17 +295,20 @@ def get_loss(data_config, **kwargs):
     else:
         ldomain = [len(data_config.label_domain_value)];
 
-    return CrossEntropyLogCoshLossDomainAttack(
+    return CrossEntropyContrastiveLogCoshLossDomainAttack(
         reduction=kwargs.get('reduction','mean'),
+        temperature=kwargs.get('temperature',0.1),
         mdmm_damp=kwargs.get('mdmm_damp',1.),
+        mdmm_reg_value=kwargs.get('mdmm_reg_value',0.01),
         mdmm_reg_scale=kwargs.get('mdmm_reg_scale',1.),
-        mdmm_reg_value=kwargs.get('mdmm_reg_value',0.01), ## target is 0 for regression
+        mdmm_q_value=kwargs.get('mdmm_q_value',0.01),
         mdmm_q_scale=kwargs.get('mdmm_q_scale',1.),
-        mdmm_q_value=kwargs.get('mdmm_q_value',0.01), ## target is 0 for regression
+        mdmm_da_value=kwargs.get('mdmm_da_value',0.01),
         mdmm_da_scale=kwargs.get('mdmm_da_scale',1.),
-        mdmm_da_value=kwargs.get('mdmm_da_value',0.01), ## target value is 0 for CELoss 
+        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.001),
         mdmm_attack_scale=kwargs.get('mdmm_attack_scale',1.),
-        mdmm_attack_value=kwargs.get('mdmm_attack_value',0.001), ## target is 0 for attack KL
+        mdmm_cont_value=kwargs.get('mdmm_cont_value',0.01),
+        mdmm_cont_scale=kwargs.get('mdmm_cont_scale',1.),
         quantiles=quantiles,
         domain_weight=wdomain,
         domain_dim=ldomain
