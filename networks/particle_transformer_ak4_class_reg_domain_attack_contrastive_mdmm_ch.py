@@ -35,7 +35,7 @@ def get_model(data_config, **kwargs):
         num_targets = num_targets,
         num_domains = num_domains,
         save_grad_inputs = False,
-        pair_input_dim = len(data_config.input_dicts['pf_vectors']),
+        pair_input_dim = len(data_config.input_dicts['pf_ch_vectors']),
         pair_extra_dim = 0,
         embed_dims = [128, 256, 128],
         pair_embed_dims = [64, 64, 64],
