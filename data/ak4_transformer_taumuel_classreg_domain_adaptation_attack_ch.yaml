@@ -11,10 +11,14 @@ test_time_selection:
 new_variables:
    ### [format] name: formula
    ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
-   pfcand_ch_mask: ak.ones_like(jet_pfcand_ch_deta)
-   pfcand_neu_mask: ak.ones_like(jet_pfcand_neu_deta)
-   sv_mask: ak.ones_like(jet_sv_deta)
+   ### mask vectors
+   pfcand_ch_mask: ak.ones_like(jet_pfcand_ch_pt)
+   pfcand_neu_mask: ak.ones_like(jet_pfcand_neu_pt)
+   sv_mask: ak.ones_like(jet_sv_pt)
+   k_mask: ak.ones_like(jet_kaon_pt)
+   l_mask: ak.ones_like(jet_lambda_pt)
    lt_mask: ak.ones_like(jet_losttrack_deta)
+   ### 4-vec for edges
    jet_pfcand_ch_p4: _p4_from_ptetaphie(jet_pfcand_ch_pt,jet_pfcand_ch_eta,jet_pfcand_ch_phi,jet_pfcand_ch_energy)
    jet_pfcand_ch_px: jet_pfcand_ch_p4.px
    jet_pfcand_ch_py: jet_pfcand_ch_p4.py
@@ -27,10 +31,19 @@ new_variables:
    jet_sv_px: jet_sv_p4.px
    jet_sv_py: jet_sv_p4.py
    jet_sv_pz: jet_sv_p4.pz
+   jet_kaon_p4: _p4_from_ptetaphie(jet_kaon_pt,jet_kaon_eta,jet_kaon_phi,jet_kaon_energy)
+   jet_kaon_px: jet_kaon_p4.px
+   jet_kaon_py: jet_kaon_p4.py
+   jet_kaon_pz: jet_kaon_p4.pz
+   jet_lambda_p4: _p4_from_ptetaphie(jet_lambda_pt,jet_lambda_eta,jet_lambda_phi,jet_lambda_energy)
+   jet_lambda_px: jet_lambda_p4.px
+   jet_lambda_py: jet_lambda_p4.py
+   jet_lambda_pz: jet_lambda_p4.pz
    jet_losttrack_p4: _p4_from_ptetaphie(jet_losttrack_pt,jet_losttrack_eta,jet_losttrack_phi,jet_losttrack_energy)
    jet_losttrack_px: jet_losttrack_p4.px
    jet_losttrack_py: jet_losttrack_p4.py
    jet_losttrack_pz: jet_losttrack_p4.pz   
+   ### truth labels for classes and domains
    label_mc_zll:   (domain>=0) & (domain<=1) & (isdata==0)
    label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
    label_mc_emu:   (domain==2) & (isdata==0)
@@ -78,49 +91,58 @@ inputs:
          ### eps_min(optional, default=-5),
          ### eps_max(optional, default=5),
          ### pad_value(optional, default=0)	 
-         - [jet_pfcand_ch_pt_log, 1, 0.5, -10, 10]
-         - [jet_pfcand_ch_energy_log, 1, 0.5, -10, 10]
-         - [jet_pfcand_ch_eta, 0, 0.5, -5, 5]
-         - [jet_pfcand_ch_deta, 0, 1, -1, 1]
-         - [jet_pfcand_ch_dphi, 0, 1, -1, 1]
-         - [jet_pfcand_ch_charge, 0, 1, -2, 2]
-         - [jet_pfcand_ch_frompv, 2, 1, -5, 5]
-         - [jet_pfcand_ch_dz, 0, 0.1, -20, 20]
-         - [jet_pfcand_ch_dzsig, 0, 0.01, -1, 50]
-         - [jet_pfcand_ch_dxy, 0, 0.25, -25, 25]
-         - [jet_pfcand_ch_dxysig, 0, 0.01, -1, 50]
-         - [jet_pfcand_ch_etarel, 1.5, 0.5, -5, 5]
-         - [jet_pfcand_ch_pperp_ratio, 0, 1, 0, 10]
-         - [jet_pfcand_ch_ppara_ratio, 0, 1, 0, 1]
-         - [jet_pfcand_ch_track_chi2, 1, 0.2, -5, 10]
-         - [jet_pfcand_ch_track_qual, 0, 0.2, -5, 10]
-         - [jet_pfcand_ch_trackjet_d3d, 0, 0.1, -10, 10]
-         - [jet_pfcand_ch_trackjet_d3dsig, 0, 0.005, -1, 50]
-         - [jet_pfcand_ch_trackjet_dist, 0, 0.1, 0, 10]
-         - [jet_pfcand_ch_trackjet_decayL, 0, 0.01, -5, 5]
-         - [jet_pfcand_ch_npixhits, 0, 0.1, -1, 5]
-         - [jet_pfcand_ch_nstriphits, 0, 0.1, -1, 5]
-         - [jet_pfcand_ch_nlosthits, 0, 0.5, -1, 5]
-         - [jet_pfcand_ch_npixlayers, 0, 0.5, -1, 5]
-         - [jet_pfcand_ch_nstriplayers, 0, 0.1, -1, 5]
-         - [jet_pfcand_ch_track_pterr, 0, 0.05, -1, 5]
-         - [jet_pfcand_ch_track_etaerr, 0, 1, -1, 1]
-         - [jet_pfcand_ch_track_phierr, 0, 1, -1, 1]
-         - [jet_pfcand_ch_id, 2, 0.2, -5, 5]
-         - [jet_pfcand_ch_tau_signal, 0, 1, 0, 1]
-         - [jet_pfcand_ch_hcalfraction, 0, 1, 0, 1]
-         - [jet_pfcand_ch_calofraction, 0, 1, 0, 5]
-         - [jet_pfcand_ch_muon_isglobal, 0, 1, -5, 5]
-         - [jet_pfcand_ch_muon_chi2,  1, 0.2, -5, 10]
-         - [jet_pfcand_ch_muon_segcomp, 0, 1, -5, 5]
-         - [jet_pfcand_ch_muon_nvalidhit, 0, 1, -1, 50]
-         - [jet_pfcand_ch_muon_nstation, 0, 1, -1, 10]
-         - [jet_pfcand_ch_electron_detaIn, 0, 25, -5, 5]
-         - [jet_pfcand_ch_electron_dphiIn, 0, 25, -5, 5]
-         - [jet_pfcand_ch_electron_sigIetaIeta, 0.002, 50, -1, 5]
-         - [jet_pfcand_ch_electron_sigIphiIphi, 0.001, 100, -1, 10]
-         - [jet_pfcand_ch_electron_r9, 0, 1, -1, 2]
-         - [jet_pfcand_ch_electron_convProb, 0, 1, -2, 2]
+         - [jet_pfcand_ch_pt_log]
+         - [jet_pfcand_ch_energy_log]
+         - [jet_pfcand_ch_eta]
+         - [jet_pfcand_ch_deta]
+         - [jet_pfcand_ch_dphi]
+         - [jet_pfcand_ch_ptrel]
+         - [jet_pfcand_ch_etarel]
+         - [jet_pfcand_ch_pperp]
+         - [jet_pfcand_ch_ppara]
+         - [jet_pfcand_ch_id]
+         - [jet_pfcand_ch_charge]
+         - [jet_pfcand_ch_frompv]
+         - [jet_pfcand_ch_dz]
+         - [jet_pfcand_ch_dzsig]
+         - [jet_pfcand_ch_dxy]
+         - [jet_pfcand_ch_dxysig]
+         - [jet_pfcand_ch_hcalfraction]
+         - [jet_pfcand_ch_calofraction]
+         - [jet_pfcand_ch_track_chi2]
+         - [jet_pfcand_ch_track_qual]
+         - [jet_pfcand_ch_track_pterr]
+         - [jet_pfcand_ch_track_etaerr]
+         - [jet_pfcand_ch_track_phierr]
+         - [jet_pfcand_ch_trackjet_sip2d]
+         - [jet_pfcand_ch_trackjet_sip2dsig]
+         - [jet_pfcand_ch_trackjet_sip3d]
+         - [jet_pfcand_ch_trackjet_sip3dsig]
+         - [jet_pfcand_ch_trackjet_dist]
+         - [jet_pfcand_ch_trackjet_decayL]
+         - [jet_pfcand_ch_nhits]
+         - [jet_pfcand_ch_npixhits]
+         - [jet_pfcand_ch_npixbarrelhits]
+         - [jet_pfcand_ch_nstriphits]
+         - [jet_pfcand_ch_nstriptibhits]
+         - [jet_pfcand_ch_nstriptobhits]
+         - [jet_pfcand_ch_nlosthits]
+         - [jet_pfcand_ch_nlayers]
+         - [jet_pfcand_ch_npixlayers]
+         - [jet_pfcand_ch_nstriplayers]
+         - [jet_pfcand_ch_tau_signal]
+         - [jet_pfcand_ch_muon_id]
+         - [jet_pfcand_ch_muon_chi2]
+         - [jet_pfcand_ch_muon_segcomp]
+         - [jet_pfcand_ch_muon_type]
+         - [jet_pfcand_ch_muon_nvalidhits]
+         - [jet_pfcand_ch_muon_nstations]
+         - [jet_pfcand_ch_electron_detaIn]
+         - [jet_pfcand_ch_electron_dphiIn]
+         - [jet_pfcand_ch_electron_sigIetaIeta]
+         - [jet_pfcand_ch_electron_sigIphiIphi]
+         - [jet_pfcand_ch_electron_r9]
+         - [jet_pfcand_ch_electron_convProb]
    pf_ch_vectors:
       length: 26
       pad_mode: wrap
@@ -146,25 +168,25 @@ inputs:
          ### eps_min(optional, default=-5),
          ### eps_max(optional, default=5),
          ### pad_value(optional, default=0)	 
-         - [jet_pfcand_neu_pt_log, 1, 0.5, -10, 10]
-         - [jet_pfcand_neu_energy_log, 1, 0.5, -10, 10]
-         - [jet_pfcand_neu_eta, 0, 0.5, -5, 5]
-         - [jet_pfcand_neu_deta, 0, 1, -1, 1]
-         - [jet_pfcand_neu_dphi, 0, 1, -1, 1]
-         - [jet_pfcand_neu_charge, 0, 1, -2, 2]
-         - [jet_pfcand_neu_frompv, 2, 1, -5, 5]
-         - [jet_pfcand_neu_dz, 0, 0.1, -20, 20]
-         - [jet_pfcand_neu_dxy, 0, 0.25, -25, 25]
-         - [jet_pfcand_neu_etarel, 1.5, 0.5, -5, 5]
-         - [jet_pfcand_neu_pperp_ratio, 0, 1, 0, 10]
-         - [jet_pfcand_neu_ppara_ratio, 0, 1, 0, 1]
-         - [jet_pfcand_neu_id, 2, 0.2, -5, 5]
-         - [jet_pfcand_neu_tau_signal, 0, 1, 0, 1]
-         - [jet_pfcand_neu_hcalfraction, 0, 1, 0, 1]
-         - [jet_pfcand_neu_calofraction, 0, 1, 0, 5]
-         - [jet_pfcand_neu_photon_sigIetaIeta, 0.002, 50, -1, 5]
-         - [jet_pfcand_neu_photon_r9, 0, 1, -1, 2]
-         - [jet_pfcand_neu_photon_eVeto, 0, 1, -1, 1]
+         - [jet_pfcand_neu_pt_log]
+         - [jet_pfcand_neu_energy_log]
+         - [jet_pfcand_neu_eta]
+         - [jet_pfcand_neu_deta]
+         - [jet_pfcand_neu_dphi]
+         - [jet_pfcand_neu_ptrel]
+         - [jet_pfcand_neu_etarel]
+         - [jet_pfcand_neu_pperp]
+         - [jet_pfcand_neu_ppara]
+         - [jet_pfcand_neu_id]
+         - [jet_pfcand_neu_frompv]
+         - [jet_pfcand_neu_dz]
+         - [jet_pfcand_neu_dxy]
+         - [jet_pfcand_neu_hcalfraction]
+         - [jet_pfcand_neu_calofraction]
+         - [jet_pfcand_neu_tau_signal]
+         - [jet_pfcand_neu_photon_sigIetaIeta]
+         - [jet_pfcand_neu_photon_r9]
+         - [jet_pfcand_neu_photon_eVeto]
    pf_neu_vectors:
       length: 26
       pad_mode: wrap
@@ -180,16 +202,21 @@ inputs:
    sv_features:
       length: 6
       vars:
-         - [jet_sv_pt_log, 3, 0.5, -5, 5]
-         - [jet_sv_mass, 1., 0.25, -1, 5]
-         - [jet_sv_deta, 0, 1, -1, 1]
-         - [jet_sv_dphi, 0, 1, -1, 1]
-         - [jet_sv_ntrack, 3, 1, -5, 20]
-         - [jet_sv_chi2, 0, 0.25, -0.001, 2.5]
-         - [jet_sv_dxy, 0.2, 0.25, -5, 5]
-         - [jet_sv_dxysig, 0, 0.01, -1, 5]
-         - [jet_sv_d3d, 0.5, 0.2, -5, 5]
-         - [jet_sv_d3dsig, 0, 0.01, -1, 5]
+         - [jet_sv_pt_log]
+         - [jet_sv_energy_log]
+         - [jet_sv_eta]
+         - [jet_sv_mass]
+         - [jet_sv_deta]
+         - [jet_sv_dphi]
+         - [jet_sv_ntrack]
+         - [jet_sv_chi2]
+         - [jet_sv_dxy]
+         - [jet_sv_dxysig]
+         - [jet_sv_dxy_sign]
+         - [jet_sv_d3d]
+         - [jet_sv_d3dsig]
+         - [jet_sv_d3d_sign]
+         - [jet_sv_costheta]
    sv_vectors:
       length: 6
       pad_mode: wrap
@@ -202,34 +229,106 @@ inputs:
       length: 6
       vars:
          - [sv_mask, null]
+   k_features:
+      length: 6
+      vars:
+         - [jet_kaon_pt_log]
+         - [jet_kaon_energy_log]
+         - [jet_kaon_eta]
+         - [jet_kaon_mass]
+         - [jet_kaon_deta]
+         - [jet_kaon_dphi]
+         - [jet_kaon_ntrack]
+         - [jet_kaon_chi2]
+         - [jet_kaon_dxy]
+         - [jet_kaon_dxysig]
+         - [jet_kaon_dxy_sign]
+         - [jet_kaon_d3d]
+         - [jet_kaon_d3dsig]
+         - [jet_kaon_d3d_sign]
+         - [jet_kaon_costheta]
+   k_vectors:
+      length: 6
+      pad_mode: wrap
+      vars:
+         - [jet_kaon_px, null]
+         - [jet_kaon_py, null]
+         - [jet_kaon_pz, null]
+         - [jet_kaon_energy, null]
+   k_mask:
+      length: 6
+      vars:
+         - [k_mask, null]
+   l_features:
+      length: 6
+      vars:
+         - [jet_lambda_pt_log]
+         - [jet_lambda_energy_log]
+         - [jet_lambda_eta]
+         - [jet_lambda_mass]
+         - [jet_lambda_deta]
+         - [jet_lambda_dphi]
+         - [jet_lambda_ntrack]
+         - [jet_lambda_chi2]
+         - [jet_lambda_dxy]
+         - [jet_lambda_dxysig]
+         - [jet_lambda_dxy_sign]
+         - [jet_lambda_d3d]
+         - [jet_lambda_d3dsig]
+         - [jet_lambda_d3d_sign]
+         - [jet_lambda_costheta]
+   l_vectors:
+      length: 6
+      pad_mode: wrap
+      vars:
+         - [jet_lambda_px, null]
+         - [jet_lambda_py, null]
+         - [jet_lambda_pz, null]
+         - [jet_lambda_energy, null]
+   l_mask:
+      length: 6
+      vars:
+         - [lambda_mask, null]
    lt_features:
       length: 6
       vars:
-         - [jet_losttrack_pt_log, 1, 0.5, -10, 10]
-         - [jet_losttrack_eta, 0, 0.5, -5, 5]
-         - [jet_losttrack_deta, 0, 1, -1, 1]
-         - [jet_losttrack_dphi, 0, 1, -1, 1]
-         - [jet_losttrack_charge, 0, 1, -2, 2]
-         - [jet_losttrack_frompv, 2, 1, -5, 5]
-         - [jet_losttrack_dz, 0, 0.1, -20, 20]
-         - [jet_losttrack_dzsig, 0, 0.01, -1, 50]
-         - [jet_losttrack_dxy, 0, 0.25, -25, 25]
-         - [jet_losttrack_dxysig, 0, 0.01, -1, 50]
-         - [jet_losttrack_etarel, 1.5, 0.5, -5, 5]
-         - [jet_losttrack_track_chi2, 1, 0.2, -5, 10]
-         - [jet_losttrack_track_qual, 0, 0.2, -5, 10]
-         - [jet_losttrack_trackjet_d3d, 0, 0.1, -10, 10]
-         - [jet_losttrack_trackjet_d3dsig, 0, 0.005, -1, 50]
-         - [jet_losttrack_trackjet_dist, 0, 0.1, 0, 10]
-         - [jet_losttrack_trackjet_decayL, 0, 0.01, -5, 5]
-         - [jet_losttrack_npixhits, 0, 0.1, -1, 5]
-         - [jet_losttrack_nstriphits, 0, 0.1, -1, 5]
-         - [jet_losttrack_nlosthits, 0, 0.5, -1, 5]
-         - [jet_losttrack_npixlayers, 0, 0.5, -1, 5]
-         - [jet_losttrack_nstriplayers, 0, 0.1, -1, 5]
-         - [jet_losttrack_track_pterr, 0, 0.05, -1, 5]
-         - [jet_losttrack_track_etaerr, 0, 1, -1, 1]
-         - [jet_losttrack_track_phierr, 0, 1, -1, 1]
+         - [jet_losttrack_pt_log]
+         - [jet_losttrack_energy_log]
+         - [jet_losttrack_eta]
+         - [jet_losttrack_deta]
+         - [jet_losttrack_dphi]
+         - [jet_losttrack_ptrel]
+         - [jet_losttrack_etarel]
+         - [jet_losttrack_pperp]
+         - [jet_losttrack_ppara]
+         - [jet_losttrack_id]
+         - [jet_losttrack_charge]
+         - [jet_losttrack_frompv]
+         - [jet_losttrack_dz]
+         - [jet_losttrack_dzsig]
+         - [jet_losttrack_dxy]
+         - [jet_losttrack_dxysig]
+         - [jet_losttrack_track_chi2]
+         - [jet_losttrack_track_qual]
+         - [jet_losttrack_track_pterr]
+         - [jet_losttrack_track_etaerr]
+         - [jet_losttrack_track_phierr]
+         - [jet_losttrack_trackjet_sip2d]
+         - [jet_losttrack_trackjet_sip2dsig]
+         - [jet_losttrack_trackjet_sip3d]
+         - [jet_losttrack_trackjet_sip3dsig]
+         - [jet_losttrack_trackjet_dist]
+         - [jet_losttrack_trackjet_decayL]
+         - [jet_losttrack_nhits]
+         - [jet_losttrack_npixhits]
+         - [jet_losttrack_npixbarrelhits]
+         - [jet_losttrack_nstriphits]
+         - [jet_losttrack_nstriptibhits]
+         - [jet_losttrack_nstriptobhits]
+         - [jet_losttrack_nlosthits]
+         - [jet_losttrack_nlayers]
+         - [jet_losttrack_npixlayers]
+         - [jet_losttrack_nstriplayers]
    lt_vectors:
       length: 6
       pad_mode: wrap
@@ -287,10 +386,15 @@ observers:
    - jet_eta
    - jet_phi
    - jet_mass
-   - jet_energy
    - jet_ncand
+   - jet_nel
+   - jet_nmu
+   - jet_elf
+   - jet_muf
    - jet_hflav
    - jet_pflav
+   - jet_nbhad
+   - jet_nchad
    - jet_muflav
    - jet_elflav
    - jet_tauflav
@@ -301,22 +405,18 @@ observers:
    - jet_genmatch_eta
    - jet_genmatch_phi
    - jet_genmatch_mass
-   - jet_genmatch_energy
    - jet_genmatch_wnu_pt
    - jet_genmatch_wnu_eta
    - jet_genmatch_wnu_phi
    - jet_genmatch_wnu_mass
-   - jet_genmatch_wnu_energy
    - jet_genmatch_lep_pt
    - jet_genmatch_lep_eta
    - jet_genmatch_lep_phi
    - jet_genmatch_lep_mass
-   - jet_genmatch_lep_energy
    - jet_genmatch_lep_vis_pt
    - jet_genmatch_lep_vis_eta
    - jet_genmatch_lep_vis_phi
    - jet_genmatch_lep_vis_mass
-   - jet_genmatch_lep_vis_energy
    - jet_pnetlast_probb
    - jet_pnetlast_probc
    - jet_pnetlast_probuds

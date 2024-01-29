@@ -26,35 +26,44 @@ def get_model(data_config, **kwargs):
 
     ## options                                                                                                                                                                                   
     cfg = dict(
+        ## input tensor dimensions
         pf_ch_input_dim = len(data_config.input_dicts['pf_ch_features']),
         pf_neu_input_dim = len(data_config.input_dicts['pf_neu_features']),
         sv_input_dim = len(data_config.input_dicts['sv_features']),
+        kaon_input_dim = len(data_config.input_dicts['kaon_features']),
+        lambda_input_dim = len(data_config.input_dicts['lambda_features']),
         lt_input_dim = len(data_config.input_dicts['lt_features']),
+        ## output dimensions
         num_classes = num_classes,
         num_targets = num_targets,
         num_domains = num_domains,
-        save_grad_inputs = False,
+        ## embeddings
+        embed_dims = [96, 192, 96],
         pair_input_dim = len(data_config.input_dicts['pf_ch_vectors']),
-        pair_extra_dim = 0,
-        embed_dims = [128, 256, 128],
+        pair_extra_dim = 0,        
         pair_embed_dims = [64, 64, 64],
+        ## transformer parameters
         block_params = None,
-        cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
         num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',8),
         num_cls_layers = kwargs.get('num_cls_layers',2),
+        cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
+        ## other options
         remove_self_pair = kwargs.get('remove_self_pair',True),
         use_pre_activation_pair = kwargs.get('use_pre_activation_pair',True),
         activation = kwargs.get('activation','gelu'),
         trim = kwargs.get('use_trim',True),
-        for_inference = kwargs.get('for_inference',False),
-        alpha_grad = kwargs.get('alpha_grad',1),
         use_amp = kwargs.get('use_amp',False),
+        ## domain and attack
+        alpha_grad = kwargs.get('alpha_grad',1),
+        save_grad_inputs = False,
         split_da = kwargs.get('split_da',True),
         split_reg = kwargs.get('split_reg',True),
+        ## final dense layers (nodes, dropout)
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
         fc_da_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
         fc_contrastive_params = [(128, 0.05)]
+        for_inference = kwargs.get('for_inference',False),
     );
 
     model = ParticleTransformerTagger(**cfg)
@@ -68,42 +77,9 @@ def get_model(data_config, **kwargs):
 
     return model, model_info
 
-## https://github.com/yiftachbeer/mmd_loss_pytorch
-class RBF(torch.nn.Module):
-    def __init__(self, n_kernels=5, mul_factor=2.0, bandwidth=None):
-        super().__init__()
-        self.bandwidth_multipliers = mul_factor ** (torch.arange(n_kernels) - n_kernels // 2)
-        self.bandwidth = bandwidth
-        
-    def get_bandwidth(self, L2_distances):
-        if self.bandwidth is None:
-            n_samples = L2_distances.shape[0]
-            return L2_distances.data.sum() / (n_samples ** 2 - n_samples)    
-        return self.bandwidth
-
-    def forward(self, X):
-        L2_distances = torch.cdist(X, X) ** 2
-        L2_distances = L2_distances.to(X.device,non_blocking=True);
-        self.bandwidth_multipliers = self.bandwidth_multipliers.to(X.device,non_blocking=True);
-        return torch.exp(-L2_distances[None, ...] / (self.get_bandwidth(L2_distances) * self.bandwidth_multipliers)[:, None, None]).sum(dim=0)
-
-## MMDLoss
-class MMDLoss(torch.nn.Module):
-
-    def __init__(self, kernel=RBF()):
-        super().__init__()
-        self.kernel = kernel
-
-    def forward(self, X, Y):
-        K = self.kernel(torch.vstack([X, Y]).to(X.device,non_blocking=True))
-        X_size = X.shape[0]
-        XX = K[:X_size, :X_size].mean()
-        XY = K[:X_size, X_size:].mean()
-        YY = K[X_size:, X_size:].mean()
-        return XX - 2 * XY + YY
-
+####
 class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
-    __constants__ = ['reduction','loss_reg','loss_res','quantiles','loss_da','domain_weight','domain_dim','loss_attack','temperature','loss_cont','use_mmd_loss']
+    __constants__ = ['reduction','loss_reg','loss_res','quantiles','loss_da','domain_weight','domain_dim','loss_attack','temperature','loss_cont']
 
     def __init__(self, 
                  reduction: str = 'mean',
@@ -112,7 +88,6 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
                  loss_da: float = 1., 
                  loss_attack: float = 1.,
                  loss_cont: float = 1.,
-                 use_mmd_loss: bool = False,
                  temperature: float = 0.1,
                  quantiles: list = [],
                  domain_weight: list = [],
@@ -128,11 +103,6 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         self.quantiles = quantiles;
         self.domain_weight = domain_weight;
         self.domain_dim = domain_dim;
-        self.use_mmd_loss = use_mmd_loss;
-        if self.use_mmd_loss:
-            self.MMDLoss = MMDLoss();
-        else:
-            self.MMDLoss = None;
         
     def forward(self, 
                 input_cat: Tensor, y_cat: Tensor, 
@@ -147,8 +117,8 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         loss_cat = 0;
         if input_cat.nelement():
             loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,reduction=self.reduction);
-
-        ## regression terms
+            
+        ## regression terms (nominal and quantiles)
         x_reg = input_reg-y_reg;        
         loss_mean = 0;
         loss_quant = 0;
@@ -165,7 +135,6 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
                 elif q > 0:
                     loss_quant += q*x_reg_eval*torch.ge(x_reg_eval,0);
                     loss_quant += (q-1)*x_reg_eval*torch.less(x_reg_eval,0);
-
             ## reduction
             if self.reduction == 'mean':
                 loss_quant = loss_quant.mean();
@@ -197,16 +166,13 @@ class CrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         ## attack term
         loss_attack = 0;
         if input_cat_attack.nelement() and input_cat_ref.nelement():
-            if self.use_mmd_loss:
-                loss_attack = self.loss_attack*self.MMDLoss(torch.softmax(input_cat_ref,dim=1),torch.softmax(input_cat_attack,dim=1));
-            else:
-                input_cat_attack = torch.log_softmax(input_cat_attack,dim=1);
-                input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
-                loss_attack = torch.nn.functional.kl_div(input=input_cat_attack,target=input_cat_ref,reduction='none');
-                if self.reduction == 'mean':
-                    loss_attack = self.loss_attack*loss_attack.mean();
-                elif self.reduction == 'sum':
-                    loss_attack = self.loss_attack*loss_attack.sum();
+            input_cat_attack = torch.log_softmax(input_cat_attack,dim=1);
+            input_cat_ref  = torch.softmax(input_cat_ref,dim=1);
+            loss_attack = torch.nn.functional.kl_div(input=input_cat_attack,target=input_cat_ref,reduction='none');
+            if self.reduction == 'mean':
+                loss_attack = self.loss_attack*loss_attack.mean();
+            elif self.reduction == 'sum':
+                loss_attack = self.loss_attack*loss_attack.sum();
 
         ## contrastive term
         loss_contrastive = 0;
@@ -242,7 +208,6 @@ def get_loss(data_config, **kwargs):
         loss_da=kwargs.get('loss_da',1),
         loss_attack=kwargs.get('loss_attack',1),
         loss_cont=kwargs.get('loss_cont',1),
-        use_mmd_loss=kwargs.get('use_mmd_loss',False),
         temperature=kwargs.get('temperature',0.1),
         quantiles=quantiles,
         domain_weight=wdomain,
