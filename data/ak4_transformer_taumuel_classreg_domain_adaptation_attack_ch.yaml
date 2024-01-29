@@ -198,7 +198,7 @@ inputs:
    pf_neu_mask:
       length: 26
       vars:
-         - [pfcand_neu_mask, null]	 
+         - [pfcand_neu_mask, null]
    sv_features:
       length: 6
       vars:
@@ -212,7 +212,6 @@ inputs:
          - [jet_sv_chi2]
          - [jet_sv_dxy]
          - [jet_sv_dxysig]
-         - [jet_sv_dxy_sign]
          - [jet_sv_d3d]
          - [jet_sv_d3dsig]
          - [jet_sv_d3d_sign]
@@ -238,11 +237,9 @@ inputs:
          - [jet_kaon_mass]
          - [jet_kaon_deta]
          - [jet_kaon_dphi]
-         - [jet_kaon_ntrack]
          - [jet_kaon_chi2]
          - [jet_kaon_dxy]
          - [jet_kaon_dxysig]
-         - [jet_kaon_dxy_sign]
          - [jet_kaon_d3d]
          - [jet_kaon_d3dsig]
          - [jet_kaon_d3d_sign]
@@ -268,11 +265,9 @@ inputs:
          - [jet_lambda_mass]
          - [jet_lambda_deta]
          - [jet_lambda_dphi]
-         - [jet_lambda_ntrack]
          - [jet_lambda_chi2]
          - [jet_lambda_dxy]
          - [jet_lambda_dxysig]
-         - [jet_lambda_dxy_sign]
          - [jet_lambda_d3d]
          - [jet_lambda_d3dsig]
          - [jet_lambda_d3d_sign]
@@ -299,9 +294,6 @@ inputs:
          - [jet_losttrack_dphi]
          - [jet_losttrack_ptrel]
          - [jet_losttrack_etarel]
-         - [jet_losttrack_pperp]
-         - [jet_losttrack_ppara]
-         - [jet_losttrack_id]
          - [jet_losttrack_charge]
          - [jet_losttrack_frompv]
          - [jet_losttrack_dz]
@@ -325,7 +317,6 @@ inputs:
          - [jet_losttrack_nstriphits]
          - [jet_losttrack_nstriptibhits]
          - [jet_losttrack_nstriptobhits]
-         - [jet_losttrack_nlosthits]
          - [jet_losttrack_nlayers]
          - [jet_losttrack_npixlayers]
          - [jet_losttrack_nstriplayers]
