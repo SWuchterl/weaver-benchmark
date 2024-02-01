@@ -30,8 +30,8 @@ def get_model(data_config, **kwargs):
         pf_ch_input_dim = len(data_config.input_dicts['pf_ch_features']),
         pf_neu_input_dim = len(data_config.input_dicts['pf_neu_features']),
         sv_input_dim = len(data_config.input_dicts['sv_features']),
-        kaon_input_dim = len(data_config.input_dicts['kaon_features']),
-        lambda_input_dim = len(data_config.input_dicts['lambda_features']),
+        kaon_input_dim = len(data_config.input_dicts['k_features']),
+        lambda_input_dim = len(data_config.input_dicts['l_features']),
         lt_input_dim = len(data_config.input_dicts['lt_features']),
         ## output dimensions
         num_classes = num_classes,
