@@ -62,8 +62,9 @@ def get_model(data_config, **kwargs):
         ## final dense layers (nodes, dropout)
         fc_params = [(256, 0.1), (128, 0.1), (96, 0.1), (64, 0.1)],
         fc_da_params = [(128, 0.1), (96, 0.1), (64, 0.1)],
-        fc_contrastive_params = [(128, 0.05)]
+        fc_contrastive_params = [(128, 0.05)],
         for_inference = kwargs.get('for_inference',False),
+        add_da_inference = kwargs.get('add_da_inference',False)
     );
 
     model = ParticleTransformerTagger(**cfg)
