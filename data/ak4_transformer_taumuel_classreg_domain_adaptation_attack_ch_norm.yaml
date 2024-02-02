@@ -744,7 +744,7 @@ inputs:
   l_mask:
     length: 6
     vars:
-    - - lambda_mask
+    - - l_mask
       - null
   lt_features:
     length: 6
