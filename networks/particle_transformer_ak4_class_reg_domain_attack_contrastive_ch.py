@@ -38,10 +38,10 @@ def get_model(data_config, **kwargs):
         num_targets = num_targets,
         num_domains = num_domains,
         ## embeddings
-        embed_dims = [96, 192, 96],
+        embed_dims = [96, 192, 128],
         pair_input_dim = len(data_config.input_dicts['pf_ch_vectors']),
         pair_extra_dim = 0,        
-        pair_embed_dims = [64, 64, 64],
+        pair_embed_dims = [32, 96, 64],
         ## transformer parameters
         block_params = None,
         num_heads = kwargs.get('num_heads',8),
