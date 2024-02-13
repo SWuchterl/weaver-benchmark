@@ -12,12 +12,15 @@ new_variables:
    ### [format] name: formula
    ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
    ### mask vectors
-   pfcand_ch_mask: ak.ones_like(jet_pfcand_ch_pt)
-   pfcand_neu_mask: ak.ones_like(jet_pfcand_neu_pt)
-   sv_mask: ak.ones_like(jet_sv_pt)
-   k_mask: ak.ones_like(jet_kaon_pt)
-   l_mask: ak.ones_like(jet_lambda_pt)
-   lt_mask: ak.ones_like(jet_losttrack_deta)
+   jet_pfcand_ch_mask: ak.ones_like(jet_pfcand_ch_pt)
+   jet_pfcand_neu_mask: ak.ones_like(jet_pfcand_neu_pt)
+   jet_pfcand_muon_mask: ak.ones_like(jet_pfcand_muon_pt)
+   jet_pfcand_electron_mask: ak.ones_like(jet_pfcand_electron_pt)
+   jet_pfcand_photon_mask: ak.ones_like(jet_pfcand_photon_pt)
+   jet_sv_mask: ak.ones_like(jet_sv_pt)
+   jet_kaon_mask: ak.ones_like(jet_kaon_pt)
+   jet_lambda_mask: ak.ones_like(jet_lambda_pt)
+   jet_losttrack_mask: ak.ones_like(jet_losttrack_deta)
    ### 4-vec for edges
    jet_pfcand_ch_p4: _p4_from_ptetaphie(jet_pfcand_ch_pt,jet_pfcand_ch_eta,jet_pfcand_ch_phi,jet_pfcand_ch_energy)
    jet_pfcand_ch_px: jet_pfcand_ch_p4.px
@@ -27,6 +30,18 @@ new_variables:
    jet_pfcand_neu_px: jet_pfcand_neu_p4.px
    jet_pfcand_neu_py: jet_pfcand_neu_p4.py
    jet_pfcand_neu_pz: jet_pfcand_neu_p4.pz
+   jet_pfcand_muon_p4: _p4_from_ptetaphie(jet_pfcand_muon_pt,jet_pfcand_muon_eta,jet_pfcand_muon_phi,jet_pfcand_muon_energy)
+   jet_pfcand_muon_px: jet_pfcand_muon_p4.px
+   jet_pfcand_muon_py: jet_pfcand_muon_p4.py
+   jet_pfcand_muon_pz: jet_pfcand_muon_p4.pz
+   jet_pfcand_electron_p4: _p4_from_ptetaphie(jet_pfcand_electron_pt,jet_pfcand_electron_eta,jet_pfcand_electron_phi,jet_pfcand_electron_energy)
+   jet_pfcand_electron_px: jet_pfcand_electron_p4.px
+   jet_pfcand_electron_py: jet_pfcand_electron_p4.py
+   jet_pfcand_electron_pz: jet_pfcand_electron_p4.pz
+   jet_pfcand_photon_p4: _p4_from_ptetaphie(jet_pfcand_photon_pt,jet_pfcand_photon_eta,jet_pfcand_photon_phi,jet_pfcand_photon_energy)
+   jet_pfcand_photon_px: jet_pfcand_photon_p4.px
+   jet_pfcand_photon_py: jet_pfcand_photon_p4.py
+   jet_pfcand_photon_pz: jet_pfcand_photon_p4.pz
    jet_sv_p4: _p4_from_ptetaphie(jet_sv_pt,jet_sv_eta,jet_sv_phi,jet_sv_energy)
    jet_sv_px: jet_sv_p4.px
    jet_sv_py: jet_sv_p4.py
@@ -131,18 +146,6 @@ inputs:
          - [jet_pfcand_ch_npixlayers]
          - [jet_pfcand_ch_nstriplayers]
          - [jet_pfcand_ch_tau_signal]
-         - [jet_pfcand_ch_muon_id]
-         - [jet_pfcand_ch_muon_chi2]
-         - [jet_pfcand_ch_muon_segcomp]
-         - [jet_pfcand_ch_muon_type]
-         - [jet_pfcand_ch_muon_nvalidhits]
-         - [jet_pfcand_ch_muon_nstations]
-         - [jet_pfcand_ch_electron_detaIn]
-         - [jet_pfcand_ch_electron_dphiIn]
-         - [jet_pfcand_ch_electron_sigIetaIeta]
-         - [jet_pfcand_ch_electron_sigIphiIphi]
-         - [jet_pfcand_ch_electron_r9]
-         - [jet_pfcand_ch_electron_convProb]
    pf_ch_vectors:
       length: 26
       pad_mode: wrap
@@ -153,8 +156,9 @@ inputs:
          - [jet_pfcand_ch_energy, null]
    pf_ch_mask:
       length: 26
+      pad_mode: constant
       vars:
-         - [pfcand_ch_mask, null]
+         - [jet_pfcand_ch_mask, null]
    pf_neu_features:
       length: 26
       pad_mode: wrap
@@ -184,9 +188,6 @@ inputs:
          - [jet_pfcand_neu_hcalfraction]
          - [jet_pfcand_neu_calofraction]
          - [jet_pfcand_neu_tau_signal]
-         - [jet_pfcand_neu_photon_sigIetaIeta]
-         - [jet_pfcand_neu_photon_r9]
-         - [jet_pfcand_neu_photon_eVeto]
    pf_neu_vectors:
       length: 26
       pad_mode: wrap
@@ -197,8 +198,127 @@ inputs:
          - [jet_pfcand_neu_energy, null]
    pf_neu_mask:
       length: 26
+      pad_mode: constant
       vars:
-         - [pfcand_neu_mask, null]
+         - [jet_pfcand_neu_mask, null]
+   pf_muon_features:
+      length: 4
+      pad_mode: wrap
+      vars:
+         ### [format 1]: var_name (no transformation)
+         ### [format 2]: [var_name,
+         ### subtract_by(optional, default=None, no transf. if preprocess.method=manual, auto transf. if preprocess.method=auto),
+         ### multiply_by(optional, default=1),
+         ### clip_min(optional, default=-5),
+         ### clip_max(optional, default=5),
+         ### eps_min(optional, default=-5),
+         ### eps_max(optional, default=5),
+         ### pad_value(optional, default=0)	 
+         - [jet_pfcand_muon_pt_log]
+         - [jet_pfcand_muon_energy_log]
+         - [jet_pfcand_muon_eta]
+         - [jet_pfcand_muon_deta]
+         - [jet_pfcand_muon_dphi]
+         - [jet_pfcand_muon_chi2]
+         - [jet_pfcand_muon_dxy]
+         - [jet_pfcand_muon_dz]
+         - [jet_pfcand_muon_segcomp]
+         - [jet_pfcand_muon_validfraction]
+         - [jet_pfcand_muon_trkKink]
+         - [jet_pfcand_muon_pterr]
+         - [jet_pfcand_muon_type]
+         - [jet_pfcand_muon_nvalidhits]
+         - [jet_pfcand_muon_nstations]
+         - [jet_pfcand_muon_nlayers]
+         - [jet_pfcand_muon_nhits]
+   pf_muon_vectors:
+      length: 4
+      pad_mode: wrap
+      vars:
+         - [jet_pfcand_muon_px, null]
+         - [jet_pfcand_muon_py, null]
+         - [jet_pfcand_muon_pz, null]
+         - [jet_pfcand_muon_energy, null]
+   pf_muon_mask:
+      length: 4
+      pad_mode: constant
+      vars:
+         - [jet_pfcand_muon_mask, null]
+   pf_electron_features:
+      length: 4
+      pad_mode: wrap
+      vars:
+         ### [format 1]: var_name (no transformation)
+         ### [format 2]: [var_name,
+         ### subtract_by(optional, default=None, no transf. if preprocess.method=manual, auto transf. if preprocess.method=auto),
+         ### multiply_by(optional, default=1),
+         ### clip_min(optional, default=-5),
+         ### clip_max(optional, default=5),
+         ### eps_min(optional, default=-5),
+         ### eps_max(optional, default=5),
+         ### pad_value(optional, default=0)	 
+         - [jet_pfcand_electron_pt_log]
+         - [jet_pfcand_electron_energy_log]
+         - [jet_pfcand_electron_eta]
+         - [jet_pfcand_electron_deta]
+         - [jet_pfcand_electron_dphi]
+         - [jet_pfcand_electron_dxy]
+         - [jet_pfcand_electron_dz]
+         - [jet_pfcand_electron_eOverP]
+         - [jet_pfcand_electron_detaIn]
+         - [jet_pfcand_electron_dphiIn]
+         - [jet_pfcand_electron_r9]
+         - [jet_pfcand_electron_hOverE]
+         - [jet_pfcand_electron_sigIetaIeta]
+         - [jet_pfcand_electron_convProb]
+   pf_electron_vectors:
+      length: 4
+      pad_mode: wrap
+      vars:
+         - [jet_pfcand_electron_px, null]
+         - [jet_pfcand_electron_py, null]
+         - [jet_pfcand_electron_pz, null]
+         - [jet_pfcand_electron_energy, null]
+   pf_electron_mask:
+      length: 4
+      pad_mode: constant
+      vars:
+         - [jet_pfcand_electron_mask, null]
+   pf_photon_features:
+      length: 6
+      pad_mode: wrap
+      vars:
+         ### [format 1]: var_name (no transformation)
+         ### [format 2]: [var_name,
+         ### subtract_by(optional, default=None, no transf. if preprocess.method=manual, auto transf. if preprocess.method=auto),
+         ### multiply_by(optional, default=1),
+         ### clip_min(optional, default=-5),
+         ### clip_max(optional, default=5),
+         ### eps_min(optional, default=-5),
+         ### eps_max(optional, default=5),
+         ### pad_value(optional, default=0)	 
+         - [jet_pfcand_photon_pt_log]
+         - [jet_pfcand_photon_energy_log]
+         - [jet_pfcand_photon_eta]
+         - [jet_pfcand_photon_deta]
+         - [jet_pfcand_photon_dphi]
+         - [jet_pfcand_photon_r9]
+         - [jet_pfcand_photon_hOverE]
+         - [jet_pfcand_photon_sigIetaIeta]
+         - [jet_pfcand_photon_eVeto]
+   pf_photon_vectors:
+      length: 6
+      pad_mode: wrap
+      vars:
+         - [jet_pfcand_photon_px, null]
+         - [jet_pfcand_photon_py, null]
+         - [jet_pfcand_photon_pz, null]
+         - [jet_pfcand_photon_energy, null]
+   pf_photon_mask:
+      length: 6
+      pad_mode: constant
+      vars:
+         - [jet_pfcand_photon_mask, null]
    sv_features:
       length: 6
       vars:
@@ -226,10 +346,11 @@ inputs:
          - [jet_sv_energy, null]
    sv_mask:
       length: 6
+      pad_mode: constant
       vars:
-         - [sv_mask, null]
-   k_features:
-      length: 6
+         - [jet_sv_mask, null]
+   kaon_features:
+      length: 4
       vars:
          - [jet_kaon_pt_log]
          - [jet_kaon_energy_log]
@@ -244,20 +365,21 @@ inputs:
          - [jet_kaon_d3dsig]
          - [jet_kaon_d3d_sign]
          - [jet_kaon_costheta]
-   k_vectors:
-      length: 6
+   kaon_vectors:
+      length: 4
       pad_mode: wrap
       vars:
          - [jet_kaon_px, null]
          - [jet_kaon_py, null]
          - [jet_kaon_pz, null]
          - [jet_kaon_energy, null]
-   k_mask:
-      length: 6
+   kaon_mask:
+      length: 4
+      pad_mode: constant
       vars:
-         - [k_mask, null]
-   l_features:
-      length: 6
+         - [jet_kaon_mask, null]
+   lambda_features:
+      length: 4
       vars:
          - [jet_lambda_pt_log]
          - [jet_lambda_energy_log]
@@ -272,19 +394,20 @@ inputs:
          - [jet_lambda_d3dsig]
          - [jet_lambda_d3d_sign]
          - [jet_lambda_costheta]
-   l_vectors:
-      length: 6
+   lambda_vectors:
+      length: 4
       pad_mode: wrap
       vars:
          - [jet_lambda_px, null]
          - [jet_lambda_py, null]
          - [jet_lambda_pz, null]
          - [jet_lambda_energy, null]
-   l_mask:
-      length: 6
+   lambda_mask:
+      length: 4
+      pad_mode: constant
       vars:
-         - [l_mask, null]
-   lt_features:
+         - [jet_lambda_mask, null]
+   losttrack_features:
       length: 6
       vars:
          - [jet_losttrack_pt_log]
@@ -320,7 +443,7 @@ inputs:
          - [jet_losttrack_nlayers]
          - [jet_losttrack_npixlayers]
          - [jet_losttrack_nstriplayers]
-   lt_vectors:
+   losttrack_vectors:
       length: 6
       pad_mode: wrap
       vars:
@@ -328,10 +451,11 @@ inputs:
          - [jet_losttrack_py, null]
          - [jet_losttrack_pz, null]
          - [jet_losttrack_energy, null]
-   lt_mask:
+   losttrack_mask:
       length: 6
+      pad_mode: constant
       vars:
-         - [lt_mask, null]
+         - [jet_losttrack_mask, null]
 labels:
    ### type can be `simple`, `custom`
    ### [option 1] use `simple` for binary/multi-class classification, then `value` is a list of 0-1 labels

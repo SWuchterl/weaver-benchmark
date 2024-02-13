@@ -29,19 +29,22 @@ def get_model(data_config, **kwargs):
         ## input tensor dimensions
         pf_ch_input_dim = len(data_config.input_dicts['pf_ch_features']),
         pf_neu_input_dim = len(data_config.input_dicts['pf_neu_features']),
+        pf_muon_input_dim = len(data_config.input_dicts['pf_muon_features']),
+        pf_electron_input_dim = len(data_config.input_dicts['pf_electron_features']),
+        pf_photon_input_dim = len(data_config.input_dicts['pf_photon_features']),
         sv_input_dim = len(data_config.input_dicts['sv_features']),
-        kaon_input_dim = len(data_config.input_dicts['k_features']),
-        lambda_input_dim = len(data_config.input_dicts['l_features']),
-        lt_input_dim = len(data_config.input_dicts['lt_features']),
+        kaon_input_dim = len(data_config.input_dicts['kaon_features']),
+        lambda_input_dim = len(data_config.input_dicts['lambda_features']),
+        losttrack_input_dim = len(data_config.input_dicts['losttrack_features']),
         ## output dimensions
         num_classes = num_classes,
         num_targets = num_targets,
         num_domains = num_domains,
         ## embeddings
-        embed_dims = [128, 128, 128],
+        embed_dims = [64, 128, 128],
         pair_input_dim = len(data_config.input_dicts['pf_ch_vectors']),
         pair_extra_dim = 0,        
-        pair_embed_dims = [64, 64, 64],
+        pair_embed_dims = [32, 64, 64],
         ## transformer parameters
         block_params = None,
         num_heads = kwargs.get('num_heads',8),
