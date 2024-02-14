@@ -24,6 +24,15 @@ new_variables:
   jet_kaon_mask: ak.ones_like(jet_kaon_pt)
   jet_lambda_mask: ak.ones_like(jet_lambda_pt)
   jet_losttrack_mask: ak.ones_like(jet_losttrack_deta)
+  jet_pfcand_ch_eta_v: ak.copy(jet_pfcand_ch_eta)
+  jet_pfcand_neu_eta_v: ak.copy(jet_pfcand_neu_eta)
+  jet_pfcand_muon_eta_v: ak.copy(jet_pfcand_muon_eta)
+  jet_pfcand_electron_eta_v: ak.copy(jet_pfcand_electron_eta)
+  jet_pfcand_photon_eta_v: ak.copy(jet_pfcand_photon_eta)
+  jet_sv_eta_v: ak.copy(jet_sv_eta)
+  jet_kaon_eta_v: ak.copy(jet_kaon_eta)
+  jet_lambda_eta_v: ak.copy(jet_lambda_eta)
+  jet_losttrack_eta_v: ak.copy(jet_losttrack_eta)
   label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
   label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
   label_mc_emu: (domain==2) & (isdata==0)
@@ -285,7 +294,7 @@ inputs:
       - null
       - 1.18827
       - 0.23143
-    - - jet_pfcand_ch_eta
+    - - jet_pfcand_ch_eta_v
       - null
       - null
       - null
@@ -409,7 +418,7 @@ inputs:
       - null
       - 0.69754
       - 0.21681
-    - - jet_pfcand_neu_eta
+    - - jet_pfcand_neu_eta_v
       - null
       - null
       - null
@@ -538,7 +547,7 @@ inputs:
       - null
       - 10.79361
       - 0.95551
-    - - jet_pfcand_muon_eta
+    - - jet_pfcand_muon_eta_v
       - null
       - null
       - null
@@ -652,7 +661,7 @@ inputs:
       - null
       - 14.56826
       - 2.44464
-    - - jet_pfcand_electron_eta
+    - - jet_pfcand_electron_eta_v
       - null
       - null
       - null
@@ -741,7 +750,7 @@ inputs:
       - null
       - 24.93039
       - 11.90522
-    - - jet_pfcand_photon_eta
+    - - jet_pfcand_photon_eta_v
       - null
       - null
       - null
@@ -854,7 +863,7 @@ inputs:
       - null
       - 14.02986
       - 3.02989
-    - - jet_sv_eta
+    - - jet_sv_eta_v
       - null
       - null
       - null
@@ -962,7 +971,7 @@ inputs:
       - null
       - 4.22443
       - 1.21978
-    - - jet_kaon_eta
+    - - jet_kaon_eta_v
       - null
       - null
       - null
@@ -1070,7 +1079,7 @@ inputs:
       - null
       - 5.22194
       - 1.64941
-    - - jet_lambda_eta
+    - - jet_lambda_eta_v
       - null
       - null
       - null
@@ -1278,7 +1287,7 @@ inputs:
       - null
       - 3.94924
       - 1.17375
-    - - jet_losttrack_eta
+    - - jet_losttrack_eta_v
       - null
       - null
       - null
