@@ -1295,7 +1295,6 @@ observers:
 - jet_taumatch_phi
 - jet_taumatch_mass
 - jet_taumatch_decaymode
-- jet_taumatch_charge
 - jet_taumatch_idjet
 - jet_taumatch_idmu
 - jet_taumatch_idele
