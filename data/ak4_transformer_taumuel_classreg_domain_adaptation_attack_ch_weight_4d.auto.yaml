@@ -1698,7 +1698,6 @@ labels_domain:
   - 1.0
   - 1.0
   - 1.0
-  - 1.0
 targets:
   type: custom
   value:
