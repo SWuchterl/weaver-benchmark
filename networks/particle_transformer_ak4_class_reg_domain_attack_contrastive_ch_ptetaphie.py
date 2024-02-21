@@ -201,11 +201,13 @@ def get_loss(data_config, **kwargs):
     ## number of domain regions
     wdomain = data_config.label_domain_loss_weight;
     ## number of lables for cross entropy in each domain
+    ldomain = [];
     if type(data_config.label_domain_value) == dict:
         ldomain = [len(dct) if type(dct) == list else 1 for dct in data_config.label_domain_value.values()]
     else:
-        ldomain = [len(data_config.label_domain_value)];
-
+        if data_config.label_domain_value:
+            ldomain = [len(data_config.label_domain_value)];
+        
     return CrossEntropyContrastiveRegDomainAttack(
         reduction=kwargs.get('reduction','mean'),
         loss_reg=kwargs.get('loss_reg',1),
