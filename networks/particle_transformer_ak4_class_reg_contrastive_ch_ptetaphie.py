@@ -151,7 +151,7 @@ def get_loss(data_config, **kwargs):
     ## number of targets
     quantiles = data_config.target_quantile;
 
-    return CrossEntropyContrastiveRegDomainAttack(
+    return CrossEntropyContrastiveReg(
         reduction=kwargs.get('reduction','mean'),
         loss_reg=kwargs.get('loss_reg',1),
         loss_res=kwargs.get('loss_res',1),
