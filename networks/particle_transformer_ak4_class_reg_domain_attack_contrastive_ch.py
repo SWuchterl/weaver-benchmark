@@ -22,8 +22,7 @@ def get_model(data_config, **kwargs):
         for dct in data_config.label_domain_value.values():
             num_domains.append(len(dct))
     else:
-        if data_config.label_domain_value:
-            num_domains.append(len(data_config.label_domain_value));
+        num_domains.append(len(data_config.label_domain_value));
 
     ## options                                                                                                                                                                                   
     cfg = dict(
@@ -205,8 +204,7 @@ def get_loss(data_config, **kwargs):
     if type(data_config.label_domain_value) == dict:
         ldomain = [len(dct) if type(dct) == list else 1 for dct in data_config.label_domain_value.values()]
     else:
-        if data_config.label_domain_value:
-            ldomain = [len(data_config.label_domain_value)];
+        ldomain = [len(data_config.label_domain_value)];
 
     return CrossEntropyContrastiveRegDomainAttack(
         reduction=kwargs.get('reduction','mean'),
