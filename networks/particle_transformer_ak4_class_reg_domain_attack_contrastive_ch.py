@@ -22,7 +22,8 @@ def get_model(data_config, **kwargs):
         for dct in data_config.label_domain_value.values():
             num_domains.append(len(dct))
     else:
-        num_domains.append(len(data_config.label_domain_value));
+        if data_config.label_domain_value:
+            num_domains.append(len(data_config.label_domain_value));
 
     ## options                                                                                                                                                                                   
     cfg = dict(
