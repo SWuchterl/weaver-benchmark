@@ -81,9 +81,9 @@ labels:
   value:
   - label_ggHH
   - label_bkg
-  ## compute by comparing the bkg n-events applying weight-tot with the signal ones
+  ## compute by comparing the bkg and signal n-events prior to any per-event weighting .. used to make effective training statistics to be the same
   class_weight:
-  - 10000.0
+  - 10.0
   - 1.0
   sample_weight:
   - weight_tot
