@@ -81,7 +81,11 @@ labels:
   value:
   - label_ggHH
   - label_bkg
-  weight:
+  ## compute by comparing the bkg n-events applying weight-tot with the signal ones
+  class_weight:
+  - 10000.0
+  - 1.0
+  sample_weight:
   - weight_tot
 observers:
   - event

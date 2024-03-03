@@ -49,15 +49,17 @@ def get_model(data_config, **kwargs):
 
 ####
 class CrossEntropyWeightLoss(torch.nn.L1Loss):
-    __constants__ = ['reduction']
+    __constants__ = ['reduction','class_weight']
 
     def __init__(self, 
-                 reduction: str = 'mean'
+                 reduction: str = 'mean',
+                 class_weight: list = []
              ) -> None:
         super(CrossEntropyWeightLoss, self).__init__(None, None, reduction)
+        self.class_weight = class_weight;
         
     def forward(self, input_cat: Tensor, y_cat: Tensor, y_weight: Tensor) -> Tensor:
-        loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,reduction='none');
+        loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,weight=self.class_weight,reduction='none');
         loss_cat = loss_cat*y_weight;
         if self.reduction == "mean":
             return loss_cat.mean();
@@ -65,7 +67,10 @@ class CrossEntropyWeightLoss(torch.nn.L1Loss):
             return loss_cat.sum();
         else:
             return loss_cat
-                    
-    
+                        
 def get_loss(data_config, **kwargs):
-    return CrossEntropyWeightLoss(reduction=kwargs.get('reduction','mean'));
+    class_weight = data_config.label_class_weight;
+    return CrossEntropyWeightLoss(
+        reduction=kwargs.get('reduction','mean'),
+        class_weight=class_weight
+    );
