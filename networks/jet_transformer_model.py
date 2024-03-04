@@ -17,14 +17,14 @@ def get_model(data_config, **kwargs):
         ## output dimensions
         num_classes = num_classes,
         ## embeddings
-        embed_dims = [64, 64],
-        pair_embed_dims = [32, 32],
-        pair_input_dim = 9,
+        embed_dims = [64, 64, 64],
+        pair_embed_dims = [32, 32, 32],
+        pair_input_dim = 8,
         ## transformer parameters
         block_params = None,
-        num_heads = kwargs.get('num_heads',4),
+        num_heads = kwargs.get('num_heads',8),
         num_layers = kwargs.get('num_layers',4),
-        num_cls_layers = kwargs.get('num_cls_layers',2),
+        num_cls_layers = kwargs.get('num_cls_layers',1),
         cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},
         ## other options
         remove_self_pair = kwargs.get('remove_self_pair',True),
@@ -33,7 +33,7 @@ def get_model(data_config, **kwargs):
         trim = kwargs.get('use_trim',True),
         use_amp = kwargs.get('use_amp',False),
         ## final dense layers (nodes, dropout)
-        fc_params = [(64, 0.1), (32, 0.1), (16,0.1)]
+        fc_params = [(128, 0.1), (64, 0.1), (32,0.1)]
     );
 
     model = JetTransformerTagger(**cfg)

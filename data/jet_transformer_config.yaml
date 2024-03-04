@@ -3,6 +3,7 @@ test_time_selection: ((btag_cat==4) | (btag_cat==2)) & (njet>=4)
 new_variables:
   jet_vec_mask: ak.ones_like(jet_vec_pt)
   jet_pair_vec_mask: ak.ones_like(jet_pair_vec_pt)
+  label_weight: (weight_tot)
   label_bkg: (process_type==0)
   label_ggHH: (process_type==1)
   label_vbfHH: (process_type==2)
@@ -86,7 +87,7 @@ labels:
   - 10.0
   - 1.0
   sample_weight:
-  - weight_tot
+  - label_weight
 observers:
   - event
   - HT
