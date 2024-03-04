@@ -65,7 +65,7 @@ class CrossEntropyWeightLoss(torch.nn.L1Loss):
         if self.num_classes > 2:
             loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,weight=self.class_weight,reduction='none');
         else:
-            loss_cat = torch.nn.functional.binary_cross_entropy_with_logits(input_cat,y_cat,eight=self.class_weight,reduction='none');            
+            loss_cat = torch.nn.functional.binary_cross_entropy_with_logits(input_cat,y_cat,weight=self.class_weight,reduction='none');            
         if y_weight.nelement():        
             loss_cat = loss_cat*y_weight;
         if self.reduction == "mean":
