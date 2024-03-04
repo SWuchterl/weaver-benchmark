@@ -8,7 +8,7 @@ new_variables:
   label_vbfHH: (process_type==2)
   label_ZZ: (process_type==3)
   label_ZH: (process_type==4)
-  loss_weight: (label_ggHH+label_vbfHH+label_ZZ+label_ZH+(label_bkg)*(weight_tot))
+  loss_weight: ((((label_ggHH) | (label_vbfHH) | (label_ZZ) | (label_ZH))*(weight_tot/weight)+(label_bkg))+(label_bkg)*(weight_tot))
 preprocess:
   method: manual
   data_fraction: null
