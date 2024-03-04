@@ -1,0 +1,110 @@
+selection: ((btag_cat==4) | (btag_cat==2)) & (njet>=4)
+test_time_selection: ((btag_cat==4) | (btag_cat==2)) & (njet>=4)
+new_variables:
+  jet_vec_mask: ak.ones_like(jet_vec_pt)
+  jet_pair_vec_mask: ak.ones_like(jet_pair_vec_pt)
+  label_weight: ((process_type>0)+(process_type==0)*weight_tot)
+  label_bkg: (process_type==0)
+  label_ggHH: (process_type==1)
+  label_vbfHH: (process_type==2)
+  label_ZZ: (process_type==3)
+  label_ZH: (process_type==4)
+preprocess:
+  method: manual
+  data_fraction: null
+inputs:
+  jet_features:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_vec_pt_log
+      - null
+    - - jet_vec_eta
+      - null
+    - - jet_vec_phi
+      - null
+    - - jet_vec_mass_log
+      - null
+    - - jet_vec_energy_log
+      - null
+  jet_vectors:
+    length: 6
+    pad_mode: wrap
+    vars:
+    - - jet_vec_pt
+      - null
+    - - jet_vec_eta
+      - null
+    - - jet_vec_phi
+      - null
+    - - jet_vec_energy
+      - null
+  jet_mask:
+    length: 6
+    pad_mode: constant
+    vars:
+    - - jet_vec_mask
+      - null
+  jet_pair_features:
+    length: 10
+    pad_mode: wrap
+    vars:
+    - - jet_pair_vec_pt_log
+      - null
+    - - jet_pair_vec_eta
+      - null
+    - - jet_pair_vec_phi
+      - null
+    - - jet_pair_vec_mass_log
+      - null
+    - - jet_pair_vec_energy_log
+      - null
+  jet_pair_vectors:
+    length: 10
+    pad_mode: wrap
+    vars:
+    - - jet_pair_vec_pt
+      - null
+    - - jet_pair_vec_eta
+      - null
+    - - jet_pair_vec_phi
+      - null
+    - - jet_pair_vec_energy
+      - null
+  jet_pair_mask:
+    length: 10
+    pad_mode: constant
+    vars:
+    - - jet_pair_vec_mask
+      - null
+labels:
+  type: simple
+  value:
+  - label_ggHH
+  - label_bkg
+  ## compute by comparing the bkg and signal n-events prior to any per-event weighting .. used to make effective training statistics to be the same
+  class_weight:
+  - 10.0
+  - 1.0
+  sample_weight:
+  - label_weight
+observers:
+  - event
+  - HT
+  - njet
+  - btag_cat
+  - weight
+  - weight_tot
+  - higgs1_reco_pt
+  - higgs1_reco_eta
+  - higgs1_reco_phi
+  - higgs1_reco_mass
+  - higgs2_reco_pt
+  - higgs2_reco_eta
+  - higgs2_reco_phi
+  - higgs2_reco_mass
+  - hh_vec_pt
+  - hh_vec_eta
+  - hh_vec_phi
+  - hh_vec_mass
+monitor_variables: null
