@@ -24,42 +24,15 @@ new_variables:
   jet_kaon_mask: ak.ones_like(jet_kaon_pt)
   jet_lambda_mask: ak.ones_like(jet_lambda_pt)
   jet_losttrack_mask: ak.ones_like(jet_losttrack_deta)
-  jet_pfcand_ch_p4: _p4_from_ptetaphie(jet_pfcand_ch_pt,jet_pfcand_ch_eta,jet_pfcand_ch_phi,jet_pfcand_ch_energy)
-  jet_pfcand_ch_px: jet_pfcand_ch_p4.px
-  jet_pfcand_ch_py: jet_pfcand_ch_p4.py
-  jet_pfcand_ch_pz: jet_pfcand_ch_p4.pz
-  jet_pfcand_neu_p4: _p4_from_ptetaphie(jet_pfcand_neu_pt,jet_pfcand_neu_eta,jet_pfcand_neu_phi,jet_pfcand_neu_energy)
-  jet_pfcand_neu_px: jet_pfcand_neu_p4.px
-  jet_pfcand_neu_py: jet_pfcand_neu_p4.py
-  jet_pfcand_neu_pz: jet_pfcand_neu_p4.pz
-  jet_pfcand_muon_p4: _p4_from_ptetaphie(jet_pfcand_muon_pt,jet_pfcand_muon_eta,jet_pfcand_muon_phi,jet_pfcand_muon_energy)
-  jet_pfcand_muon_px: jet_pfcand_muon_p4.px
-  jet_pfcand_muon_py: jet_pfcand_muon_p4.py
-  jet_pfcand_muon_pz: jet_pfcand_muon_p4.pz
-  jet_pfcand_electron_p4: _p4_from_ptetaphie(jet_pfcand_electron_pt,jet_pfcand_electron_eta,jet_pfcand_electron_phi,jet_pfcand_electron_energy)
-  jet_pfcand_electron_px: jet_pfcand_electron_p4.px
-  jet_pfcand_electron_py: jet_pfcand_electron_p4.py
-  jet_pfcand_electron_pz: jet_pfcand_electron_p4.pz
-  jet_pfcand_photon_p4: _p4_from_ptetaphie(jet_pfcand_photon_pt,jet_pfcand_photon_eta,jet_pfcand_photon_phi,jet_pfcand_photon_energy)
-  jet_pfcand_photon_px: jet_pfcand_photon_p4.px
-  jet_pfcand_photon_py: jet_pfcand_photon_p4.py
-  jet_pfcand_photon_pz: jet_pfcand_photon_p4.pz
-  jet_sv_p4: _p4_from_ptetaphie(jet_sv_pt,jet_sv_eta,jet_sv_phi,jet_sv_energy)
-  jet_sv_px: jet_sv_p4.px
-  jet_sv_py: jet_sv_p4.py
-  jet_sv_pz: jet_sv_p4.pz
-  jet_kaon_p4: _p4_from_ptetaphie(jet_kaon_pt,jet_kaon_eta,jet_kaon_phi,jet_kaon_energy)
-  jet_kaon_px: jet_kaon_p4.px
-  jet_kaon_py: jet_kaon_p4.py
-  jet_kaon_pz: jet_kaon_p4.pz
-  jet_lambda_p4: _p4_from_ptetaphie(jet_lambda_pt,jet_lambda_eta,jet_lambda_phi,jet_lambda_energy)
-  jet_lambda_px: jet_lambda_p4.px
-  jet_lambda_py: jet_lambda_p4.py
-  jet_lambda_pz: jet_lambda_p4.pz
-  jet_losttrack_p4: _p4_from_ptetaphie(jet_losttrack_pt,jet_losttrack_eta,jet_losttrack_phi,jet_losttrack_energy)
-  jet_losttrack_px: jet_losttrack_p4.px
-  jet_losttrack_py: jet_losttrack_p4.py
-  jet_losttrack_pz: jet_losttrack_p4.pz
+  jet_pfcand_ch_eta_v: ak.copy(jet_pfcand_ch_eta)
+  jet_pfcand_neu_eta_v: ak.copy(jet_pfcand_neu_eta)
+  jet_pfcand_muon_eta_v: ak.copy(jet_pfcand_muon_eta)
+  jet_pfcand_electron_eta_v: ak.copy(jet_pfcand_electron_eta)
+  jet_pfcand_photon_eta_v: ak.copy(jet_pfcand_photon_eta)
+  jet_sv_eta_v: ak.copy(jet_sv_eta)
+  jet_kaon_eta_v: ak.copy(jet_kaon_eta)
+  jet_lambda_eta_v: ak.copy(jet_lambda_eta)
+  jet_losttrack_eta_v: ak.copy(jet_losttrack_eta)
   label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
   label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
   label_mc_emu: (domain==2) & (isdata==0)
@@ -113,313 +86,235 @@ inputs:
       - 0.7792599303838854
       - -3.0
       - 6.0
-      - -0.13262
-      - -1.40754
     - - jet_pfcand_ch_energy_log
       - 0.9990891480276892
       - 0.7525479361960796
       - -3.0
       - 6.0
-      - -0.09923
-      - -1.49664
     - - jet_pfcand_ch_eta
       - -0.00044088175779666814
       - 0.7336982154468045
       - -3.0
       - 3.0
-      - -0.00277
-      - -1.62865
+      - -0.00458
+      - -2.12555
     - - jet_pfcand_ch_deta
       - 4.402336262111563e-05
       - 5.9024081139193685
       - -7.0
       - 7.0
-      - -0.00013
-      - -1.73153
     - - jet_pfcand_ch_dphi
       - -0.000306133155961026
       - 6.154298566288105
       - -5.0
       - 5.0
-      - 0.00022
-      - -1.74832
     - - jet_pfcand_ch_ptrel
       - 0.328822066673556
       - 2.951462027666225
       - -2.0
       - 7.0
-      - -0.32488
-      - -0.83777
     - - jet_pfcand_ch_etarel
       - 2.8855956535898155
       - 0.9592201338106673
       - -3.0
       - 7.0
-      - -0.1174
-      - -1.38911
     - - jet_pfcand_ch_pperp
       - 0.14620085428137522
       - 3.7458959161642347
       - -2.0
       - 7.0
-      - -0.4046
-      - -0.54572
     - - jet_pfcand_ch_ppara
       - 0.9882642863304827
       - 61.04360681585273
       - -7.0
       - 2.0
-      - 0.45827
-      - -2.32419
     - - jet_pfcand_ch_id
       - 1.9551499707834343
       - 3.8078866779801257
       - -7.0
       - 1.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_charge
       - 0.03669516100063843
       - 1.0006739448642357
       - -2.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_frompv
       - 1.94140504954331
       - 1.1176563401284185
       - -3.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_dz
       - -0.006028240911843028
       - 0.16512484400801558
       - -7.0
       - 7.0
-      - 0.00099
-      - -1.14206
     - - jet_pfcand_ch_dzsig
       - -0.26506018289079897
       - 0.004711207831052539
       - -7.0
       - 7.0
-      - 0.00125
-      - -0.70428
     - - jet_pfcand_ch_dxy
       - -0.016274611760231806
       - 0.5322943303135098
       - -7.0
       - 7.0
-      - 0.00865
-      - -0.534
     - - jet_pfcand_ch_dxysig
       - -0.2385513170102864
       - 0.050317348708647784
       - -7.0
       - 7.0
-      - 0.012
-      - -0.91204
     - - jet_pfcand_ch_hcalfraction
       - 0.42048415151194424
       - 2.3153564292615756
       - -5.0
       - 3.0
-      - -0.2095
-      - -0.97358
     - - jet_pfcand_ch_calofraction
       - 0.5872453877384597
       - 1.8750363440140931
       - -2.0
       - 5.0
-      - 0.17392
-      - -1.10111
     - - jet_pfcand_ch_track_chi2
       - 0.7762048012967916
       - 0.38666891146771687
       - -1.0
       - 7.0
-      - -0.30013
-      - -0.30014
     - - jet_pfcand_ch_track_qual
       - 3.8161619629058214
       - 0.4709143405650784
       - -3.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_track_pterr
       - 0.017139961515775685
       - 26.69826228650718
       - -1.0
       - 7.0
-      - -0.14019
-      - -0.45761
     - - jet_pfcand_ch_track_etaerr
       - 0.0020880184847554806
       - 251.96836059438766
       - -1.0
       - 7.0
-      - -0.30083
-      - -0.52612
     - - jet_pfcand_ch_track_phierr
       - 0.002150919289207015
       - 301.53002025826413
       - -2.0
       - 7.0
-      - -0.35968
-      - -0.64857
     - - jet_pfcand_ch_trackjet_sip2d
       - 0.13376783674104556
       - 0.6350414704404082
       - -7.0
       - 7.0
-      - -0.08494
-      - -0.16512
     - - jet_pfcand_ch_trackjet_sip2dsig
       - 2.392705099636482
       - 0.05149638545612396
       - -7.0
       - 7.0
-      - -0.12322
-      - -0.46205
     - - jet_pfcand_ch_trackjet_sip3d
       - 0.2330654138691885
       - 0.3312683430448459
       - -7.0
       - 7.0
-      - -0.0772
-      - -0.69075
     - - jet_pfcand_ch_trackjet_sip3dsig
       - 3.619404678783954
       - 0.006987597485318928
       - -7.0
       - 7.0
-      - -0.02529
-      - -0.38071
     - - jet_pfcand_ch_trackjet_dist
       - 0.5852745418726643
       - 0.5161185683857181
       - -1.0
       - 7.0
-      - -0.30025
-      - -0.30207
     - - jet_pfcand_ch_trackjet_decayL
       - 2.4403599836296244
       - 0.06170110308807679
       - -7.0
       - 7.0
-      - -0.15057
-      - -0.66426
     - - jet_pfcand_ch_nhits
       - 11.249287487753818
       - 0.12426386051949281
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_npixhits
       - 2.6006246804742954
       - 0.4882450780002076
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_npixbarrelhits
       - 2.3361716428033286
       - 0.4946969191703906
       - -2.0
       - 5.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nstriphits
       - 8.648662807279523
       - 0.14638948335536972
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nstriptibhits
       - 7.201576179414813
       - 0.17631263276808903
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nstriptobhits
       - 1.2985983201482716
       - 0.5938922474277359
       - -2.0
       - 7.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nlosthits
       - -0.45449378479830815
       - 1.0191548699759638
       - -2.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nlayers
       - 7.913329815814037
       - 0.18388726902813002
       - -2.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_npixlayers
       - 2.381625374831044
       - 0.5626828907531227
       - -2.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_nstriplayers
       - 5.531704440982993
       - 0.2300317033650859
       - -2.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_ch_tau_signal
       - 0.10640526218112294
       - 3.2430089272499574
       - -1.0
       - 4.0
-      - 0.0
-      - 0.0
   pf_ch_vectors:
     length: 26
     pad_mode: wrap
     vars:
-    - - jet_pfcand_ch_px
+    - - jet_pfcand_ch_pt
       - null
       - null
       - null
       - null
-      - -0.01788
-      - -5.34949
-    - - jet_pfcand_ch_py
+      - 1.18827
+      - 0.23143
+    - - jet_pfcand_ch_eta_v
       - null
       - null
       - null
       - null
-      - -0.01467
-      - -5.32688
-    - - jet_pfcand_ch_pz
+      - -0.00458
+      - -2.12555
+    - - jet_pfcand_ch_phi
       - null
       - null
       - null
       - null
-      - -0.003
-      - -12.8904
+      - -0.04023
+      - -2.83466
     - - jet_pfcand_ch_energy
       - null
       - null
       - null
       - null
-      - 2.37972
-      - 0.37168
+      - 2.3784
+      - 0.37163
   pf_ch_mask:
     length: 26
     pad_mode: constant
@@ -435,144 +330,114 @@ inputs:
       - 0.8827476689761617
       - -3.0
       - 7.0
-      - -0.19469
-      - -1.22594
     - - jet_pfcand_neu_energy_log
       - 0.33671732279139543
       - 0.8174681933509139
       - -3.0
       - 7.0
-      - -0.18841
-      - -1.18324
     - - jet_pfcand_neu_eta
       - 0.007201875589428352
       - 0.891669549451071
       - -4.0
       - 4.0
-      - 0.00974
-      - -1.56112
+      - 0.01849
+      - -1.72692
     - - jet_pfcand_neu_deta
       - 4.672319441524409e-05
       - 6.128538468126396
       - -5.0
       - 5.0
-      - -0.00026
-      - -1.73985
     - - jet_pfcand_neu_dphi
       - 0.00012767114077723386
       - 5.7929515382247185
       - -5.0
       - 5.0
-      - -0.00043
-      - -1.69892
     - - jet_pfcand_neu_ptrel
       - 0.24987813167705697
       - 3.2274575164259987
       - -2.0
       - 7.0
-      - -0.35905
-      - -0.70502
     - - jet_pfcand_neu_etarel
       - 2.4372652477660686
       - 1.15179289315399
       - -3.0
       - 7.0
-      - -0.21974
-      - -1.13609
     - - jet_pfcand_neu_pperp
       - 0.2049236229655425
       - 4.233730763358283
       - -2.0
       - 7.0
-      - -0.3881
-      - -0.85897
     - - jet_pfcand_neu_ppara
       - 0.9859878979908487
       - 62.70764185413147
       - -7.0
       - 2.0
-      - 0.3899
-      - -2.2412
     - - jet_pfcand_neu_id
       - 0.16297565204111267
       - 2.7074656764015743
       - -1.0
       - 7.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_neu_frompv
       - 2.9995341042477865
       - 288.8564319956107
       - -7.0
       - 1.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_neu_dz
       - 5.872380457667202e-06
       - 180.94275090570736
       - -7.0
       - 7.0
-      - -0.00106
-      - -0.00106
     - - jet_pfcand_neu_dxy
       - 1.6637817611860009e-06
       - 842.9281614963952
       - -7.0
       - 7.0
-      - -0.00141
-      - -0.00141
     - - jet_pfcand_neu_hcalfraction
       - 0.16297151644715074
       - 2.7075389556062124
       - -1.0
       - 3.0
-      - -0.44125
-      - -0.44125
     - - jet_pfcand_neu_calofraction
       - 0.45479391113413836
       - 2.012734766046128
       - -2.0
       - 2.0
-      - -0.91538
-      - -0.91538
     - - jet_pfcand_neu_tau_signal
       - 0.07890321404895458
       - 3.709368826668575
       - -1.0
       - 4.0
-      - 0.0
-      - 0.0
   pf_neu_vectors:
     length: 26
     pad_mode: wrap
     vars:
-    - - jet_pfcand_neu_px
+    - - jet_pfcand_neu_pt
       - null
       - null
       - null
       - null
-      - 0.00581
-      - -2.67968
-    - - jet_pfcand_neu_py
+      - 0.69754
+      - 0.21681
+    - - jet_pfcand_neu_eta_v
       - null
       - null
       - null
       - null
-      - -0.00391
-      - -2.69202
-    - - jet_pfcand_neu_pz
+      - 0.01849
+      - -1.72692
+    - - jet_pfcand_neu_phi
       - null
       - null
       - null
       - null
-      - 0.01216
-      - -5.83028
+      - -0.01173
+      - -2.82889
     - - jet_pfcand_neu_energy
       - null
       - null
       - null
       - null
-      - 1.11197
+      - 1.11173
       - 0.32931
   pf_neu_mask:
     length: 26
@@ -589,152 +454,120 @@ inputs:
       - 0.6661435578429801
       - -4.0
       - 4.0
-      - 0.0989
-      - -1.51651
     - - jet_pfcand_muon_energy_log
       - 2.990389081894962
       - 0.7474102093308339
       - -5.0
       - 5.0
-      - -0.07087
-      - -1.35888
     - - jet_pfcand_muon_eta
       - -4.101826891447459e-05
       - 0.677274830303549
       - -3.0
       - 3.0
-      - -0.00152
-      - -1.46483
+      - -0.00228
+      - -2.16251
     - - jet_pfcand_muon_deta
       - -2.5078767083462572e-05
       - 9.507749799285058
       - -6.0
       - 7.0
-      - 0.00023
-      - -1.82986
     - - jet_pfcand_muon_dphi
       - 0.0001643369705188221
       - 9.287941207055091
       - -6.0
       - 6.0
-      - -0.0014
-      - -1.85236
     - - jet_pfcand_muon_chi2
       - 492.41255373481994
       - 0.00015247935368396063
       - -1.0
       - 7.0
-      - -0.07493
-      - -0.07499
     - - jet_pfcand_muon_dxy
       - -0.002304753346091601
       - 1.5859762200138998
       - -7.0
       - 7.0
-      - 0.00362
-      - -0.11456
     - - jet_pfcand_muon_dz
       - -0.01055558430933673
       - 0.32617699639300013
       - -7.0
       - 7.0
-      - 0.00344
-      - -1.13918
     - - jet_pfcand_muon_segcomp
       - 0.8223388488921082
       - 4.219642979638434
       - -4.0
       - 2.0
-      - 0.39967
-      - -2.32859
     - - jet_pfcand_muon_validfraction
       - 0.9621021097147682
       - 10.723258134527704
       - -7.0
       - 1.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_muon_trkKink
       - 16.832900558508946
       - 0.015975483253661407
       - -1.0
       - 7.0
-      - -0.16812
-      - -0.23168
     - - jet_pfcand_muon_pterr
       - 0.017753999709636606
       - 97.6503803283547
       - -2.0
       - 7.0
-      - -0.18652
-      - -0.92
     - - jet_pfcand_muon_type
       - 12.53921401254251
       - 0.2531053884736156
       - -3.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_muon_nvalidhits
       - 19.865628428876505
       - 0.06618180999356173
       - -2.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_muon_nstations
       - 2.6596808003873744
       - 0.7797064289627362
       - -3.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_muon_nlayers
       - 12.853533022659565
       - 0.4217500109232205
       - -6.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_pfcand_muon_nhits
       - 18.56107673653697
       - 0.2393335361478334
       - -5.0
       - 6.0
-      - 0.0
-      - 0.0
   pf_muon_vectors:
     length: 4
     pad_mode: wrap
     vars:
-    - - jet_pfcand_muon_px
+    - - jet_pfcand_muon_pt
       - null
       - null
       - null
       - null
-      - -0.01318
-      - -41.79674
-    - - jet_pfcand_muon_py
+      - 10.79361
+      - 0.95551
+    - - jet_pfcand_muon_eta_v
       - null
       - null
       - null
       - null
-      - -0.0125
-      - -41.85673
-    - - jet_pfcand_muon_pz
+      - -0.00228
+      - -2.16251
+    - - jet_pfcand_muon_phi
       - null
       - null
       - null
       - null
-      - -0.02777
-      - -91.15945
+      - -0.00674
+      - -2.82738
     - - jet_pfcand_muon_energy
       - null
       - null
       - null
       - null
-      - 17.94134
-      - 3.22773
+      - 17.58575
+      - 3.22386
   pf_muon_mask:
     length: 4
     pad_mode: constant
@@ -750,131 +583,105 @@ inputs:
       - 0.8665114735560705
       - -5.0
       - 5.0
-      - 0.03432
-      - -1.51265
     - - jet_pfcand_electron_energy_log
       - 3.216711421985943
       - 0.777077191044179
       - -5.0
       - 4.0
-      - 0.03503
-      - -1.61612
     - - jet_pfcand_electron_eta
       - 0.016360159618527697
       - 0.7871409161165078
       - -3.0
       - 3.0
-      - -0.00553
-      - -1.6426
+      - 0.00916
+      - -2.06865
     - - jet_pfcand_electron_deta
       - 1.6520156691707624e-05
       - 13.469339831076432
       - -7.0
       - 7.0
-      - -0.00068
-      - -1.64068
     - - jet_pfcand_electron_dphi
       - 0.000163108610807507
       - 13.041504377971902
       - -7.0
       - 7.0
-      - -0.0017
-      - -1.6575
     - - jet_pfcand_electron_dxy
       - -1.8193939060535217e-05
       - 3.8214696594480584
       - -7.0
       - 7.0
-      - -3.0e-05
-      - -0.45715
     - - jet_pfcand_electron_dz
       - 0.0038154320333927657
       - 0.6740657106786273
       - -7.0
       - 7.0
-      - -0.00256
-      - -0.14889
     - - jet_pfcand_electron_eOverP
       - 1.5928365414272012
       - 0.6405394677307222
       - -2.0
       - 7.0
-      - -0.32495
-      - -0.69648
     - - jet_pfcand_electron_detaIn
       - -3.1859597739555025e-05
       - 61.86841378298315
       - -7.0
       - 7.0
-      - 0.00152
-      - -0.96285
     - - jet_pfcand_electron_dphiIn
       - -0.0002628083459956884
       - 14.740824964985583
       - -7.0
       - 7.0
-      - 0.00423
-      - -1.42037
     - - jet_pfcand_electron_r9
       - 0.882561077470633
       - 3.293659098793238
       - -2.0
       - 7.0
-      - 0.08665
-      - -1.33249
     - - jet_pfcand_electron_hOverE
       - 0.26955078347137257
       - 1.4230495854637284
       - -1.0
       - 7.0
-      - -0.36569
-      - -0.38359
     - - jet_pfcand_electron_sigIetaIeta
       - 0.01750848267820324
       - 82.19804428699901
       - -2.0
       - 7.0
-      - -0.34759
-      - -0.87543
     - - jet_pfcand_electron_convProb
       - -0.9371320529761215
       - 3.310245931932684
       - -1.0
       - 7.0
-      - -0.20811
-      - -0.20811
   pf_electron_vectors:
     length: 4
     pad_mode: wrap
     vars:
-    - - jet_pfcand_electron_px
+    - - jet_pfcand_electron_pt
       - null
       - null
       - null
       - null
-      - -0.10464
-      - -42.16823
-    - - jet_pfcand_electron_py
+      - 14.56826
+      - 2.44464
+    - - jet_pfcand_electron_eta_v
       - null
       - null
       - null
       - null
-      - -0.07354
-      - -42.07699
-    - - jet_pfcand_electron_pz
+      - 0.00916
+      - -2.06865
+    - - jet_pfcand_electron_phi
       - null
       - null
       - null
       - null
-      - 0.06013
-      - -95.4368
+      - -0.02167
+      - -2.83637
     - - jet_pfcand_electron_energy
       - null
       - null
       - null
       - null
-      - 25.91923
-      - 3.11263
+      - 25.54821
+      - 3.10358
   pf_electron_mask:
     length: 4
     pad_mode: constant
@@ -890,96 +697,80 @@ inputs:
       - 1.4775000734624728
       - -3.0
       - 7.0
-      - -0.21038
-      - -1.30357
     - - jet_pfcand_photon_energy_log
       - 3.9320495880930193
       - 1.181622814541329
       - -3.0
       - 6.0
-      - -0.13337
-      - -1.37541
     - - jet_pfcand_photon_eta
       - 0.002995007851019911
       - 0.7937106135070771
       - -4.0
       - 3.0
-      - 0.00997
-      - -1.62563
+      - 0.01569
+      - -2.03904
     - - jet_pfcand_photon_deta
       - -7.865521793508605e-07
       - 18.116913468589075
       - -7.0
       - 7.0
-      - -0.00034
-      - -1.34925
     - - jet_pfcand_photon_dphi
       - 0.0003790119927272418
       - 10.922344289890138
       - -7.0
       - 7.0
-      - -0.00151
-      - -0.91112
     - - jet_pfcand_photon_r9
       - 0.7506338081660479
       - 4.044236286973244
       - -3.0
       - 7.0
-      - 0.01795
-      - -1.47099
     - - jet_pfcand_photon_hOverE
       - 0.17786696590277037
       - 6.822971746986142
       - -2.0
       - 7.0
-      - -0.1919
-      - -1.21359
     - - jet_pfcand_photon_sigIetaIeta
       - 0.01978935282492927
       - 88.49916927976683
       - -3.0
       - 7.0
-      - -0.35846
-      - -0.96336
     - - jet_pfcand_photon_eVeto
       - 0.8030104586073972
       - 2.5143036139312462
       - -3.0
       - 1.0
-      - 0.0
-      - 0.0
   pf_photon_vectors:
     length: 6
     pad_mode: wrap
     vars:
-    - - jet_pfcand_photon_px
+    - - jet_pfcand_photon_pt
       - null
       - null
       - null
       - null
-      - 0.41328
-      - -51.2555
-    - - jet_pfcand_photon_py
+      - 24.93039
+      - 11.90522
+    - - jet_pfcand_photon_eta_v
       - null
       - null
       - null
       - null
-      - 0.19491
-      - -51.31778
-    - - jet_pfcand_photon_pz
+      - 0.01569
+      - -2.03904
+    - - jet_pfcand_photon_phi
       - null
       - null
       - null
       - null
-      - 0.36507
-      - -115.45402
+      - 0.01602
+      - -2.82194
     - - jet_pfcand_photon_energy
       - null
       - null
       - null
       - null
-      - 45.07575
-      - 15.89977
+      - 44.33422
+      - 15.85572
   pf_photon_mask:
     length: 6
     pad_mode: constant
@@ -994,131 +785,105 @@ inputs:
       - 1.1410245128175038
       - -4.0
       - 6.0
-      - 0.03939
-      - -1.70944
     - - jet_sv_energy_log
       - 3.2054948809002504
       - 1.0271616150686544
       - -4.0
       - 6.0
-      - 0.01428
-      - -1.68757
     - - jet_sv_eta
       - -0.01101191883095017
       - 0.7744198392336953
       - -3.0
       - 3.0
-      - -0.00584
-      - -1.60468
+      - -0.01854
+      - -2.07844
     - - jet_sv_mass
       - 1.3643363164079219
       - 1.0106426207774253
       - -2.0
       - 7.0
-      - -0.25764
-      - -1.01869
     - - jet_sv_deta
       - -1.1694857148269251e-05
       - 12.299093650445071
       - -6.0
       - 6.0
-      - 0.00021
-      - -1.59506
     - - jet_sv_dphi
       - 0.000202343200979462
       - 12.054031305281992
       - -6.0
       - 6.0
-      - 0.00045
-      - -1.59794
     - - jet_sv_ntrack
       - 2.9832876897999365
       - 0.7847109249684843
       - -2.0
       - 7.0
-      - 0.0
-      - 0.0
     - - jet_sv_chi2
       - -0.5335514211667249
       - 0.014828487983721324
       - -7.0
       - 7.0
-      - 0.01875
-      - 0.0081
     - - jet_sv_dxy
       - 0.6847843164203523
       - 0.7566548632201743
       - -1.0
       - 7.0
-      - -0.33933
-      - -0.49982
     - - jet_sv_dxysig
       - 19.9599132891451
       - 0.028433883186229976
       - -1.0
       - 7.0
-      - -0.36827
-      - -0.54314
     - - jet_sv_d3d
       - 1.3029227237544772
       - 0.3725860007173606
       - -1.0
       - 7.0
-      - -0.32913
-      - -0.46889
     - - jet_sv_d3dsig
       - 20.002279770327295
       - 0.028393346955427747
       - -1.0
       - 7.0
-      - -0.36845
-      - -0.54362
     - - jet_sv_d3d_sign
       - 0.5229755921829355
       - 1.1732301008376007
       - -3.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_sv_costheta
       - 0.9691921410007507
       - 5.203776792761511
       - -7.0
       - 1.0
-      - 0.15883
-      - 0.07998
   sv_vectors:
     length: 6
     pad_mode: wrap
     vars:
-    - - jet_sv_px
+    - - jet_sv_pt
       - null
       - null
       - null
       - null
-      - -0.25714
-      - -29.31186
-    - - jet_sv_py
+      - 14.02986
+      - 3.02989
+    - - jet_sv_eta_v
       - null
       - null
       - null
       - null
-      - -0.13725
-      - -29.06557
-    - - jet_sv_pz
+      - -0.01854
+      - -2.07844
+    - - jet_sv_phi
       - null
       - null
       - null
       - null
-      - -0.19204
-      - -72.79038
+      - -0.03078
+      - -2.83607
     - - jet_sv_energy
       - null
       - null
       - null
       - null
-      - 24.9933
-      - 4.76951
+      - 24.93858
+      - 4.76577
   sv_mask:
     length: 6
     pad_mode: constant
@@ -1133,124 +898,100 @@ inputs:
       - 1.154185223609385
       - -3.0
       - 6.0
-      - -0.05967
-      - -1.49341
     - - jet_kaon_energy_log
       - 2.046507740368351
       - 1.0664996649383567
       - -3.0
       - 6.0
-      - -0.05084
-      - -1.55189
     - - jet_kaon_eta
       - -0.00888908078724048
       - 0.8107785898717655
       - -3.0
       - 3.0
-      - -0.0087
-      - -1.64687
+      - -0.01913
+      - -2.0315
     - - jet_kaon_mass
       - 0.4981434185522495
       - 35.83108215982574
       - -4.0
       - 3.0
-      - -0.00332
-      - -1.96029
     - - jet_kaon_deta
       - -2.3336824959293716e-05
       - 7.782569077025622
       - -4.0
       - 4.0
-      - -0.00011
-      - -1.8259
     - - jet_kaon_dphi
       - 9.109980954787272e-05
       - 7.984839864335209
       - -4.0
       - 4.0
-      - 0.00067
-      - -1.84666
     - - jet_kaon_chi2
       - 1.02469086949582
       - 0.7265881918732495
       - -2.0
       - 5.0
-      - -0.4267
-      - -0.74205
     - - jet_kaon_dxy
       - 6.812778363019432
       - 0.10628724490651978
       - -2.0
       - 7.0
-      - -0.41764
-      - -0.65404
     - - jet_kaon_dxysig
       - 169.19882799424073
       - 0.0037420749779527563
       - -2.0
       - 7.0
-      - -0.38055
-      - -0.56979
     - - jet_kaon_d3d
       - 13.523651820293324
       - 0.04902572539790892
       - -2.0
       - 7.0
-      - -0.37135
-      - -0.61864
     - - jet_kaon_d3dsig
       - 204.03021162347562
       - 0.003013158574207447
       - -2.0
       - 7.0
-      - -0.38245
-      - -0.56348
     - - jet_kaon_d3d_sign
       - 0.6804847571476822
       - 1.3646987678536415
       - -3.0
       - 1.0
-      - 0.0
-      - 0.0
     - - jet_kaon_costheta
       - 0.947107327404606
       - 4.606750775653192
       - -7.0
       - 1.0
-      - 0.24324
-      - -1.12379
   kaon_vectors:
     length: 4
     pad_mode: wrap
     vars:
-    - - jet_kaon_px
+    - - jet_kaon_pt
       - null
       - null
       - null
       - null
-      - -0.25342
-      - -10.22444
-    - - jet_kaon_py
+      - 4.22443
+      - 1.21978
+    - - jet_kaon_eta_v
       - null
       - null
       - null
       - null
-      - -0.12657
-      - -10.01426
-    - - jet_kaon_pz
+      - -0.01913
+      - -2.0315
+    - - jet_kaon_phi
       - null
       - null
       - null
       - null
-      - -0.0694
-      - -22.57777
+      - -0.08797
+      - -2.86107
     - - jet_kaon_energy
       - null
       - null
       - null
       - null
-      - 7.38041
-      - 1.80648
+      - 7.3801
+      - 1.80647
   kaon_mask:
     length: 4
     pad_mode: constant
@@ -1265,124 +1006,100 @@ inputs:
       - 1.2843133977199785
       - -3.0
       - 6.0
-      - -0.05394
-      - -1.53404
     - - jet_lambda_energy_log
       - 2.314179610457263
       - 1.208051467262138
       - -3.0
       - 6.0
-      - -0.07063
-      - -1.5328
     - - jet_lambda_eta
       - -0.005366270657284911
       - 0.7675680207160763
       - -3.0
       - 3.0
-      - -0.00922
-      - -1.60978
+      - -0.01711
+      - -2.09318
     - - jet_lambda_mass
       - 1.1279154432613632
       - 46.60464406397697
       - -3.0
       - 3.0
-      - -0.12141
-      - -1.69639
     - - jet_lambda_deta
       - -5.729048052848356e-05
       - 9.218397437041379
       - -5.0
       - 5.0
-      - -0.00016
-      - -1.75948
     - - jet_lambda_dphi
       - -9.113656810582955e-05
       - 9.482045005807448
       - -5.0
       - 5.0
-      - 0.00153
-      - -1.75994
     - - jet_lambda_chi2
       - 0.9975480174190898
       - 0.7134391465590707
       - -2.0
       - 5.0
-      - -0.44451
-      - -0.71028
     - - jet_lambda_dxy
       - 8.248099699854599
       - 0.0912347283927808
       - -2.0
       - 7.0
-      - -0.4609
-      - -0.67154
     - - jet_lambda_dxysig
       - 110.32224056118778
       - 0.00553832334920879
       - -2.0
       - 7.0
-      - -0.36773
-      - -0.52077
     - - jet_lambda_d3d
       - 16.790629695779465
       - 0.042235751971213424
       - -2.0
       - 7.0
-      - -0.39328
-      - -0.65992
     - - jet_lambda_d3dsig
       - 123.28847173598321
       - 0.0047274326449759955
       - -2.0
       - 7.0
-      - -0.36575
-      - -0.50587
     - - jet_lambda_d3d_sign
       - 0.7523200693447464
       - 1.5179154439940026
       - -4.0
       - 1.0
-      - 0.0
-      - 0.0
     - - jet_lambda_costheta
       - 0.9755699649772437
       - 8.186051647208881
       - -7.0
       - 1.0
-      - 0.19959
-      - -0.1359
   lambda_vectors:
     length: 4
     pad_mode: wrap
     vars:
-    - - jet_lambda_px
+    - - jet_lambda_pt
       - null
       - null
       - null
       - null
-      - -0.31094
-      - -11.11475
-    - - jet_lambda_py
+      - 5.22194
+      - 1.64941
+    - - jet_lambda_eta_v
       - null
       - null
       - null
       - null
-      - -0.16374
-      - -10.7665
-    - - jet_lambda_pz
+      - -0.01711
+      - -2.09318
+    - - jet_lambda_phi
       - null
       - null
       - null
       - null
-      - -0.08533
-      - -26.35135
+      - -0.09004
+      - -2.86199
     - - jet_lambda_energy
       - null
       - null
       - null
       - null
-      - 9.54199
-      - 2.8444
+      - 9.54151
+      - 2.84435
   lambda_mask:
     length: 4
     pad_mode: constant
@@ -1397,264 +1114,200 @@ inputs:
       - 0.9688326831192318
       - -2.0
       - 7.0
-      - -0.16218
-      - -1.34017
     - - jet_losttrack_energy_log
       - 2.4547262540117534
       - 0.9098245376630459
       - -3.0
       - 7.0
-      - -0.12798
-      - -1.386
     - - jet_losttrack_eta
       - 0.006846701782128402
       - 0.6098860157507299
       - -3.0
       - 3.0
-      - 0.00465
-      - -1.41421
+      - 0.01318
+      - -2.28687
     - - jet_losttrack_deta
       - 0.00015065479320669985
       - 14.103516456771986
       - -4.0
       - 4.0
-      - -0.0004
-      - -1.7678
     - - jet_losttrack_dphi
       - -0.0005233859107200316
       - 11.93621643742422
       - -3.0
       - 3.0
-      - 0.00119
-      - -1.72965
     - - jet_losttrack_ptrel
       - 1.0206746958496793
       - 0.1920276889822894
       - -1.0
       - 7.0
-      - -0.13009
-      - -0.18066
     - - jet_losttrack_etarel
       - 4.007226395566199
       - 1.1866735654472658
       - -3.0
       - 7.0
-      - -0.07469
-      - -1.52587
     - - jet_losttrack_charge
       - 0.012026291923422262
       - 1.000072182596399
       - -2.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_frompv
       - 1.55373116976711
       - 1.3950295873884349
       - -3.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_dz
       - 0.023801057710096045
       - 0.15323678513022448
       - -7.0
       - 7.0
-      - -0.00363
-      - -1.2225
     - - jet_losttrack_dzsig
       - -0.1754022489047669
       - 0.029142922758568154
       - -7.0
       - 7.0
-      - 0.00512
-      - -0.04138
     - - jet_losttrack_dxy
       - 0.002150574650434192
       - 0.5755161291883216
       - -7.0
       - 7.0
-      - -0.00121
-      - -1.34291
     - - jet_losttrack_dxysig
       - 0.25137794127556085
       - 0.023992420406861167
       - -7.0
       - 7.0
-      - -0.00596
-      - -0.04626
     - - jet_losttrack_track_chi2
       - 1.1832243103787858
       - 0.48127457136495155
       - -1.0
       - 7.0
-      - -0.08818
-      - -0.56946
     - - jet_losttrack_track_qual
       - 3.2893590172640215
       - 0.5053165826894817
       - -2.0
       - 2.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_track_pterr
       - 0.21583306091779447
       - 0.5475335947026235
       - -1.0
       - 7.0
-      - -0.10517
-      - -0.11296
     - - jet_losttrack_track_etaerr
       - 0.0046585677233369005
       - 89.02450849676976
       - -1.0
       - 7.0
-      - -0.28289
-      - -0.3904
     - - jet_losttrack_track_phierr
       - 0.00285839246048611
       - 299.48192595018656
       - -1.0
       - 7.0
-      - -0.31798
-      - -0.7731
     - - jet_losttrack_trackjet_sip2d
       - 0.43900444558818813
       - 0.5974721430979906
       - -7.0
       - 7.0
-      - -0.24929
-      - -0.80667
     - - jet_losttrack_trackjet_sip2dsig
       - 7.960294708835583
       - 0.023548171411694303
       - -7.0
       - 7.0
-      - -0.10666
-      - -0.71503
     - - jet_losttrack_trackjet_sip3d
       - 0.9004191868938899
       - 0.2993569344127367
       - -7.0
       - 7.0
-      - -0.24978
-      - -0.83744
     - - jet_losttrack_trackjet_sip3dsig
       - 19.084589389547464
       - 0.005066473700980873
       - -7.0
       - 7.0
-      - -0.06547
-      - -0.29506
     - - jet_losttrack_trackjet_dist
       - 0.8402119374036726
       - 0.5191217527678763
       - -1.0
       - 7.0
-      - -0.38901
-      - -0.43563
     - - jet_losttrack_trackjet_decayL
       - 18.879549473531764
       - 0.019014197873701198
       - -7.0
       - 7.0
-      - -0.32558
-      - -0.79716
     - - jet_losttrack_nhits
       - 11.211862799817828
       - 0.18865649482365535
       - -3.0
       - 5.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_npixhits
       - 2.520999169841604
       - 0.6081438223944762
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_npixbarrelhits
       - 2.4890262202510116
       - 0.6322155918941932
       - -2.0
       - 6.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_nstriphits
       - 8.690863629976224
       - 0.1802121272749628
       - -3.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_nstriptibhits
       - 7.733324172056676
       - 0.2234242902152154
       - -3.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_nstriptobhits
       - 0.9575386113950104
       - 0.6937497645742249
       - -2.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_nlayers
       - 8.091497451114618
       - 0.3049766579635777
       - -3.0
       - 4.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_npixlayers
       - 2.2985666646538196
       - 0.7669299442662257
       - -2.0
       - 3.0
-      - 0.0
-      - 0.0
     - - jet_losttrack_nstriplayers
       - 5.7929307864608
       - 0.2751208916713986
       - -3.0
       - 3.0
-      - 0.0
-      - 0.0
   losttrack_vectors:
     length: 6
     pad_mode: wrap
     vars:
-    - - jet_losttrack_px
+    - - jet_losttrack_pt
       - null
       - null
       - null
       - null
-      - 0.03043
-      - -11.23256
-    - - jet_losttrack_py
+      - 3.94924
+      - 1.17375
+    - - jet_losttrack_eta_v
       - null
       - null
       - null
       - null
-      - -0.01331
-      - -11.60597
-    - - jet_losttrack_pz
+      - 0.01318
+      - -2.28687
+    - - jet_losttrack_phi
       - null
       - null
       - null
       - null
-      - 0.06251
-      - -38.97391
+      - -0.0082
+      - -2.82909
     - - jet_losttrack_energy
       - null
       - null
       - null
       - null
-      - 10.03577
-      - 2.53224
+      - 10.00085
+      - 2.52992
   losttrack_mask:
     length: 6
     pad_mode: constant

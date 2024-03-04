@@ -24,43 +24,15 @@ new_variables:
   jet_kaon_mask: ak.ones_like(jet_kaon_pt)
   jet_lambda_mask: ak.ones_like(jet_lambda_pt)
   jet_losttrack_mask: ak.ones_like(jet_losttrack_deta)
-  jet_pfcand_ch_p4: _p4_from_ptetaphie(jet_pfcand_ch_pt,jet_pfcand_ch_eta,jet_pfcand_ch_phi,jet_pfcand_ch_energy)
-  jet_pfcand_ch_px: jet_pfcand_ch_p4.px
-  jet_pfcand_ch_py: jet_pfcand_ch_p4.py
-  jet_pfcand_ch_pz: jet_pfcand_ch_p4.pz
-  jet_pfcand_neu_p4: _p4_from_ptetaphie(jet_pfcand_neu_pt,jet_pfcand_neu_eta,jet_pfcand_neu_phi,jet_pfcand_neu_energy)
-  jet_pfcand_neu_px: jet_pfcand_neu_p4.px
-  jet_pfcand_neu_py: jet_pfcand_neu_p4.py
-  jet_pfcand_neu_pz: jet_pfcand_neu_p4.pz
-  jet_pfcand_muon_p4: _p4_from_ptetaphie(jet_pfcand_muon_pt,jet_pfcand_muon_eta,jet_pfcand_muon_phi,jet_pfcand_muon_energy)
-  jet_pfcand_muon_px: jet_pfcand_muon_p4.px
-  jet_pfcand_muon_py: jet_pfcand_muon_p4.py
-  jet_pfcand_muon_pz: jet_pfcand_muon_p4.pz
-  jet_pfcand_electron_p4: _p4_from_ptetaphie(jet_pfcand_electron_pt,jet_pfcand_electron_eta,jet_pfcand_electron_phi,jet_pfcand_electron_energy)
-  jet_pfcand_electron_px: jet_pfcand_electron_p4.px
-  jet_pfcand_electron_py: jet_pfcand_electron_p4.py
-  jet_pfcand_electron_pz: jet_pfcand_electron_p4.pz
-  jet_pfcand_photon_p4: _p4_from_ptetaphie(jet_pfcand_photon_pt,jet_pfcand_photon_eta,jet_pfcand_photon_phi,jet_pfcand_photon_energy)
-  jet_pfcand_photon_px: jet_pfcand_photon_p4.px
-  jet_pfcand_photon_py: jet_pfcand_photon_p4.py
-  jet_pfcand_photon_pz: jet_pfcand_photon_p4.pz
-  jet_sv_p4: _p4_from_ptetaphie(jet_sv_pt,jet_sv_eta,jet_sv_phi,jet_sv_energy)
-  jet_sv_px: jet_sv_p4.px
-  jet_sv_py: jet_sv_p4.py
-  jet_sv_pz: jet_sv_p4.pz
-  jet_kaon_p4: _p4_from_ptetaphie(jet_kaon_pt,jet_kaon_eta,jet_kaon_phi,jet_kaon_energy)
-  jet_kaon_px: jet_kaon_p4.px
-  jet_kaon_py: jet_kaon_p4.py
-  jet_kaon_pz: jet_kaon_p4.pz
-  jet_lambda_p4: _p4_from_ptetaphie(jet_lambda_pt,jet_lambda_eta,jet_lambda_phi,jet_lambda_energy)
-  jet_lambda_px: jet_lambda_p4.px
-  jet_lambda_py: jet_lambda_p4.py
-  jet_lambda_pz: jet_lambda_p4.pz
-  jet_losttrack_p4: _p4_from_ptetaphie(jet_losttrack_pt,jet_losttrack_eta,jet_losttrack_phi,jet_losttrack_energy)
-  jet_losttrack_px: jet_losttrack_p4.px
-  jet_losttrack_py: jet_losttrack_p4.py
-  jet_losttrack_pz: jet_losttrack_p4.pz
-  label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
+  jet_pfcand_ch_eta_v: ak.copy(jet_pfcand_ch_eta)
+  jet_pfcand_neu_eta_v: ak.copy(jet_pfcand_neu_eta)
+  jet_pfcand_muon_eta_v: ak.copy(jet_pfcand_muon_eta)
+  jet_pfcand_electron_eta_v: ak.copy(jet_pfcand_electron_eta)
+  jet_pfcand_photon_eta_v: ak.copy(jet_pfcand_photon_eta)
+  jet_sv_eta_v: ak.copy(jet_sv_eta)
+  jet_kaon_eta_v: ak.copy(jet_kaon_eta)
+  jet_lambda_eta_v: ak.copy(jet_lambda_eta)
+  jet_losttrack_eta_v: ak.copy(jet_losttrack_eta)  label_mc_zll: (domain>=0) & (domain<=1) & (isdata==0)
   label_data_zll: (domain>=0) & (domain<=1) & (isdata==1)
   label_mc_emu: (domain==2) & (isdata==0)
   label_data_emu: (domain==2) & (isdata==1)
@@ -392,7 +364,7 @@ inputs:
     length: 26
     pad_mode: wrap
     vars:
-    - - jet_pfcand_ch_px
+    - - jet_pfcand_ch_pt
       - null
       - null
       - null
