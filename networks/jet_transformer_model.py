@@ -56,7 +56,7 @@ class CrossEntropyWeightLoss(torch.nn.L1Loss):
                  class_weight: list = []
              ) -> None:
         super(CrossEntropyWeightLoss, self).__init__(None, None, reduction)
-        self.class_weight = class_weight;
+        self.class_weight = torch.tensor(class_weight);
         
     def forward(self, input_cat: Tensor, y_cat: Tensor, y_weight: Tensor) -> Tensor:
         loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,weight=self.class_weight,reduction='none');
