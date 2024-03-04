@@ -59,6 +59,7 @@ class CrossEntropyWeightLoss(torch.nn.L1Loss):
         self.class_weight = torch.tensor(class_weight);
         
     def forward(self, input_cat: Tensor, y_cat: Tensor, y_weight: Tensor) -> Tensor:
+        self.class_weight = self.class_weight.to(y_cat.device,non_blocking=True)        
         loss_cat = torch.nn.functional.cross_entropy(input_cat,y_cat,weight=self.class_weight,reduction='none');
         loss_cat = loss_cat*y_weight;
         if self.reduction == "mean":
