@@ -23,7 +23,7 @@ def get_model(data_config, **kwargs):
             num_domains.append(len(dct))
     else:
         num_domains.append(len(data_config.label_domain_value));
-
+        
     ## options                                                                                                                                                                                   
     cfg = dict(
         ## input tensor dimensions
@@ -205,7 +205,7 @@ def get_loss(data_config, **kwargs):
         ldomain = [len(dct) if type(dct) == list else 1 for dct in data_config.label_domain_value.values()]
     else:
         ldomain = [len(data_config.label_domain_value)];
-
+        
     return CrossEntropyContrastiveRegDomainAttack(
         reduction=kwargs.get('reduction','mean'),
         loss_reg=kwargs.get('loss_reg',1),
