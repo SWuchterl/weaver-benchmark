@@ -8,7 +8,7 @@ new_variables:
   label_vbfHH: (process_type==2)
   label_ZZ: (process_type==3)
   label_ZH: (process_type==4)
-  loss_weight: ((((label_ggHH) | (label_vbfHH) | (label_ZZ) | (label_ZH))*(weight_exp))+(label_bkg)*(1.+weight_tot))
+  loss_weight: (weight_norm)
 preprocess:
   method: manual
   data_fraction: null
@@ -84,7 +84,7 @@ labels:
   - label_bkg
   ## compute by comparing the bkg and signal n-events prior to any per-event weighting .. used to make effective training statistics to be the same
   class_weight:
-  - 6.0
+  - 5.0
   - 1.0
   sample_weight:
   - loss_weight
