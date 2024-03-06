@@ -84,8 +84,8 @@ labels:
   - label_bkg
   ## compute by comparing the bkg and signal n-events prior to any per-event weighting .. used to make effective training statistics to be the same
   class_weight:
+  - 6.0
   - 1.0
-  - 9.0
   sample_weight:
   - loss_weight
 observers:
