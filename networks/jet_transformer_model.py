@@ -22,7 +22,7 @@ def get_model(data_config, **kwargs):
         pair_input_dim = 8,
         ## transformer parameters
         block_params = None,
-        num_heads = kwargs.get('num_heads',8),
+        num_heads = kwargs.get('num_heads',4),
         num_layers = kwargs.get('num_layers',4),
         num_cls_layers = kwargs.get('num_cls_layers',1),
         cls_block_params={'dropout': 0.05, 'attn_dropout': 0.05, 'activation_dropout': 0.05},

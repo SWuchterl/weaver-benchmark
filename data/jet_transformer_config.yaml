@@ -13,7 +13,7 @@ preprocess:
   data_fraction: null
 inputs:
   jet_features:
-    length: 6
+    length: 4
     pad_mode: wrap
     vars:
     - - jet_vec_pt_log
@@ -27,7 +27,7 @@ inputs:
     - - jet_vec_energy_log
       - null
   jet_vectors:
-    length: 6
+    length: 4
     pad_mode: wrap
     vars:
     - - jet_vec_pt
@@ -39,13 +39,13 @@ inputs:
     - - jet_vec_energy
       - null
   jet_mask:
-    length: 6
+    length: 4
     pad_mode: constant
     vars:
     - - jet_vec_mask
       - null
   jet_pair_features:
-    length: 10
+    length: 6
     pad_mode: wrap
     vars:
     - - jet_pair_vec_pt_log
@@ -59,7 +59,7 @@ inputs:
     - - jet_pair_vec_energy_log
       - null
   jet_pair_vectors:
-    length: 10
+    length: 6
     pad_mode: wrap
     vars:
     - - jet_pair_vec_pt
@@ -71,7 +71,7 @@ inputs:
     - - jet_pair_vec_energy
       - null
   jet_pair_mask:
-    length: 10
+    length: 6
     pad_mode: constant
     vars:
     - - jet_pair_vec_mask
