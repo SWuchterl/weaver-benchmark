@@ -176,7 +176,7 @@ class FocalCrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
                     y_val   = input_domain[indexes,id_dom:id_dom+self.domain_dim[id]].squeeze();
                     y_pred  = y_domain[indexes,id].squeeze();
                     if y_val.nelement():
-                        ce_loss = torch.nn.functional.cross_entropy(input_domain,y_domain,reduction="none");
+                        ce_loss = torch.nn.functional.cross_entropy(y_val,y_pred,reduction="none");
                         loss = ce_loss*((1-torch.exp(-ce_loss))**self.focal_gamma)
                         if self.reduction == 'mean':
                             loss_domain += w*loss.mean();
