@@ -161,7 +161,12 @@ class FocalCrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
         if input_domain.nelement():
             ## just one domain region
             if not self.domain_weight or len(self.domain_weight) == 1:
-                loss_domain = self.loss_da*torch.nn.functional.cross_entropy(input_domain,y_domain,reduction=self.reduction);
+                ce_loss = torch.nn.functional.cross_entropy(input_domain,y_domain,reduction="none");
+                loss_domain = ce_loss*((1-torch.exp(-ce_loss))**self.focal_gamma)
+                if self.reduction == 'mean':
+                    loss_domain = self.loss_da*loss_domain.mean();
+                elif self.reduction == 'sum':
+                    loss_domain = self.loss_da*loss_domain.sum();
             else:
                 ## more domain regions with different relative weights
                 for id,w in enumerate(self.domain_weight):
@@ -171,7 +176,12 @@ class FocalCrossEntropyContrastiveRegDomainAttack(torch.nn.L1Loss):
                     y_val   = input_domain[indexes,id_dom:id_dom+self.domain_dim[id]].squeeze();
                     y_pred  = y_domain[indexes,id].squeeze();
                     if y_val.nelement():
-                        loss_domain += w*torch.nn.functional.cross_entropy(y_val,y_pred,reduction=self.reduction);
+                        ce_loss = torch.nn.functional.cross_entropy(y_val,y_pred,reduction="none");
+                        loss = ce_loss*((1-torch.exp(-ce_loss))**self.focal_gamma)
+                        if self.reduction == 'mean':
+                            loss_domain += w*loss.mean();
+                        elif self.reduction == 'sum':
+                            loss_domain = w*loss.sum();
                 loss_domain *= self.loss_da;
 
         ## attack term
