@@ -73,10 +73,10 @@ def get_model(data_config, **kwargs):
     model = ParticleTransformerTagger(**cfg)
 
     model_info = {
-        'input_names':list(data_config.input_names),
-        'input_shapes':{k:((1,) + s[1:]) for k, s in data_config.input_shapes.items()},
-        'output_names':['output'],
-        'dynamic_axes':{**{k:{0:'N', 2:'n_' + k.split('_')[0]} for k in data_config.input_names}, **{'output':{0:'N'}}},
+        'input_names':list(data_config.input_names), ## names of each tensor
+        'input_shapes':{k:((1,) + s[1:]) for k, s in data_config.input_shapes.items()}, ## shape (1,node,len)
+        'output_names':['output'], ## place holder is good
+        'dynamic_axes':{**{k:{0:'N',2:'n_'+k} for k in data_config.input_names}, **{'output':{0:'N'}}},
         }
 
     return model, model_info
