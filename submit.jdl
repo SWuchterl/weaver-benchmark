@@ -1,0 +1,26 @@
+# HTCondor Stuff
+universe = vanilla
+## logs
+output = out/$(Process).stdout
+error = error/$(Process).stderr
+log = log/$(Process).log
+should_transfer_files = YES
+
+getenv = true
+
+batch_name = LeptonIDTraining
+
+## job requirements
+#Requirements = OpSysAndVer == "CentOS7"
+RequestCPUs = 1
+RequestGPUs = 1
+RequestMemory = 25000
++RequestRuntime = 1209600
+
+# executable
+executable = job.sh
+
+# start job
+queue
+
+
